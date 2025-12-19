@@ -204,6 +204,180 @@ See the full [API documentation](doc/api.md) for detailed reference.
 - Dart SDK: >=3.0.0
 - Flutter: >=3.0.0 (if using with Flutter)
 
+## Feature Status
+
+Tabela pokazuje aktualny stan implementacji funkcji dla DOCX i PDF.
+
+### 1. Text – Inline styles (TextRun / Span)
+
+| Funkcja | DOCX | PDF |
+|---------|:----:|:---:|
+| **bold** | ✅ | ✅ |
+| **italic** | ✅ | ✅ |
+| **underline** | ✅ | ❌ |
+| **strikethrough** | ✅ | ❌ |
+| superscript | ❌ | ❌ |
+| subscript | ❌ | ❌ |
+| **font family** | ✅ | ✅ |
+| **font size (pt)** | ✅ | ✅ |
+| text color | ❌ | ❌ |
+| background / highlight color | ❌ | ❌ |
+| letter spacing | ❌ | ❌ |
+| word spacing | ❌ | ❌ |
+| text shadow | ❌ | ❌ |
+| all caps / small caps | ❌ | ❌ |
+| monospace | ❌ | ❌ |
+
+### 2. Paragraph & Block structure
+
+| Funkcja | DOCX | PDF |
+|---------|:----:|:---:|
+| **new paragraph** | ✅ | ✅ |
+| **empty paragraph** | ✅ | ✅ |
+| paragraph spacing (before / after) | ❌ | ❌ |
+| line height | ❌ | ❌ |
+| **text alignment: left** | ✅ | ✅ |
+| **text alignment: right** | ✅ | ✅ |
+| **text alignment: center** | ✅ | ✅ |
+| **text alignment: justify** | ✅ | ✅ |
+| first line indent | ❌ | ❌ |
+| left indent | ❌ | ❌ |
+| right indent | ❌ | ❌ |
+
+### 3. Semantic text styles
+
+| Funkcja | DOCX | PDF |
+|---------|:----:|:---:|
+| **normal text / paragraph** | ✅ | ✅ |
+| **H1** | ✅ | ✅ |
+| **H2** | ✅ | ✅ |
+| **H3** | ✅ | ✅ |
+| H4 | ❌ | ❌ |
+| subtitle | ❌ | ❌ |
+| caption | ❌ | ❌ |
+| quote / blockquote | ❌ | ❌ |
+| code block | ❌ | ❌ |
+| footnote text | ❌ | ❌ |
+| small print / disclaimer | ❌ | ❌ |
+
+### 4. Lists
+
+| Funkcja | DOCX | PDF |
+|---------|:----:|:---:|
+| **unordered list (bullet •)** | ✅ | ✅ |
+| unordered list (dash -) | ❌ | ❌ |
+| unordered list (custom symbol) | ❌ | ❌ |
+| **ordered list (1, 2, 3)** | ✅ | ✅ |
+| ordered list (a, b, c) | ❌ | ❌ |
+| ordered list (I, II, III) | ❌ | ❌ |
+| nested lists | ❌ | ❌ |
+| list item spacing | ❌ | ❌ |
+| start index | ❌ | ❌ |
+
+### 5. Tables
+
+| Funkcja | DOCX | PDF |
+|---------|:----:|:---:|
+| table | ❌ | ❌ |
+| row | ❌ | ❌ |
+| cell | ❌ | ❌ |
+| rowspan | ❌ | ❌ |
+| colspan | ❌ | ❌ |
+| table width | ❌ | ❌ |
+| column widths | ❌ | ❌ |
+| cell padding | ❌ | ❌ |
+| cell alignment | ❌ | ❌ |
+| vertical alignment | ❌ | ❌ |
+| borders | ❌ | ❌ |
+| background color per cell | ❌ | ❌ |
+| header row | ❌ | ❌ |
+| repeat header row | ❌ | ❌ |
+
+### 6. Images & Media
+
+| Funkcja | DOCX | PDF |
+|---------|:----:|:---:|
+| image from asset | ❌ | ❌ |
+| image from file | ❌ | ❌ |
+| image from bytes | ❌ | ❌ |
+| image from URL | ❌ | ❌ |
+| width / height | ❌ | ❌ |
+| keep aspect ratio | ❌ | ❌ |
+| alignment | ❌ | ❌ |
+| inline image | ❌ | ❌ |
+| block image | ❌ | ❌ |
+| caption | ❌ | ❌ |
+| image padding | ❌ | ❌ |
+| image border | ❌ | ❌ |
+
+### 7. Page & Layout
+
+| Funkcja | DOCX | PDF |
+|---------|:----:|:---:|
+| page size (A4) | ❌ | ✅ |
+| page size (Letter) | ❌ | ✅ |
+| page size (custom) | ❌ | ✅ |
+| orientation (portrait) | ❌ | ✅ |
+| orientation (landscape) | ❌ | ❌ |
+| **margins** | ❌ | ✅ |
+| header | ❌ | ❌ |
+| footer | ❌ | ❌ |
+| different first page | ❌ | ❌ |
+| different odd/even pages | ❌ | ❌ |
+| page number | ❌ | ❌ |
+| page total count | ❌ | ❌ |
+| dynamic text (date, title, author) | ❌ | ❌ |
+
+### 8. Sections & Flow control
+
+| Funkcja | DOCX | PDF |
+|---------|:----:|:---:|
+| section break | ❌ | ❌ |
+| **page break** | ✅ | ✅ |
+| keep together | ❌ | ❌ |
+| keep with next | ❌ | ❌ |
+| force page break before | ✅ | ✅ |
+| columns (1–3) | ❌ | ❌ |
+
+### 9. Document metadata
+
+| Funkcja | DOCX | PDF |
+|---------|:----:|:---:|
+| **title** | ✅ | ❌ |
+| **author** | ✅ | ❌ |
+| subject | ❌ | ❌ |
+| keywords | ❌ | ❌ |
+| creation date | ❌ | ❌ |
+| modification date | ❌ | ❌ |
+| language | ❌ | ❌ |
+| reading direction (LTR / RTL) | ❌ | ❌ |
+
+### 10. Interactivity (PDF only)
+
+| Funkcja | PDF |
+|---------|:---:|
+| clickable links | ❌ |
+| mailto links | ❌ |
+| internal anchors | ❌ |
+| table of contents (TOC) | ❌ |
+| bookmarks / outline | ❌ |
+| form fields | ❌ |
+
+### 11. Internationalization & Typography
+
+| Funkcja | DOCX | PDF |
+|---------|:----:|:---:|
+| UTF-8 support | ✅ | ⚠️ |
+| emoji support | ❌ | ❌ |
+| RTL languages | ❌ | ❌ |
+| hyphenation | ❌ | ❌ |
+| widows & orphans control | ❌ | ❌ |
+| ligatures | ❌ | ❌ |
+
+**Legenda:** ✅ Zaimplementowane | ❌ Do zrobienia | ⚠️ Częściowo (tylko ASCII/WinAnsi)
+
+---
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
