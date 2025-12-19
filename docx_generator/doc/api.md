@@ -1,4 +1,4 @@
-[![Codigee - Best Flutter Experts](doc/logo.jpeg)](https://umami.team.codigee.com/q/FZ9PQYyYN)
+[![Codigee - Best Flutter Experts](logo.jpeg)](https://codigee.com)
 
 # docs_gee API Reference
 
@@ -6,22 +6,38 @@ Complete API documentation for the docs_gee library.
 
 ## Table of Contents
 
-- [DocxGenerator](#docxgenerator)
-- [DocxDocument](#docxdocument)
-- [DocxParagraph](#docxparagraph)
-- [DocxRun](#docxrun)
-- [DocxAlignment](#docxalignment)
-- [DocxParagraphStyle](#docxparagraphstyle)
+- [Generators](#generators)
+  - [DocxGenerator](#docxgenerator)
+  - [PdfGenerator](#pdfgenerator)
+- [Document Model](#document-model)
+  - [Document](#document)
+  - [Paragraph](#paragraph)
+  - [TextRun](#textrun)
+- [Tables](#tables)
+  - [Table](#table)
+  - [TableRow](#tablerow)
+  - [TableCell](#tablecell)
+  - [TableBorders](#tableborders)
+- [Enums](#enums)
+  - [Alignment](#alignment)
+  - [ParagraphStyle](#paragraphstyle)
+  - [BorderStyle](#borderstyle)
+- [Type Aliases](#type-aliases)
 - [Usage Examples](#usage-examples)
-- [Error Handling](#error-handling)
 
 ---
 
-## DocxGenerator
+## Generators
 
-Main class for generating DOCX files from a document model.
+### DocxGenerator
 
-### Constructor
+Generates Microsoft Word DOCX files.
+
+```dart
+class DocxGenerator implements DocumentGenerator
+```
+
+#### Constructor
 
 ```dart
 DocxGenerator({
@@ -35,7 +51,7 @@ DocxGenerator({
 | `fontName` | `String` | `'Times New Roman'` | Default font for the document |
 | `fontSize` | `int` | `24` | Font size in half-points (24 = 12pt) |
 
-### Font Size Reference
+#### Font Size Reference
 
 | Half-points | Points | Typical Use |
 |-------------|--------|-------------|
@@ -46,45 +62,60 @@ DocxGenerator({
 | 32 | 16pt | Section headings |
 | 48 | 24pt | Titles |
 
-### Methods
+#### Methods
 
-#### generate()
-
-Generates a DOCX file from the given document.
+##### generate()
 
 ```dart
-Uint8List generate(DocxDocument document)
+Uint8List generate(Document document)
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `document` | `DocxDocument` | The document to convert |
-
-**Returns:** `Uint8List` - The DOCX file as bytes.
-
-**Example:**
-
-```dart
-final generator = DocxGenerator(
-  fontName: 'Arial',
-  fontSize: 24, // 12pt
-);
-
-final bytes = generator.generate(document);
-await File('output.docx').writeAsBytes(bytes);
-```
+Returns the document as DOCX bytes.
 
 ---
 
-## DocxDocument
+### PdfGenerator
 
-Container for document content and metadata.
-
-### Constructor
+Generates PDF documents.
 
 ```dart
-DocxDocument({
-  List<DocxParagraph>? paragraphs,
+class PdfGenerator implements DocumentGenerator
+```
+
+#### Constructor
+
+```dart
+PdfGenerator({
+  String fontName = 'Helvetica',
+  double fontSize = 12.0,
+})
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `fontName` | `String` | `'Helvetica'` | Base font (Helvetica, Times-Roman, Courier) |
+| `fontSize` | `double` | `12.0` | Font size in points |
+
+#### Methods
+
+##### generate()
+
+```dart
+Uint8List generate(Document document)
+```
+
+Returns the document as PDF bytes.
+
+---
+
+## Document Model
+
+### Document
+
+Container for document content and metadata. Alias for `DocxDocument`.
+
+```dart
+Document({
   String? title,
   String? author,
 })
@@ -92,180 +123,91 @@ DocxDocument({
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `paragraphs` | `List<DocxParagraph>?` | `[]` | Initial paragraphs |
 | `title` | `String?` | `null` | Document title (metadata) |
 | `author` | `String?` | `null` | Document author (metadata) |
 
-### Properties
+#### Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `paragraphs` | `List<DocxParagraph>` | All paragraphs in the document |
+| `content` | `List<Object>` | All content items (paragraphs and tables) |
+| `paragraphs` | `List<DocxParagraph>` | Only paragraphs (for backward compatibility) |
 | `title` | `String?` | Document title |
 | `author` | `String?` | Document author |
 
-### Methods
-
-#### addParagraph()
-
-Adds a single paragraph to the document.
+#### Methods
 
 ```dart
-void addParagraph(DocxParagraph paragraph)
-```
-
-#### addParagraphs()
-
-Adds multiple paragraphs to the document.
-
-```dart
-void addParagraphs(List<DocxParagraph> paragraphs)
-```
-
-**Example:**
-
-```dart
-final doc = DocxDocument(
-  title: 'Annual Report',
-  author: 'Finance Team',
-);
-
-doc.addParagraph(DocxParagraph.heading('Introduction', level: 1));
-doc.addParagraphs([
-  DocxParagraph.text('First paragraph...'),
-  DocxParagraph.text('Second paragraph...'),
-]);
+void addParagraph(Paragraph paragraph)
+void addParagraphs(List<Paragraph> paragraphs)
+void addTable(Table table)
 ```
 
 ---
 
-## DocxParagraph
+### Paragraph
 
-Represents a paragraph with text content, style, and formatting.
+Represents a paragraph with text content, style, and formatting. Alias for `DocxParagraph`.
 
-### Constructor
+#### Constructor
 
 ```dart
-const DocxParagraph({
-  required List<DocxRun> runs,
-  DocxParagraphStyle style = DocxParagraphStyle.normal,
-  DocxAlignment alignment = DocxAlignment.left,
+Paragraph({
+  required List<TextRun> runs,
+  ParagraphStyle style = ParagraphStyle.normal,
+  Alignment alignment = Alignment.left,
   bool pageBreakBefore = false,
+  int indentLevel = 0,
 })
 ```
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `runs` | `List<DocxRun>` | required | Text segments with formatting |
-| `style` | `DocxParagraphStyle` | `normal` | Paragraph style |
-| `alignment` | `DocxAlignment` | `left` | Text alignment |
-| `pageBreakBefore` | `bool` | `false` | Insert page break before this paragraph |
+| `runs` | `List<TextRun>` | required | Text segments with formatting |
+| `style` | `ParagraphStyle` | `normal` | Paragraph style |
+| `alignment` | `Alignment` | `left` | Text alignment |
+| `pageBreakBefore` | `bool` | `false` | Insert page break before |
+| `indentLevel` | `int` | `0` | Nesting level for lists (0-8) |
 
-### Factory Constructors
-
-#### DocxParagraph.text()
-
-Creates a simple paragraph with plain text.
+#### Factory Constructors
 
 ```dart
-factory DocxParagraph.text(
-  String text, {
-  DocxParagraphStyle style = DocxParagraphStyle.normal,
-  DocxAlignment alignment = DocxAlignment.left,
-  bool pageBreakBefore = false,
-})
-```
+// Plain text
+Paragraph.text(String text, {Alignment alignment, bool pageBreakBefore})
 
-#### DocxParagraph.heading()
+// Headings (level 1-4)
+Paragraph.heading(String text, {required int level, Alignment alignment, bool pageBreakBefore})
 
-Creates a heading paragraph.
+// Semantic styles
+Paragraph.subtitle(String text, {Alignment alignment})
+Paragraph.caption(String text, {Alignment alignment})
+Paragraph.quote(String text, {Alignment alignment})
+Paragraph.codeBlock(String text, {Alignment alignment})
+Paragraph.footnote(String text, {Alignment alignment})
 
-```dart
-factory DocxParagraph.heading(
-  String text, {
-  required int level,  // 1, 2, or 3
-  DocxAlignment alignment = DocxAlignment.left,
-  bool pageBreakBefore = false,
-})
-```
-
-| Level | Style Applied |
-|-------|---------------|
-| 1 | `heading1` (largest) |
-| 2 | `heading2` (medium) |
-| 3 | `heading3` (smallest) |
-
-#### DocxParagraph.bulletItem()
-
-Creates a bullet list item.
-
-```dart
-factory DocxParagraph.bulletItem(
-  String text, {
-  DocxAlignment alignment = DocxAlignment.left,
-})
-```
-
-#### DocxParagraph.numberedItem()
-
-Creates a numbered list item.
-
-```dart
-factory DocxParagraph.numberedItem(
-  String text, {
-  DocxAlignment alignment = DocxAlignment.left,
-})
-```
-
-### Properties
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `runs` | `List<DocxRun>` | Text segments in this paragraph |
-| `style` | `DocxParagraphStyle` | The paragraph style |
-| `alignment` | `DocxAlignment` | Text alignment |
-| `pageBreakBefore` | `bool` | Whether to break page before |
-| `plainText` | `String` | Combined text from all runs (getter) |
-
-**Example:**
-
-```dart
-// Simple text
-doc.addParagraph(DocxParagraph.text('Hello World'));
-
-// Heading with page break
-doc.addParagraph(DocxParagraph.heading(
-  'Chapter 2',
-  level: 1,
-  pageBreakBefore: true,
-));
-
-// Mixed formatting using runs
-doc.addParagraph(DocxParagraph(
-  runs: [
-    const DocxRun('Regular '),
-    const DocxRun('bold ', bold: true),
-    const DocxRun('italic', italic: true),
-  ],
-  alignment: DocxAlignment.center,
-));
+// Lists (with optional indentLevel for nesting)
+Paragraph.bulletItem(String text, {int indentLevel, Alignment alignment})
+Paragraph.dashItem(String text, {int indentLevel, Alignment alignment})
+Paragraph.numberedItem(String text, {int indentLevel, Alignment alignment})
+Paragraph.alphaItem(String text, {int indentLevel, Alignment alignment})
+Paragraph.romanItem(String text, {int indentLevel, Alignment alignment})
 ```
 
 ---
 
-## DocxRun
+### TextRun
 
-A run of text with consistent formatting. In DOCX terminology, a "run" is a contiguous piece of text sharing the same formatting properties.
-
-### Constructor
+A run of text with formatting. Alias for `DocxRun`.
 
 ```dart
-const DocxRun(
+TextRun(
   String text, {
   bool bold = false,
   bool italic = false,
   bool underline = false,
   bool strikethrough = false,
+  String? color,
+  String? backgroundColor,
 })
 ```
 
@@ -276,252 +218,322 @@ const DocxRun(
 | `italic` | `bool` | `false` | Italic formatting |
 | `underline` | `bool` | `false` | Underline formatting |
 | `strikethrough` | `bool` | `false` | Strikethrough formatting |
+| `color` | `String?` | `null` | Text color (hex, e.g., `'FF0000'`) |
+| `backgroundColor` | `String?` | `null` | Highlight color (hex) |
 
-### Properties
+#### Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `text` | `String` | The text content |
-| `bold` | `bool` | Whether text is bold |
-| `italic` | `bool` | Whether text is italic |
-| `underline` | `bool` | Whether text is underlined |
-| `strikethrough` | `bool` | Whether text has strikethrough |
-| `hasFormatting` | `bool` | True if any formatting is applied (getter) |
+| `hasFormatting` | `bool` | True if any formatting is applied |
 
-### Methods
-
-#### copyWith()
-
-Creates a copy with modified properties.
+#### Methods
 
 ```dart
-DocxRun copyWith({
-  String? text,
-  bool? bold,
-  bool? italic,
-  bool? underline,
-  bool? strikethrough,
+TextRun copyWith({String? text, bool? bold, bool? italic, ...})
+```
+
+---
+
+## Tables
+
+### Table
+
+Table container with rows and borders. Alias for `DocxTable`.
+
+```dart
+Table({
+  required List<TableRow> rows,
+  TableBorders borders = const TableBorders.none(),
 })
 ```
 
-**Example:**
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `rows` | `List<TableRow>` | required | Table rows |
+| `borders` | `TableBorders` | `TableBorders.none()` | Border configuration |
+
+#### Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `columnCount` | `int` | Number of columns (from first row) |
+
+---
+
+### TableRow
+
+A row containing cells. Alias for `DocxTableRow`.
 
 ```dart
-const original = DocxRun('Hello', bold: true);
-final modified = original.copyWith(italic: true);
-// Result: bold AND italic
-```
-
-**Combined Formatting Example:**
-
-```dart
-doc.addParagraph(DocxParagraph(
-  runs: [
-    const DocxRun('Normal, '),
-    const DocxRun('bold, ', bold: true),
-    const DocxRun('italic, ', italic: true),
-    const DocxRun('bold+italic, ', bold: true, italic: true),
-    const DocxRun('underlined, ', underline: true),
-    const DocxRun('struck through.', strikethrough: true),
-  ],
-));
+TableRow({
+  required List<TableCell> cells,
+})
 ```
 
 ---
 
-## DocxAlignment
+### TableCell
 
-Text alignment options for paragraphs.
+A cell with content. Alias for `DocxTableCell`.
 
 ```dart
-enum DocxAlignment {
-  left('left'),
-  center('center'),
-  right('right'),
-  justify('both');
-}
+TableCell({
+  required List<Paragraph> paragraphs,
+  String? backgroundColor,
+  Alignment alignment = Alignment.left,
+})
 ```
 
-| Value | Word XML Value | Description |
-|-------|----------------|-------------|
-| `left` | `left` | Left-aligned (default) |
-| `center` | `center` | Centered |
-| `right` | `right` | Right-aligned |
-| `justify` | `both` | Justified (both edges) |
-
-**Example:**
+#### Factory Constructor
 
 ```dart
-doc.addParagraph(DocxParagraph.text(
-  'This text is centered.',
-  alignment: DocxAlignment.center,
-));
+// Simple text cell
+TableCell.text(
+  String text, {
+  String? backgroundColor,
+  Alignment alignment = Alignment.left,
+})
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `paragraphs` | `List<Paragraph>` | required | Cell content |
+| `backgroundColor` | `String?` | `null` | Fill color (hex, e.g., `'E0E0E0'`) |
+| `alignment` | `Alignment` | `left` | Text alignment |
+
+---
+
+### TableBorders
+
+Border configuration for tables. Alias for `DocxTableBorders`.
+
+```dart
+// All borders (single line)
+const TableBorders.all({
+  String color = '000000',
+  int size = 4,
+  BorderStyle style = BorderStyle.single,
+})
+
+// No borders
+const TableBorders.none()
+
+// Outside borders only
+const TableBorders.outside({
+  String color = '000000',
+  int size = 4,
+  BorderStyle style = BorderStyle.single,
+})
+
+// Custom borders
+TableBorders({
+  Border? top,
+  Border? left,
+  Border? bottom,
+  Border? right,
+  Border? insideH,
+  Border? insideV,
+})
 ```
 
 ---
 
-## DocxParagraphStyle
+## Enums
 
-Predefined paragraph styles.
+### Alignment
 
-```dart
-enum DocxParagraphStyle {
-  normal('Normal'),
-  heading1('Heading1'),
-  heading2('Heading2'),
-  heading3('Heading3'),
-  listBullet('ListBullet'),
-  listNumber('ListNumber');
-}
-```
+Text alignment options. Alias for `DocxAlignment`.
 
-| Value | Style ID | Description |
-|-------|----------|-------------|
-| `normal` | `Normal` | Standard body text |
-| `heading1` | `Heading1` | Primary heading (largest) |
-| `heading2` | `Heading2` | Secondary heading |
-| `heading3` | `Heading3` | Tertiary heading (smallest) |
-| `listBullet` | `ListBullet` | Bullet list item |
-| `listNumber` | `ListNumber` | Numbered list item |
+| Value | Description |
+|-------|-------------|
+| `left` | Left-aligned (default) |
+| `center` | Centered |
+| `right` | Right-aligned |
+| `justify` | Justified |
+
+### ParagraphStyle
+
+Paragraph styles. Alias for `DocxParagraphStyle`.
+
+| Value | Description |
+|-------|-------------|
+| `normal` | Standard body text |
+| `heading1` | Primary heading (largest) |
+| `heading2` | Secondary heading |
+| `heading3` | Tertiary heading |
+| `heading4` | Quaternary heading (smallest) |
+| `subtitle` | Document subtitle |
+| `caption` | Image/figure caption |
+| `quote` | Block quote |
+| `codeBlock` | Code block (monospace) |
+| `footnote` | Footnote text |
+| `listBullet` | Bullet list item |
+| `listDash` | Dash list item |
+| `listNumber` | Numbered list item |
+| `listNumberAlpha` | Alphabetic list item |
+| `listNumberRoman` | Roman numeral list item |
+
+### BorderStyle
+
+Border line styles. Alias for `DocxBorderStyle`.
+
+| Value | Description |
+|-------|-------------|
+| `single` | Single line |
+| `double` | Double line |
+| `dashed` | Dashed line |
+| `dotted` | Dotted line |
+| `thick` | Thick line |
+
+---
+
+## Type Aliases
+
+For cleaner, format-agnostic code:
+
+| Alias | Original Class |
+|-------|----------------|
+| `Document` | `DocxDocument` |
+| `Paragraph` | `DocxParagraph` |
+| `TextRun` | `DocxRun` |
+| `Alignment` | `DocxAlignment` |
+| `ParagraphStyle` | `DocxParagraphStyle` |
+| `Table` | `DocxTable` |
+| `TableRow` | `DocxTableRow` |
+| `TableCell` | `DocxTableCell` |
+| `TableBorders` | `DocxTableBorders` |
+| `Border` | `DocxBorder` |
+| `BorderStyle` | `DocxBorderStyle` |
 
 ---
 
 ## Usage Examples
 
-### Complete Document
+### Complete Document with Tables
 
 ```dart
 import 'dart:io';
 import 'package:docs_gee/docs_gee.dart';
 
 void main() {
-  final doc = DocxDocument(
-    title: 'Project Report',
-    author: 'Development Team',
-  );
+  final doc = Document(title: 'Report', author: 'Team');
 
-  // Title page
-  doc.addParagraph(DocxParagraph.heading(
-    'Project Report 2024',
-    level: 1,
-    alignment: DocxAlignment.center,
+  // Title
+  doc.addParagraph(Paragraph.heading('Quarterly Report', level: 1));
+  doc.addParagraph(Paragraph.subtitle('Q4 2024 Summary'));
+
+  // Content
+  doc.addParagraph(Paragraph.text(
+    'This report summarizes performance metrics.',
+    alignment: Alignment.justify,
   ));
 
-  doc.addParagraph(DocxParagraph.text(
-    'Prepared by: Development Team',
-    alignment: DocxAlignment.center,
+  // Table
+  doc.addTable(Table(
+    borders: const TableBorders.all(),
+    rows: [
+      TableRow(cells: [
+        TableCell.text('Metric', backgroundColor: 'E0E0E0'),
+        TableCell.text('Value', backgroundColor: 'E0E0E0'),
+      ]),
+      TableRow(cells: [
+        TableCell.text('Revenue'),
+        TableCell.text('\$1.2M', alignment: Alignment.right),
+      ]),
+      TableRow(cells: [
+        TableCell.text('Growth'),
+        TableCell.text('+15%', alignment: Alignment.right),
+      ]),
+    ],
   ));
 
-  // New section with page break
-  doc.addParagraph(DocxParagraph.heading(
-    'Executive Summary',
-    level: 1,
-    pageBreakBefore: true,
-  ));
+  // Lists
+  doc.addParagraph(Paragraph.heading('Key Points', level: 2));
+  doc.addParagraph(Paragraph.bulletItem('All targets met'));
+  doc.addParagraph(Paragraph.bulletItem('New markets opened'));
+  doc.addParagraph(Paragraph.bulletItem('Sub-item', indentLevel: 1));
 
-  doc.addParagraph(DocxParagraph.text(
-    'This report summarizes the key achievements and challenges '
-    'encountered during the project lifecycle.',
-    alignment: DocxAlignment.justify,
-  ));
-
-  // Key points as bullet list
-  doc.addParagraph(DocxParagraph.heading('Key Points', level: 2));
-  doc.addParagraph(DocxParagraph.bulletItem('Completed all milestones'));
-  doc.addParagraph(DocxParagraph.bulletItem('Under budget by 10%'));
-  doc.addParagraph(DocxParagraph.bulletItem('Delivered ahead of schedule'));
-
-  // Action items as numbered list
-  doc.addParagraph(DocxParagraph.heading('Next Steps', level: 2));
-  doc.addParagraph(DocxParagraph.numberedItem('Review final deliverables'));
-  doc.addParagraph(DocxParagraph.numberedItem('Schedule stakeholder meeting'));
-  doc.addParagraph(DocxParagraph.numberedItem('Prepare presentation'));
-
-  // Generate and save
-  final generator = DocxGenerator(
-    fontName: 'Calibri',
-    fontSize: 22, // 11pt
-  );
-
-  final bytes = generator.generate(doc);
-  File('report.docx').writeAsBytesSync(bytes);
-  print('Generated report.docx (${bytes.length} bytes)');
+  // Generate both formats
+  File('report.docx').writeAsBytesSync(DocxGenerator().generate(doc));
+  File('report.pdf').writeAsBytesSync(PdfGenerator().generate(doc));
 }
 ```
 
-### Flutter/Web Usage
+### Rich Text Formatting
 
 ```dart
-import 'package:docs_gee/docs_gee.dart';
+doc.addParagraph(Paragraph(
+  runs: [
+    TextRun('Normal, '),
+    TextRun('bold, ', bold: true),
+    TextRun('italic, ', italic: true),
+    TextRun('red text, ', color: 'FF0000'),
+    TextRun('highlighted', backgroundColor: 'FFFF00'),
+  ],
+));
+```
 
-class DocumentService {
-  Uint8List generateInvoice({
-    required String clientName,
-    required List<LineItem> items,
-  }) {
-    final doc = DocxDocument(title: 'Invoice');
+### Nested Lists
 
-    doc.addParagraph(DocxParagraph.heading('INVOICE', level: 1));
-    doc.addParagraph(DocxParagraph.text('Client: $clientName'));
-    doc.addParagraph(DocxParagraph.text(''));
+```dart
+doc.addParagraph(Paragraph.numberedItem('First item'));
+doc.addParagraph(Paragraph.alphaItem('Sub-item a', indentLevel: 1));
+doc.addParagraph(Paragraph.alphaItem('Sub-item b', indentLevel: 1));
+doc.addParagraph(Paragraph.romanItem('Detail i', indentLevel: 2));
+doc.addParagraph(Paragraph.numberedItem('Second item'));
+```
 
-    for (final item in items) {
-      doc.addParagraph(DocxParagraph(
-        runs: [
-          DocxRun(item.name, bold: true),
-          DocxRun(' - \$${item.price.toStringAsFixed(2)}'),
-        ],
-      ));
-    }
+### Semantic Styles
 
-    final generator = DocxGenerator();
-    return generator.generate(doc);
-  }
-}
+```dart
+doc.addParagraph(Paragraph.heading('Title', level: 1));
+doc.addParagraph(Paragraph.subtitle('Document subtitle'));
+doc.addParagraph(Paragraph.quote('A famous quote...'));
+doc.addParagraph(Paragraph.codeBlock('const x = 42;'));
+doc.addParagraph(Paragraph.caption('Figure 1: Chart'));
+doc.addParagraph(Paragraph.footnote('1. Reference note'));
 ```
 
 ---
 
-## Error Handling
+## Platform Notes
 
-The library uses standard Dart exceptions:
+### Emoji Support
 
-| Scenario | Exception |
-|----------|-----------|
-| Empty document | No exception (generates valid empty document) |
-| Invalid UTF-8 text | `FormatException` from dart:convert |
-| Memory issues | Standard Dart memory errors |
-
-**Best Practice:**
+Emoji characters work in **DOCX only** (Word handles them natively):
 
 ```dart
-try {
-  final bytes = generator.generate(doc);
+doc.addParagraph(Paragraph.text('Hello World! 👋🌍'));
+```
+
+PDF uses standard fonts without emoji support.
+
+### Web Usage
+
+```dart
+import 'dart:html' as html;
+
+void downloadDocument(Uint8List bytes, String filename) {
+  final blob = html.Blob([bytes]);
+  final url = html.Url.createObjectUrlFromBlob(blob);
+  html.AnchorElement(href: url)
+    ..setAttribute('download', filename)
+    ..click();
+  html.Url.revokeObjectUrl(url);
+}
+```
+
+### Mobile Usage
+
+```dart
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+
+Future<void> shareDocument(Uint8List bytes) async {
+  final dir = await getTemporaryDirectory();
+  final file = File('${dir.path}/document.docx');
   await file.writeAsBytes(bytes);
-} catch (e) {
-  print('Failed to generate document: $e');
+  await Share.shareXFiles([XFile(file.path)]);
 }
-```
-
----
-
-## Performance Tips
-
-1. **Reuse generator** - Create one `DocxGenerator` instance and reuse it for multiple documents with the same font settings.
-
-2. **Batch paragraphs** - Use `addParagraphs()` instead of multiple `addParagraph()` calls when adding many paragraphs at once.
-
-3. **Minimize runs** - Combine adjacent text with the same formatting into a single `DocxRun` instead of multiple runs.
-
-```dart
-// Less efficient
-runs: [
-  DocxRun('Hello '),
-  DocxRun('World'),
-]
-
-// More efficient
-runs: [
-  DocxRun('Hello World'),
-]
 ```
