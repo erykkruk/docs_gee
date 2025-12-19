@@ -7,34 +7,27 @@ import 'models/models.dart';
 /// Both [DocxGenerator] and [PdfGenerator] implement this interface,
 /// allowing them to be used interchangeably.
 ///
+/// This interface only contains platform-independent methods.
+/// For file I/O operations (not available on Web), use the concrete
+/// generator classes directly which provide [generateToFile] method.
+///
 /// Example:
 /// ```dart
 /// final doc = Document();
 /// doc.addParagraph(Paragraph.text('Hello World'));
 ///
-/// // Use any generator
+/// // Use any generator (works on all platforms including Web)
 /// DocumentGenerator generator = DocxGenerator();
-/// // or: DocumentGenerator generator = PdfGenerator();
-///
 /// final bytes = generator.generate(doc);
 ///
-/// // Or save directly to file
-/// await generator.generateToFile(doc, filePath: 'my_document.docx');
+/// // For file saving (not available on Web):
+/// // await DocxGenerator().generateToFile(doc, filePath: 'output.docx');
 /// ```
 abstract class DocumentGenerator {
   /// Generates the document and returns it as bytes.
+  ///
+  /// Works on all platforms including Web.
   Uint8List generate(DocxDocument document);
-
-  /// Generates the document and saves it to a file.
-  ///
-  /// [filePath] - optional path where to save the file.
-  /// If not provided, uses a default name (e.g., 'document.docx' or 'document.pdf').
-  ///
-  /// Returns the actual file path where the document was saved.
-  Future<String> generateToFile(DocxDocument document, {String? filePath});
-
-  /// Default file extension for this generator (e.g., '.docx', '.pdf').
-  String get defaultExtension;
 }
 
 // ============================================================

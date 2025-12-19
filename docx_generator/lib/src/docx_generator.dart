@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
@@ -39,22 +38,7 @@ class DocxGenerator implements DocumentGenerator {
   final int fontSize;
 
   /// Default file extension for DOCX files.
-  @override
-  String get defaultExtension => '.docx';
-
-  /// Generates a DOCX file and saves it to the specified path.
-  ///
-  /// [filePath] - optional path where to save the file.
-  /// If not provided, saves as 'document.docx' in the current directory.
-  ///
-  /// Returns the actual file path where the document was saved.
-  @override
-  Future<String> generateToFile(DocxDocument document, {String? filePath}) async {
-    final bytes = generate(document);
-    final path = filePath ?? 'document$defaultExtension';
-    await File(path).writeAsBytes(bytes);
-    return path;
-  }
+  static const String defaultExtension = '.docx';
 
   /// Generates a DOCX file from the given document.
   ///
