@@ -161,6 +161,38 @@ class StylesXml {
     buffer.writeln('    </w:rPr>');
     buffer.writeln('  </w:style>');
 
+    // Code Block (monospace font with background)
+    buffer.writeln('  <w:style w:type="paragraph" w:styleId="CodeBlock">');
+    buffer.writeln('    <w:name w:val="Code Block"/>');
+    buffer.writeln('    <w:basedOn w:val="Normal"/>');
+    buffer.writeln('    <w:qFormat/>');
+    buffer.writeln('    <w:pPr>');
+    buffer.writeln('      <w:spacing w:before="120" w:after="120"/>');
+    buffer.writeln('      <w:ind w:left="360" w:right="360"/>');
+    buffer.writeln('      <w:shd w:val="clear" w:fill="F5F5F5"/>');
+    buffer.writeln('    </w:pPr>');
+    buffer.writeln('    <w:rPr>');
+    buffer.writeln('      <w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"/>');
+    buffer.writeln('      <w:sz w:val="20"/>');
+    buffer.writeln('      <w:szCs w:val="20"/>');
+    buffer.writeln('    </w:rPr>');
+    buffer.writeln('  </w:style>');
+
+    // Footnote Text (smaller font)
+    buffer.writeln('  <w:style w:type="paragraph" w:styleId="Footnote">');
+    buffer.writeln('    <w:name w:val="Footnote Text"/>');
+    buffer.writeln('    <w:basedOn w:val="Normal"/>');
+    buffer.writeln('    <w:qFormat/>');
+    buffer.writeln('    <w:pPr>');
+    buffer.writeln('      <w:spacing w:after="60"/>');
+    buffer.writeln('    </w:pPr>');
+    buffer.writeln('    <w:rPr>');
+    buffer.writeln('      <w:sz w:val="18"/>');
+    buffer.writeln('      <w:szCs w:val="18"/>');
+    buffer.writeln('      <w:color w:val="666666"/>');
+    buffer.writeln('    </w:rPr>');
+    buffer.writeln('  </w:style>');
+
     // List Bullet (•)
     buffer.writeln('  <w:style w:type="paragraph" w:styleId="ListBullet">');
     buffer.writeln('    <w:name w:val="List Bullet"/>');

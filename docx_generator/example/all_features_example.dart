@@ -44,6 +44,16 @@ void main() {
     'This is a blockquote - ideal for citations and quotes. '
     'It appears indented and in italic style.',
   ));
+
+  doc.addParagraph(Paragraph.codeBlock(
+    'function hello() {\n'
+    '  console.log("Hello, World!");\n'
+    '}',
+  ));
+
+  doc.addParagraph(Paragraph.footnote(
+    '1. This is a footnote - smaller text for references and notes.',
+  ));
   doc.addParagraph(Paragraph.text(''));
 
   // ============================================
@@ -200,8 +210,8 @@ void main() {
     'This document demonstrates all the features available in docs_gee library:',
   ));
   doc.addParagraph(Paragraph.bulletItem('4 heading levels (H1-H4)'));
-  doc.addParagraph(
-      Paragraph.bulletItem('Semantic styles: subtitle, caption, quote'));
+  doc.addParagraph(Paragraph.bulletItem(
+      'Semantic styles: subtitle, caption, quote, code block, footnote'));
   doc.addParagraph(Paragraph.bulletItem(
       'Text formatting: bold, italic, underline, strikethrough'));
   doc.addParagraph(Paragraph.bulletItem('Text colors and background colors'));

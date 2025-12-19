@@ -8,7 +8,7 @@ A pure Dart library for generating **DOCX** and **PDF** documents. Works on all 
 - **Dual format** - Generate both DOCX and PDF from the same document model
 - **Cross-platform** - iOS, Android, Web, Desktop (macOS, Windows, Linux)
 - **Rich text formatting** - Bold, italic, underline, strikethrough, colors
-- **Paragraph styles** - Headings (H1-H4), subtitle, caption, quote
+- **Paragraph styles** - Headings (H1-H4), subtitle, caption, quote, code block, footnote
 - **Text alignment** - Left, center, right, justify
 - **Lists** - Bullet, dash, numbered (1,2,3), alphabetic (a,b,c), roman (I,II,III)
 - **Nested lists** - Up to 9 levels of nesting
@@ -106,6 +106,8 @@ doc.addParagraph(DocxParagraph.heading('Minor Section', level: 4));
 doc.addParagraph(DocxParagraph.subtitle('Document subtitle'));
 doc.addParagraph(DocxParagraph.caption('Figure 1: Example caption'));
 doc.addParagraph(DocxParagraph.quote('This is a blockquote...'));
+doc.addParagraph(DocxParagraph.codeBlock('const x = 42;\nconsole.log(x);'));
+doc.addParagraph(DocxParagraph.footnote('1. Reference note here.'));
 ```
 
 ### Text Colors
@@ -289,7 +291,7 @@ Tabela pokazuje aktualny stan implementacji funkcji dla DOCX i PDF.
 | word spacing | ❌ | ❌ |
 | text shadow | ❌ | ❌ |
 | all caps / small caps | ❌ | ❌ |
-| monospace | ❌ | ❌ |
+| **monospace (via code block)** | ✅ | ✅ |
 
 ### 2. Paragraph & Block structure
 
@@ -319,8 +321,8 @@ Tabela pokazuje aktualny stan implementacji funkcji dla DOCX i PDF.
 | **subtitle** | ✅ | ✅ |
 | **caption** | ✅ | ✅ |
 | **quote / blockquote** | ✅ | ✅ |
-| code block | ❌ | ❌ |
-| footnote text | ❌ | ❌ |
+| **code block** | ✅ | ✅ |
+| **footnote text** | ✅ | ✅ |
 | small print / disclaimer | ❌ | ❌ |
 
 ### 4. Lists

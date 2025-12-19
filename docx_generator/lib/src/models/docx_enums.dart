@@ -19,6 +19,8 @@ enum DocxParagraphStyle {
   subtitle('Subtitle'),
   caption('Caption'),
   quote('Quote'),
+  codeBlock('CodeBlock'),
+  footnote('Footnote'),
   listBullet('ListBullet'),
   listDash('ListDash'),
   listNumber('ListNumber'),

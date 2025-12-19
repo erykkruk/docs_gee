@@ -84,6 +84,30 @@ class DocxParagraph {
     );
   }
 
+  /// Creates a code block paragraph (monospace font).
+  factory DocxParagraph.codeBlock(
+    String text, {
+    DocxAlignment alignment = DocxAlignment.left,
+  }) {
+    return DocxParagraph(
+      runs: [DocxRun(text)],
+      style: DocxParagraphStyle.codeBlock,
+      alignment: alignment,
+    );
+  }
+
+  /// Creates a footnote text paragraph (smaller font).
+  factory DocxParagraph.footnote(
+    String text, {
+    DocxAlignment alignment = DocxAlignment.left,
+  }) {
+    return DocxParagraph(
+      runs: [DocxRun(text)],
+      style: DocxParagraphStyle.footnote,
+      alignment: alignment,
+    );
+  }
+
   /// Creates a bullet list item (•).
   factory DocxParagraph.bulletItem(
     String text, {

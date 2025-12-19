@@ -134,12 +134,16 @@ class _PdfBuilder {
     final boldItalicFontObj = _PdfObject(6, _buildBoldItalicFont());
     _objects.add(boldItalicFontObj);
 
-    // Object 7: Info dictionary (metadata)
-    final infoObj = _PdfObject(7, _buildInfo(document));
+    // Object 7: Monospace Font (Courier)
+    final monoFontObj = _PdfObject(7, _buildMonoFont());
+    _objects.add(monoFontObj);
+
+    // Object 8: Info dictionary (metadata)
+    final infoObj = _PdfObject(8, _buildInfo(document));
     _objects.add(infoObj);
 
     // Create page objects and content streams
-    int nextObjId = 8;
+    int nextObjId = 9;
     for (int i = 0; i < pages.length; i++) {
       final pageObjId = nextObjId++;
       final contentObjId = nextObjId++;
@@ -175,7 +179,7 @@ class _PdfBuilder {
     _writeBytes(buffer, '<<\n');
     _writeBytes(buffer, '/Size ${_objects.length + 1}\n');
     _writeBytes(buffer, '/Root 1 0 R\n');
-    _writeBytes(buffer, '/Info 7 0 R\n');
+    _writeBytes(buffer, '/Info 8 0 R\n');
     _writeBytes(buffer, '>>\n');
     _writeBytes(buffer, 'startxref\n');
     _writeBytes(buffer, '$xrefOffset\n');
@@ -197,9 +201,9 @@ class _PdfBuilder {
   String _buildPages(int pageCount) {
     final kids = StringBuffer();
     kids.write('/Kids [');
-    // Page objects start at ID 8, every other object (page, content, page, content...)
+    // Page objects start at ID 9, every other object (page, content, page, content...)
     for (int i = 0; i < pageCount; i++) {
-      final pageObjId = 8 + (i * 2);
+      final pageObjId = 9 + (i * 2);
       kids.write('$pageObjId 0 R ');
     }
     kids.write(']');
@@ -271,6 +275,15 @@ class _PdfBuilder {
     return '$fontName-BoldItalic';
   }
 
+  String _buildMonoFont() {
+    return '<<\n'
+        '/Type /Font\n'
+        '/Subtype /Type1\n'
+        '/BaseFont /Courier\n'
+        '/Encoding /WinAnsiEncoding\n'
+        '>>';
+  }
+
   String _buildInfo(DocxDocument document) {
     final buffer = StringBuffer();
     buffer.writeln('<<');
@@ -308,6 +321,7 @@ class _PdfBuilder {
         '    /F2 4 0 R\n'
         '    /F3 5 0 R\n'
         '    /F4 6 0 R\n'
+        '    /F5 7 0 R\n'
         '  >>\n'
         '>>\n'
         '>>';
@@ -377,6 +391,8 @@ class _PdfBuilder {
       DocxParagraphStyle.heading4 => (fontSize * 1.1).round(),
       DocxParagraphStyle.subtitle => (fontSize * 1.2).round(),
       DocxParagraphStyle.caption => (fontSize * 0.85).round(),
+      DocxParagraphStyle.codeBlock => (fontSize * 0.85).round(),
+      DocxParagraphStyle.footnote => (fontSize * 0.75).round(),
       DocxParagraphStyle.quote => fontSize,
       _ => fontSize,
     };
@@ -461,6 +477,12 @@ class _PdfBuilder {
       final isItalicStyle = paragraph.style == DocxParagraphStyle.quote ||
           paragraph.style == DocxParagraphStyle.subtitle;
 
+      // Determine if code block (monospace font)
+      final isCodeBlock = paragraph.style == DocxParagraphStyle.codeBlock;
+
+      // Determine if footnote (gray color)
+      final isFootnote = paragraph.style == DocxParagraphStyle.footnote;
+
       // Add prefix as regular text
       if (prefix.isNotEmpty) {
         segments.add(_TextSegment(prefix, '/F1'));
@@ -469,21 +491,34 @@ class _PdfBuilder {
       // Add runs with their formatting
       for (final run in paragraph.runs) {
         String fontRef;
-        final isBold = run.bold || isHeading;
-        final isItalic = run.italic || isItalicStyle;
-        if (isBold && isItalic) {
-          fontRef = '/F4';
-        } else if (isBold) {
-          fontRef = '/F2';
-        } else if (isItalic) {
-          fontRef = '/F3';
+        String? textColor = run.color;
+
+        // Code blocks use monospace font
+        if (isCodeBlock) {
+          fontRef = '/F5'; // Courier
         } else {
-          fontRef = '/F1';
+          final isBold = run.bold || isHeading;
+          final isItalic = run.italic || isItalicStyle;
+          if (isBold && isItalic) {
+            fontRef = '/F4';
+          } else if (isBold) {
+            fontRef = '/F2';
+          } else if (isItalic) {
+            fontRef = '/F3';
+          } else {
+            fontRef = '/F1';
+          }
         }
+
+        // Footnotes use gray color if no color specified
+        if (isFootnote && textColor == null) {
+          textColor = '666666';
+        }
+
         segments.add(_TextSegment(
           run.text,
           fontRef,
-          color: run.color,
+          color: textColor,
           underline: run.underline,
           strikethrough: run.strikethrough,
         ));
