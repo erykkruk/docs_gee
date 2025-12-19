@@ -12,6 +12,8 @@ A pure Dart library for generating **DOCX** and **PDF** documents. Works on all 
 - **Text alignment** - Left, center, right, justify
 - **Lists** - Bullet, dash, numbered (1,2,3), alphabetic (a,b,c), roman (I,II,III)
 - **Nested lists** - Up to 9 levels of nesting
+- **Tables** - Rows, cells, borders, cell background colors
+- **Emoji support** - Works in DOCX (Word handles natively)
 - **Page breaks** - Control document pagination
 - **Text colors** - Foreground and background/highlight colors
 - **Configurable fonts** - Set default font and size
@@ -169,6 +171,36 @@ doc.addParagraph(DocxParagraph.bulletItem('Top level'));
 doc.addParagraph(DocxParagraph.bulletItem('Nested item', indentLevel: 1));
 doc.addParagraph(DocxParagraph.bulletItem('Deep nested', indentLevel: 2));
 doc.addParagraph(DocxParagraph.bulletItem('Back to top level'));
+```
+
+### Tables
+
+```dart
+doc.addTable(DocxTable(
+  borders: const DocxTableBorders.all(),
+  rows: [
+    DocxTableRow(cells: [
+      DocxTableCell.text('Name', backgroundColor: 'E0E0E0'),
+      DocxTableCell.text('Age', backgroundColor: 'E0E0E0'),
+    ]),
+    DocxTableRow(cells: [
+      DocxTableCell.text('Alice'),
+      DocxTableCell.text('30', alignment: DocxAlignment.right),
+    ]),
+    DocxTableRow(cells: [
+      DocxTableCell.text('Bob'),
+      DocxTableCell.text('25', alignment: DocxAlignment.right),
+    ]),
+  ],
+));
+```
+
+### Emoji (DOCX only)
+
+```dart
+// Emoji works in DOCX - Word handles it natively
+doc.addParagraph(DocxParagraph.text('Hello World! 👋🌍'));
+doc.addParagraph(DocxParagraph.text('Status: ✅ Complete'));
 ```
 
 ### Page Breaks
@@ -343,18 +375,18 @@ Tabela pokazuje aktualny stan implementacji funkcji dla DOCX i PDF.
 
 | Funkcja | DOCX | PDF |
 |---------|:----:|:---:|
-| table | ❌ | ❌ |
-| row | ❌ | ❌ |
-| cell | ❌ | ❌ |
+| **table** | ✅ | ✅ |
+| **row** | ✅ | ✅ |
+| **cell** | ✅ | ✅ |
 | rowspan | ❌ | ❌ |
 | colspan | ❌ | ❌ |
-| table width | ❌ | ❌ |
-| column widths | ❌ | ❌ |
-| cell padding | ❌ | ❌ |
-| cell alignment | ❌ | ❌ |
+| table width (auto) | ✅ | ✅ |
+| column widths (equal) | ✅ | ✅ |
+| cell padding | ✅ | ✅ |
+| **cell alignment** | ✅ | ✅ |
 | vertical alignment | ❌ | ❌ |
-| borders | ❌ | ❌ |
-| background color per cell | ❌ | ❌ |
+| **borders** | ✅ | ✅ |
+| **background color per cell** | ✅ | ✅ |
 | header row | ❌ | ❌ |
 | repeat header row | ❌ | ❌ |
 
@@ -433,7 +465,7 @@ Tabela pokazuje aktualny stan implementacji funkcji dla DOCX i PDF.
 | Funkcja | DOCX | PDF |
 |---------|:----:|:---:|
 | UTF-8 support | ✅ | ⚠️ |
-| emoji support | ❌ | ❌ |
+| **emoji support** | ✅ | ❌ |
 | RTL languages | ❌ | ❌ |
 | hyphenation | ❌ | ❌ |
 | widows & orphans control | ❌ | ❌ |

@@ -332,30 +332,40 @@ class _PdfBuilder {
     return '<<\n/Length ${bytes.length}\n>>\nstream\n$content\nendstream';
   }
 
-  List<List<DocxParagraph>> _paginateDocument(DocxDocument document) {
-    final pages = <List<DocxParagraph>>[];
-    var currentPage = <DocxParagraph>[];
+  List<List<Object>> _paginateDocument(DocxDocument document) {
+    final pages = <List<Object>>[];
+    var currentPage = <Object>[];
     var currentY = _contentHeight;
 
-    for (final paragraph in document.paragraphs) {
+    for (final item in document.content) {
+      double itemHeight;
+      bool hasPageBreak = false;
+
+      if (item is DocxParagraph) {
+        itemHeight = _estimateParagraphHeight(item);
+        hasPageBreak = item.pageBreakBefore;
+      } else if (item is DocxTable) {
+        itemHeight = _estimateTableHeight(item);
+      } else {
+        continue;
+      }
+
       // Check for explicit page break
-      if (paragraph.pageBreakBefore && currentPage.isNotEmpty) {
+      if (hasPageBreak && currentPage.isNotEmpty) {
         pages.add(currentPage);
-        currentPage = <DocxParagraph>[];
+        currentPage = <Object>[];
         currentY = _contentHeight;
       }
 
-      final paragraphHeight = _estimateParagraphHeight(paragraph);
-
-      // Check if paragraph fits on current page
-      if (currentY - paragraphHeight < 0 && currentPage.isNotEmpty) {
+      // Check if item fits on current page
+      if (currentY - itemHeight < 0 && currentPage.isNotEmpty) {
         pages.add(currentPage);
-        currentPage = <DocxParagraph>[];
+        currentPage = <Object>[];
         currentY = _contentHeight;
       }
 
-      currentPage.add(paragraph);
-      currentY -= paragraphHeight;
+      currentPage.add(item);
+      currentY -= itemHeight;
     }
 
     if (currentPage.isNotEmpty) {
@@ -368,6 +378,28 @@ class _PdfBuilder {
     }
 
     return pages;
+  }
+
+  /// Estimates the height of a table for pagination.
+  double _estimateTableHeight(DocxTable table) {
+    double totalHeight = 0;
+    for (final row in table.rows) {
+      totalHeight += _estimateRowHeight(row);
+    }
+    return totalHeight + 10; // Add some padding
+  }
+
+  /// Estimates the height of a table row.
+  double _estimateRowHeight(DocxTableRow row) {
+    double maxHeight = fontSize * 1.5; // Minimum row height
+    for (final cell in row.cells) {
+      double cellHeight = 0;
+      for (final paragraph in cell.paragraphs) {
+        cellHeight += _estimateParagraphHeight(paragraph);
+      }
+      if (cellHeight > maxHeight) maxHeight = cellHeight;
+    }
+    return maxHeight + 8; // Add cell padding
   }
 
   double _estimateParagraphHeight(DocxParagraph paragraph) {
@@ -398,225 +430,508 @@ class _PdfBuilder {
     };
   }
 
-  String _buildContentStream(List<DocxParagraph> paragraphs) {
+  String _buildContentStream(List<Object> contentItems) {
     final buffer = StringBuffer();
-
-    buffer.writeln('BT'); // Begin text
-
     var currentY = pageHeight - marginTop;
 
     // Track counters for each list type and level
-    // Key: "styleType_level", Value: current counter
     final listCounters = <String, int>{};
     DocxParagraphStyle? lastListStyle;
     int lastIndentLevel = -1;
 
-    for (final paragraph in paragraphs) {
-      final size = _getFontSizeForStyle(paragraph.style);
-      final lineHeight = size * 1.4;
-
-      // Handle list prefixes and indentation
-      String prefix = '';
-      // Calculate indent offset in points (18 points per level, ~0.25 inch)
-      final indentOffset = paragraph.indentLevel * 18.0;
-
-      if (paragraph.style.isList) {
-        // Reset counters if switching list type at same level
-        if (lastListStyle != paragraph.style ||
-            paragraph.indentLevel < lastIndentLevel) {
-          // Reset all counters at this level and deeper
-          listCounters.removeWhere((key, _) {
-            final parts = key.split('_');
-            if (parts.length == 2) {
-              final level = int.tryParse(parts[1]) ?? 0;
-              return level >= paragraph.indentLevel;
-            }
-            return false;
-          });
-        }
-
-        final counterKey = '${paragraph.style.name}_${paragraph.indentLevel}';
-
-        if (paragraph.style == DocxParagraphStyle.listBullet) {
-          prefix = '  \x95 '; // Bullet character
-        } else if (paragraph.style == DocxParagraphStyle.listDash) {
-          prefix = '  - '; // Dash character
-        } else if (paragraph.style == DocxParagraphStyle.listNumber) {
-          final count = (listCounters[counterKey] ?? 0) + 1;
-          listCounters[counterKey] = count;
-          prefix = '  $count. ';
-        } else if (paragraph.style == DocxParagraphStyle.listNumberAlpha) {
-          final count = (listCounters[counterKey] ?? 0) + 1;
-          listCounters[counterKey] = count;
-          prefix = '  ${_toAlpha(count)}) ';
-        } else if (paragraph.style == DocxParagraphStyle.listNumberRoman) {
-          final count = (listCounters[counterKey] ?? 0) + 1;
-          listCounters[counterKey] = count;
-          prefix = '  ${_toRoman(count)}. ';
-        }
-
-        lastListStyle = paragraph.style;
-        lastIndentLevel = paragraph.indentLevel;
-      } else {
-        // Reset all list counters when not in a list
-        listCounters.clear();
-        lastListStyle = null;
-        lastIndentLevel = -1;
-      }
-
-      // Combine all runs into text segments with formatting info
-      final segments = <_TextSegment>[];
-
-      // Determine if heading (bold by default)
-      final isHeading = paragraph.style == DocxParagraphStyle.heading1 ||
-          paragraph.style == DocxParagraphStyle.heading2 ||
-          paragraph.style == DocxParagraphStyle.heading3 ||
-          paragraph.style == DocxParagraphStyle.heading4;
-
-      // Determine if italic style (quote, subtitle)
-      final isItalicStyle = paragraph.style == DocxParagraphStyle.quote ||
-          paragraph.style == DocxParagraphStyle.subtitle;
-
-      // Determine if code block (monospace font)
-      final isCodeBlock = paragraph.style == DocxParagraphStyle.codeBlock;
-
-      // Determine if footnote (gray color)
-      final isFootnote = paragraph.style == DocxParagraphStyle.footnote;
-
-      // Add prefix as regular text
-      if (prefix.isNotEmpty) {
-        segments.add(_TextSegment(prefix, '/F1'));
-      }
-
-      // Add runs with their formatting
-      for (final run in paragraph.runs) {
-        String fontRef;
-        String? textColor = run.color;
-
-        // Code blocks use monospace font
-        if (isCodeBlock) {
-          fontRef = '/F5'; // Courier
+    for (final item in contentItems) {
+      if (item is DocxParagraph) {
+        currentY = _renderParagraph(
+          buffer,
+          item,
+          currentY,
+          listCounters,
+          lastListStyle,
+          lastIndentLevel,
+        );
+        if (item.style.isList) {
+          lastListStyle = item.style;
+          lastIndentLevel = item.indentLevel;
         } else {
-          final isBold = run.bold || isHeading;
-          final isItalic = run.italic || isItalicStyle;
-          if (isBold && isItalic) {
-            fontRef = '/F4';
-          } else if (isBold) {
-            fontRef = '/F2';
-          } else if (isItalic) {
-            fontRef = '/F3';
-          } else {
-            fontRef = '/F1';
-          }
+          listCounters.clear();
+          lastListStyle = null;
+          lastIndentLevel = -1;
         }
-
-        // Footnotes use gray color if no color specified
-        if (isFootnote && textColor == null) {
-          textColor = '666666';
-        }
-
-        segments.add(_TextSegment(
-          run.text,
-          fontRef,
-          color: textColor,
-          underline: run.underline,
-          strikethrough: run.strikethrough,
-        ));
+      } else if (item is DocxTable) {
+        currentY = _renderTable(buffer, item, currentY);
       }
-
-      // Wrap text into lines
-      final lines = _wrapTextSegments(segments, size);
-
-      // Render each line
-      for (int i = 0; i < lines.length; i++) {
-        final line = lines[i];
-        final lineText = line.map((s) => s.text).join();
-        final lineWidth = _estimateTextWidth(lineText, size);
-
-        // Calculate X position based on alignment and indent
-        double xPos;
-        switch (paragraph.alignment) {
-          case DocxAlignment.center:
-            xPos = marginLeft +
-                indentOffset +
-                (_contentWidth - indentOffset - lineWidth) / 2;
-          case DocxAlignment.right:
-            xPos = marginLeft + _contentWidth - lineWidth;
-          case DocxAlignment.justify:
-          case DocxAlignment.left:
-            xPos = marginLeft + indentOffset;
-        }
-
-        // Move to position for this line
-        buffer.writeln('1 0 0 1 $xPos $currentY Tm');
-
-        // Track current x position for underline/strikethrough
-        var segmentX = xPos;
-
-        // Render segments in this line
-        for (final segment in line) {
-          // Set color if specified
-          if (segment.color != null) {
-            final rgb = _hexToRgb(segment.color!);
-            buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} rg');
-          } else {
-            buffer.writeln('0 0 0 rg'); // Default black
-          }
-
-          buffer.writeln('${segment.fontRef} $size Tf');
-          buffer.writeln('(${_escapePdfString(segment.text)}) Tj');
-
-          // Calculate segment width for decorations
-          final segmentWidth = _estimateTextWidth(segment.text, size);
-
-          // Store decoration info for later (will be drawn outside BT/ET)
-          if (segment.underline || segment.strikethrough) {
-            // We need to end text block, draw line, then continue
-            buffer.writeln('ET');
-            buffer.writeln('q'); // Save graphics state
-
-            // Set line color
-            if (segment.color != null) {
-              final rgb = _hexToRgb(segment.color!);
-              buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} RG');
-            } else {
-              buffer.writeln('0 0 0 RG'); // Default black stroke
-            }
-
-            buffer.writeln('0.5 w'); // Line width
-
-            if (segment.underline) {
-              final underlineY = currentY - 2;
-              buffer.writeln('$segmentX $underlineY m');
-              buffer.writeln('${segmentX + segmentWidth} $underlineY l');
-              buffer.writeln('S');
-            }
-
-            if (segment.strikethrough) {
-              final strikeY = currentY + size * 0.3;
-              buffer.writeln('$segmentX $strikeY m');
-              buffer.writeln('${segmentX + segmentWidth} $strikeY l');
-              buffer.writeln('S');
-            }
-
-            buffer.writeln('Q'); // Restore graphics state
-            buffer.writeln('BT'); // Begin text again
-            buffer.writeln('1 0 0 1 ${segmentX + segmentWidth} $currentY Tm');
-          }
-
-          segmentX += segmentWidth;
-        }
-
-        currentY -= lineHeight;
-      }
-
-      // Add paragraph spacing
-      currentY -= size * 0.4;
     }
 
-    buffer.writeln('ET'); // End text
-
     return buffer.toString();
+  }
+
+  /// Renders a paragraph and returns the new Y position.
+  double _renderParagraph(
+    StringBuffer buffer,
+    DocxParagraph paragraph,
+    double startY,
+    Map<String, int> listCounters,
+    DocxParagraphStyle? lastListStyle,
+    int lastIndentLevel,
+  ) {
+    buffer.writeln('BT'); // Begin text
+
+    var currentY = startY;
+    final size = _getFontSizeForStyle(paragraph.style);
+    final lineHeight = size * 1.4;
+
+    // Handle list prefixes and indentation
+    String prefix = '';
+    final indentOffset = paragraph.indentLevel * 18.0;
+
+    if (paragraph.style.isList) {
+      // Reset counters if switching list type at same level
+      if (lastListStyle != paragraph.style ||
+          paragraph.indentLevel < lastIndentLevel) {
+        listCounters.removeWhere((key, _) {
+          final parts = key.split('_');
+          if (parts.length == 2) {
+            final level = int.tryParse(parts[1]) ?? 0;
+            return level >= paragraph.indentLevel;
+          }
+          return false;
+        });
+      }
+
+      final counterKey = '${paragraph.style.name}_${paragraph.indentLevel}';
+
+      if (paragraph.style == DocxParagraphStyle.listBullet) {
+        prefix = '  \x95 ';
+      } else if (paragraph.style == DocxParagraphStyle.listDash) {
+        prefix = '  - ';
+      } else if (paragraph.style == DocxParagraphStyle.listNumber) {
+        final count = (listCounters[counterKey] ?? 0) + 1;
+        listCounters[counterKey] = count;
+        prefix = '  $count. ';
+      } else if (paragraph.style == DocxParagraphStyle.listNumberAlpha) {
+        final count = (listCounters[counterKey] ?? 0) + 1;
+        listCounters[counterKey] = count;
+        prefix = '  ${_toAlpha(count)}) ';
+      } else if (paragraph.style == DocxParagraphStyle.listNumberRoman) {
+        final count = (listCounters[counterKey] ?? 0) + 1;
+        listCounters[counterKey] = count;
+        prefix = '  ${_toRoman(count)}. ';
+      }
+    }
+
+    // Combine all runs into text segments
+    final segments = <_TextSegment>[];
+    final isHeading = paragraph.style == DocxParagraphStyle.heading1 ||
+        paragraph.style == DocxParagraphStyle.heading2 ||
+        paragraph.style == DocxParagraphStyle.heading3 ||
+        paragraph.style == DocxParagraphStyle.heading4;
+    final isItalicStyle = paragraph.style == DocxParagraphStyle.quote ||
+        paragraph.style == DocxParagraphStyle.subtitle;
+    final isCodeBlock = paragraph.style == DocxParagraphStyle.codeBlock;
+    final isFootnote = paragraph.style == DocxParagraphStyle.footnote;
+
+    if (prefix.isNotEmpty) {
+      segments.add(_TextSegment(prefix, '/F1'));
+    }
+
+    for (final run in paragraph.runs) {
+      String fontRef;
+      String? textColor = run.color;
+
+      if (isCodeBlock) {
+        fontRef = '/F5';
+      } else {
+        final isBold = run.bold || isHeading;
+        final isItalic = run.italic || isItalicStyle;
+        if (isBold && isItalic) {
+          fontRef = '/F4';
+        } else if (isBold) {
+          fontRef = '/F2';
+        } else if (isItalic) {
+          fontRef = '/F3';
+        } else {
+          fontRef = '/F1';
+        }
+      }
+
+      if (isFootnote && textColor == null) {
+        textColor = '666666';
+      }
+
+      segments.add(_TextSegment(
+        run.text,
+        fontRef,
+        color: textColor,
+        underline: run.underline,
+        strikethrough: run.strikethrough,
+      ));
+    }
+
+    final lines = _wrapTextSegments(segments, size);
+
+    for (int i = 0; i < lines.length; i++) {
+      final line = lines[i];
+      final lineText = line.map((s) => s.text).join();
+      final lineWidth = _estimateTextWidth(lineText, size);
+
+      double xPos;
+      switch (paragraph.alignment) {
+        case DocxAlignment.center:
+          xPos = marginLeft +
+              indentOffset +
+              (_contentWidth - indentOffset - lineWidth) / 2;
+        case DocxAlignment.right:
+          xPos = marginLeft + _contentWidth - lineWidth;
+        case DocxAlignment.justify:
+        case DocxAlignment.left:
+          xPos = marginLeft + indentOffset;
+      }
+
+      buffer.writeln('1 0 0 1 $xPos $currentY Tm');
+      var segmentX = xPos;
+
+      for (final segment in line) {
+        if (segment.color != null) {
+          final rgb = _hexToRgb(segment.color!);
+          buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} rg');
+        } else {
+          buffer.writeln('0 0 0 rg');
+        }
+
+        buffer.writeln('${segment.fontRef} $size Tf');
+        buffer.writeln('(${_escapePdfString(segment.text)}) Tj');
+
+        final segmentWidth = _estimateTextWidth(segment.text, size);
+
+        if (segment.underline || segment.strikethrough) {
+          buffer.writeln('ET');
+          buffer.writeln('q');
+
+          if (segment.color != null) {
+            final rgb = _hexToRgb(segment.color!);
+            buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} RG');
+          } else {
+            buffer.writeln('0 0 0 RG');
+          }
+
+          buffer.writeln('0.5 w');
+
+          if (segment.underline) {
+            final underlineY = currentY - 2;
+            buffer.writeln('$segmentX $underlineY m');
+            buffer.writeln('${segmentX + segmentWidth} $underlineY l');
+            buffer.writeln('S');
+          }
+
+          if (segment.strikethrough) {
+            final strikeY = currentY + size * 0.3;
+            buffer.writeln('$segmentX $strikeY m');
+            buffer.writeln('${segmentX + segmentWidth} $strikeY l');
+            buffer.writeln('S');
+          }
+
+          buffer.writeln('Q');
+          buffer.writeln('BT');
+          buffer.writeln('1 0 0 1 ${segmentX + segmentWidth} $currentY Tm');
+        }
+
+        segmentX += segmentWidth;
+      }
+
+      currentY -= lineHeight;
+    }
+
+    buffer.writeln('ET');
+    currentY -= size * 0.4;
+
+    return currentY;
+  }
+
+  /// Renders a table and returns the new Y position.
+  double _renderTable(StringBuffer buffer, DocxTable table, double startY) {
+    if (table.rows.isEmpty || table.columnCount == 0) return startY;
+
+    var currentY = startY;
+    final tableWidth = _contentWidth;
+    final columnWidth = tableWidth / table.columnCount;
+
+    for (int rowIndex = 0; rowIndex < table.rows.length; rowIndex++) {
+      final row = table.rows[rowIndex];
+      final rowHeight = _estimateRowHeight(row);
+      var currentX = marginLeft;
+
+      for (int colIndex = 0; colIndex < row.cells.length; colIndex++) {
+        final cell = row.cells[colIndex];
+
+        // Draw cell background
+        if (cell.backgroundColor != null) {
+          final rgb = _hexToRgb(cell.backgroundColor!);
+          buffer.writeln('q');
+          buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} rg');
+          buffer.writeln(
+              '$currentX ${currentY - rowHeight} $columnWidth $rowHeight re');
+          buffer.writeln('f');
+          buffer.writeln('Q');
+        }
+
+        // Draw cell borders
+        _drawCellBorders(
+          buffer,
+          table.borders,
+          currentX,
+          currentY,
+          columnWidth,
+          rowHeight,
+          isFirstRow: rowIndex == 0,
+          isLastRow: rowIndex == table.rows.length - 1,
+          isFirstCol: colIndex == 0,
+          isLastCol: colIndex == row.cells.length - 1,
+        );
+
+        // Render cell content
+        const cellPadding = 4.0;
+        var cellY = currentY - cellPadding;
+
+        for (final paragraph in cell.paragraphs) {
+          cellY = _renderCellParagraph(
+            buffer,
+            paragraph,
+            cellY,
+            currentX + cellPadding,
+            columnWidth - (cellPadding * 2),
+          );
+        }
+
+        currentX += columnWidth;
+      }
+
+      currentY -= rowHeight;
+    }
+
+    return currentY - 10; // Add spacing after table
+  }
+
+  /// Draws cell borders.
+  void _drawCellBorders(
+    StringBuffer buffer,
+    DocxTableBorders borders,
+    double x,
+    double y,
+    double width,
+    double height, {
+    required bool isFirstRow,
+    required bool isLastRow,
+    required bool isFirstCol,
+    required bool isLastCol,
+  }) {
+    buffer.writeln('q');
+    buffer.writeln('0 0 0 RG');
+    buffer.writeln('0.5 w');
+
+    // Top border
+    if (isFirstRow && borders.top != null) {
+      buffer.writeln('$x $y m');
+      buffer.writeln('${x + width} $y l');
+      buffer.writeln('S');
+    } else if (!isFirstRow && borders.insideH != null) {
+      buffer.writeln('$x $y m');
+      buffer.writeln('${x + width} $y l');
+      buffer.writeln('S');
+    }
+
+    // Bottom border
+    if (isLastRow && borders.bottom != null) {
+      final bottomY = y - height;
+      buffer.writeln('$x $bottomY m');
+      buffer.writeln('${x + width} $bottomY l');
+      buffer.writeln('S');
+    }
+
+    // Left border
+    if (isFirstCol && borders.left != null) {
+      buffer.writeln('$x $y m');
+      buffer.writeln('$x ${y - height} l');
+      buffer.writeln('S');
+    } else if (!isFirstCol && borders.insideV != null) {
+      buffer.writeln('$x $y m');
+      buffer.writeln('$x ${y - height} l');
+      buffer.writeln('S');
+    }
+
+    // Right border
+    if (isLastCol && borders.right != null) {
+      final rightX = x + width;
+      buffer.writeln('$rightX $y m');
+      buffer.writeln('$rightX ${y - height} l');
+      buffer.writeln('S');
+    }
+
+    buffer.writeln('Q');
+  }
+
+  /// Renders a paragraph inside a cell and returns the new Y position.
+  double _renderCellParagraph(
+    StringBuffer buffer,
+    DocxParagraph paragraph,
+    double startY,
+    double cellX,
+    double cellWidth,
+  ) {
+    buffer.writeln('BT');
+
+    var currentY = startY;
+    final size = _getFontSizeForStyle(paragraph.style);
+    final lineHeight = size * 1.4;
+
+    final segments = <_TextSegment>[];
+    final isHeading = paragraph.style == DocxParagraphStyle.heading1 ||
+        paragraph.style == DocxParagraphStyle.heading2 ||
+        paragraph.style == DocxParagraphStyle.heading3 ||
+        paragraph.style == DocxParagraphStyle.heading4;
+    final isItalicStyle = paragraph.style == DocxParagraphStyle.quote ||
+        paragraph.style == DocxParagraphStyle.subtitle;
+    final isCodeBlock = paragraph.style == DocxParagraphStyle.codeBlock;
+    final isFootnote = paragraph.style == DocxParagraphStyle.footnote;
+
+    for (final run in paragraph.runs) {
+      String fontRef;
+      String? textColor = run.color;
+
+      if (isCodeBlock) {
+        fontRef = '/F5';
+      } else {
+        final isBold = run.bold || isHeading;
+        final isItalic = run.italic || isItalicStyle;
+        if (isBold && isItalic) {
+          fontRef = '/F4';
+        } else if (isBold) {
+          fontRef = '/F2';
+        } else if (isItalic) {
+          fontRef = '/F3';
+        } else {
+          fontRef = '/F1';
+        }
+      }
+
+      if (isFootnote && textColor == null) {
+        textColor = '666666';
+      }
+
+      segments.add(_TextSegment(
+        run.text,
+        fontRef,
+        color: textColor,
+        underline: run.underline,
+        strikethrough: run.strikethrough,
+      ));
+    }
+
+    final lines = _wrapTextSegmentsForWidth(segments, size, cellWidth);
+
+    for (final line in lines) {
+      final lineText = line.map((s) => s.text).join();
+      final lineWidth = _estimateTextWidth(lineText, size);
+
+      double xPos;
+      switch (paragraph.alignment) {
+        case DocxAlignment.center:
+          xPos = cellX + (cellWidth - lineWidth) / 2;
+        case DocxAlignment.right:
+          xPos = cellX + cellWidth - lineWidth;
+        case DocxAlignment.justify:
+        case DocxAlignment.left:
+          xPos = cellX;
+      }
+
+      buffer.writeln('1 0 0 1 $xPos $currentY Tm');
+
+      for (final segment in line) {
+        if (segment.color != null) {
+          final rgb = _hexToRgb(segment.color!);
+          buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} rg');
+        } else {
+          buffer.writeln('0 0 0 rg');
+        }
+
+        buffer.writeln('${segment.fontRef} $size Tf');
+        buffer.writeln('(${_escapePdfString(segment.text)}) Tj');
+      }
+
+      currentY -= lineHeight;
+    }
+
+    buffer.writeln('ET');
+    return currentY;
+  }
+
+  /// Wraps text segments for a specific width (used in table cells).
+  List<List<_TextSegment>> _wrapTextSegmentsForWidth(
+      List<_TextSegment> segments, int size, double maxWidth) {
+    final lines = <List<_TextSegment>>[];
+    var currentLine = <_TextSegment>[];
+    var currentLineWidth = 0.0;
+    final spaceWidth = _estimateTextWidth(' ', size);
+
+    for (final segment in segments) {
+      final words = segment.text.split(' ');
+
+      for (int i = 0; i < words.length; i++) {
+        final word = words[i];
+        if (word.isEmpty) continue;
+
+        final wordWidth = _estimateTextWidth(word, size);
+        final needsSpace = currentLine.isNotEmpty &&
+            (currentLine.last.text.isNotEmpty &&
+                !currentLine.last.text.endsWith(' '));
+        final additionalWidth = needsSpace ? spaceWidth + wordWidth : wordWidth;
+
+        if (currentLineWidth + additionalWidth > maxWidth &&
+            currentLine.isNotEmpty) {
+          lines.add(currentLine);
+          currentLine = <_TextSegment>[];
+          currentLineWidth = 0.0;
+
+          currentLine.add(_TextSegment(
+            word,
+            segment.fontRef,
+            color: segment.color,
+            underline: segment.underline,
+            strikethrough: segment.strikethrough,
+          ));
+          currentLineWidth = wordWidth;
+        } else {
+          if (needsSpace) {
+            currentLine.add(_TextSegment(
+              ' $word',
+              segment.fontRef,
+              color: segment.color,
+              underline: segment.underline,
+              strikethrough: segment.strikethrough,
+            ));
+            currentLineWidth += spaceWidth + wordWidth;
+          } else {
+            currentLine.add(_TextSegment(
+              word,
+              segment.fontRef,
+              color: segment.color,
+              underline: segment.underline,
+              strikethrough: segment.strikethrough,
+            ));
+            currentLineWidth += wordWidth;
+          }
+        }
+      }
+    }
+
+    if (currentLine.isNotEmpty) {
+      lines.add(currentLine);
+    }
+
+    if (lines.isEmpty) {
+      lines.add([_TextSegment('', '/F1')]);
+    }
+
+    return lines;
   }
 
   /// Converts hex color string to RGB values (0-1 range).

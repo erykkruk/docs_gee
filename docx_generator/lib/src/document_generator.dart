@@ -48,3 +48,21 @@ typedef Alignment = DocxAlignment;
 
 /// Alias for [DocxParagraphStyle] - use for format-agnostic code.
 typedef ParagraphStyle = DocxParagraphStyle;
+
+/// Alias for [DocxTable] - use for format-agnostic code.
+typedef Table = DocxTable;
+
+/// Alias for [DocxTableRow] - use for format-agnostic code.
+typedef TableRow = DocxTableRow;
+
+/// Alias for [DocxTableCell] - use for format-agnostic code.
+typedef TableCell = DocxTableCell;
+
+/// Alias for [DocxTableBorders] - use for format-agnostic code.
+typedef TableBorders = DocxTableBorders;
+
+/// Alias for [DocxBorder] - use for format-agnostic code.
+typedef Border = DocxBorder;
+
+/// Alias for [DocxBorderStyle] - use for format-agnostic code.
+typedef BorderStyle = DocxBorderStyle;

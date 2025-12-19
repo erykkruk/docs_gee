@@ -202,6 +202,78 @@ void main() {
   ));
 
   // ============================================
+  // TABLES
+  // ============================================
+  doc.addParagraph(
+      Paragraph.heading('10. Tables', level: 1, pageBreakBefore: true));
+
+  doc.addParagraph(Paragraph.heading('Simple Table:', level: 3));
+  doc.addTable(Table(
+    rows: [
+      TableRow(cells: [
+        TableCell.text('Name', backgroundColor: 'E0E0E0'),
+        TableCell.text('Age', backgroundColor: 'E0E0E0'),
+        TableCell.text('City', backgroundColor: 'E0E0E0'),
+      ]),
+      TableRow(cells: [
+        TableCell.text('Alice'),
+        TableCell.text('30'),
+        TableCell.text('New York'),
+      ]),
+      TableRow(cells: [
+        TableCell.text('Bob'),
+        TableCell.text('25'),
+        TableCell.text('Los Angeles'),
+      ]),
+      TableRow(cells: [
+        TableCell.text('Charlie'),
+        TableCell.text('35'),
+        TableCell.text('Chicago'),
+      ]),
+    ],
+  ));
+
+  doc.addParagraph(Paragraph.text(''));
+  doc.addParagraph(Paragraph.heading('Table with Colored Cells:', level: 3));
+  doc.addTable(Table(
+    borders: const TableBorders.all(),
+    rows: [
+      TableRow(cells: [
+        TableCell.text('Status', backgroundColor: '333333'),
+        TableCell.text('Count', backgroundColor: '333333'),
+      ]),
+      TableRow(cells: [
+        TableCell.text('Success', backgroundColor: '90EE90'),
+        TableCell.text('42', alignment: Alignment.right),
+      ]),
+      TableRow(cells: [
+        TableCell.text('Warning', backgroundColor: 'FFD700'),
+        TableCell.text('7', alignment: Alignment.right),
+      ]),
+      TableRow(cells: [
+        TableCell.text('Error', backgroundColor: 'FF6B6B'),
+        TableCell.text('3', alignment: Alignment.right),
+      ]),
+    ],
+  ));
+
+  doc.addParagraph(Paragraph.text(''));
+
+  // ============================================
+  // EMOJI (DOCX ONLY)
+  // ============================================
+  doc.addParagraph(Paragraph.heading('11. Emoji Support (DOCX only)', level: 1));
+  doc.addParagraph(Paragraph.text(
+      'Emoji characters work in DOCX (Word handles them natively):'));
+  doc.addParagraph(Paragraph.bulletItem('Hello World! 👋🌍'));
+  doc.addParagraph(Paragraph.bulletItem('Status: ✅ Complete'));
+  doc.addParagraph(Paragraph.bulletItem('Celebration! 🎉🎊🥳'));
+  doc.addParagraph(Paragraph.bulletItem('Weather: ☀️ 🌧️ ❄️'));
+  doc.addParagraph(Paragraph.footnote(
+      'Note: PDF uses standard fonts without emoji support, so emoji will not render in PDF output.'));
+  doc.addParagraph(Paragraph.text(''));
+
+  // ============================================
   // SUMMARY
   // ============================================
   doc.addParagraph(
@@ -221,6 +293,8 @@ void main() {
       '5 list types: bullet, dash, numbered, alpha, roman'));
   doc.addParagraph(Paragraph.bulletItem('Nested lists up to 9 levels deep'));
   doc.addParagraph(Paragraph.bulletItem('Page breaks'));
+  doc.addParagraph(Paragraph.bulletItem('Tables with borders and colors'));
+  doc.addParagraph(Paragraph.bulletItem('Emoji support (DOCX only)'));
   doc.addParagraph(
       Paragraph.bulletItem('Document metadata: title, author, dates'));
 
