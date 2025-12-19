@@ -1,3 +1,5 @@
+[![Codigee - Best Flutter Experts](doc/logo.jpeg)](https://umami.team.codigee.com/q/FZ9PQYyYN)
+
 # docs_gee API Reference
 
 Complete API documentation for the docs_gee library.

@@ -9,26 +9,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial release of docs_gee library
-- **DocxGenerator** - Main class for generating DOCX files
+#### Document Generation
+- **DocxGenerator** - Generates Microsoft Word DOCX files
+  - Pure Dart implementation using OOXML standard
   - Configurable default font name and size
-  - Generates valid OOXML-compliant documents
-- **DocxDocument** - Document container
-  - Support for title and author metadata
-  - Methods to add single or multiple paragraphs
-- **DocxParagraph** - Paragraph model with factory constructors
-  - `DocxParagraph.text()` - Simple text paragraph
-  - `DocxParagraph.heading()` - Heading levels 1-3
-  - `DocxParagraph.bulletItem()` - Bullet list items
-  - `DocxParagraph.numberedItem()` - Numbered list items
-- **DocxRun** - Text formatting model
-  - Bold, italic, underline, strikethrough support
-  - `copyWith()` method for easy modification
-- **DocxAlignment** - Text alignment enum
-  - Left, center, right, justify options
-- **DocxParagraphStyle** - Paragraph style enum
-  - Normal, heading1-3, listBullet, listNumber
-- **Page breaks** - Control pagination with `pageBreakBefore`
-- **Cross-platform support** - Works on iOS, Android, Web, macOS, Windows, Linux
-- Complete documentation with API reference
-- Example application demonstrating all features
+  - Compatible with Word 2007+, Google Docs, LibreOffice
+- **PdfGenerator** - Generates PDF documents
+  - Pure Dart implementation (PDF 1.4 standard)
+  - No native dependencies
+  - Cross-platform support including Web
+
+#### Document Model
+- **Document** - Container for document content
+  - Title and author metadata
+  - Mixed content support (paragraphs and tables)
+  - Creation and modification timestamps
+
+#### Text Formatting
+- **TextRun** - Rich text formatting
+  - Bold, italic, underline, strikethrough
+  - Text color (hex format)
+  - Background/highlight color
+- **Text alignment** - Left, center, right, justify
+
+#### Paragraph Styles
+- Headings (H1-H4)
+- Subtitle
+- Caption
+- Block quote
+- Code block (monospace)
+- Footnote
+
+#### Lists
+- Bullet lists (•)
+- Dash lists (–)
+- Numbered lists (1, 2, 3)
+- Alphabetic lists (a, b, c)
+- Roman numeral lists (I, II, III)
+- Nested lists up to 9 levels deep
+
+#### Tables
+- Basic table support with rows and cells
+- Cell background colors
+- Cell text alignment
+- Table borders (all, none, outside only)
+- Border styles (single, double, dashed, dotted)
+
+#### Other Features
+- Page breaks
+- Emoji support (DOCX only - Word handles natively)
+- Cross-platform: iOS, Android, Web, macOS, Windows, Linux
+
+### Documentation
+- Complete API reference
+- Usage examples for all features
+- Platform-specific guides (Web, Mobile)
