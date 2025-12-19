@@ -399,9 +399,10 @@ class _PdfBuilder {
       final size = _getFontSizeForStyle(paragraph.style);
       final lineHeight = size * 1.4;
 
-      // Handle list prefixes
+      // Handle list prefixes and indentation
       String prefix = '';
-      final indentSpaces = '  ' * (paragraph.indentLevel + 1);
+      // Calculate indent offset in points (18 points per level, ~0.25 inch)
+      final indentOffset = paragraph.indentLevel * 18.0;
 
       if (paragraph.style.isList) {
         // Reset counters if switching list type at same level
@@ -421,21 +422,21 @@ class _PdfBuilder {
         final counterKey = '${paragraph.style.name}_${paragraph.indentLevel}';
 
         if (paragraph.style == DocxParagraphStyle.listBullet) {
-          prefix = '$indentSpaces\x95 '; // Bullet character
+          prefix = '  \x95 '; // Bullet character
         } else if (paragraph.style == DocxParagraphStyle.listDash) {
-          prefix = '$indentSpaces- '; // Dash character
+          prefix = '  - '; // Dash character
         } else if (paragraph.style == DocxParagraphStyle.listNumber) {
           final count = (listCounters[counterKey] ?? 0) + 1;
           listCounters[counterKey] = count;
-          prefix = '$indentSpaces$count. ';
+          prefix = '  $count. ';
         } else if (paragraph.style == DocxParagraphStyle.listNumberAlpha) {
           final count = (listCounters[counterKey] ?? 0) + 1;
           listCounters[counterKey] = count;
-          prefix = '$indentSpaces${_toAlpha(count)}) ';
+          prefix = '  ${_toAlpha(count)}) ';
         } else if (paragraph.style == DocxParagraphStyle.listNumberRoman) {
           final count = (listCounters[counterKey] ?? 0) + 1;
           listCounters[counterKey] = count;
-          prefix = '$indentSpaces${_toRoman(count)}. ';
+          prefix = '  ${_toRoman(count)}. ';
         }
 
         lastListStyle = paragraph.style;
@@ -497,16 +498,18 @@ class _PdfBuilder {
         final lineText = line.map((s) => s.text).join();
         final lineWidth = _estimateTextWidth(lineText, size);
 
-        // Calculate X position based on alignment
+        // Calculate X position based on alignment and indent
         double xPos;
         switch (paragraph.alignment) {
           case DocxAlignment.center:
-            xPos = marginLeft + (_contentWidth - lineWidth) / 2;
+            xPos = marginLeft +
+                indentOffset +
+                (_contentWidth - indentOffset - lineWidth) / 2;
           case DocxAlignment.right:
             xPos = marginLeft + _contentWidth - lineWidth;
           case DocxAlignment.justify:
           case DocxAlignment.left:
-            xPos = marginLeft;
+            xPos = marginLeft + indentOffset;
         }
 
         // Move to position for this line

@@ -1,18 +1,22 @@
 # docs_gee
 
-A pure Dart library for generating Microsoft Word DOCX files. Works on all platforms: iOS, Android, Web, macOS, Windows, and Linux.
+A pure Dart library for generating **DOCX** and **PDF** documents. Works on all platforms: iOS, Android, Web, macOS, Windows, and Linux.
 
 ## Features
 
 - **Pure Dart** - No native dependencies, works everywhere Dart runs
+- **Dual format** - Generate both DOCX and PDF from the same document model
 - **Cross-platform** - iOS, Android, Web, Desktop (macOS, Windows, Linux)
-- **Rich text formatting** - Bold, italic, underline, strikethrough
-- **Paragraph styles** - Headings (H1-H3), normal text, lists
+- **Rich text formatting** - Bold, italic, underline, strikethrough, colors
+- **Paragraph styles** - Headings (H1-H4), subtitle, caption, quote
 - **Text alignment** - Left, center, right, justify
-- **Lists** - Bullet points and numbered lists
+- **Lists** - Bullet, dash, numbered (1,2,3), alphabetic (a,b,c), roman (I,II,III)
+- **Nested lists** - Up to 9 levels of nesting
 - **Page breaks** - Control document pagination
+- **Text colors** - Foreground and background/highlight colors
 - **Configurable fonts** - Set default font and size
-- **Lightweight** - Single dependency (`archive` for ZIP compression)
+- **Document metadata** - Title, author, creation date
+- **Lightweight** - Minimal dependencies (`archive` for ZIP)
 
 ## Installation
 
@@ -47,15 +51,29 @@ void main() {
   // Add content
   doc.addParagraph(DocxParagraph.heading('Hello World', level: 1));
   doc.addParagraph(DocxParagraph.text('This is a simple paragraph.'));
+  doc.addParagraph(DocxParagraph.bulletItem('First item'));
+  doc.addParagraph(DocxParagraph.bulletItem('Second item'));
 
   // Generate DOCX
-  final generator = DocxGenerator();
-  final bytes = generator.generate(doc);
+  final docxBytes = DocxGenerator().generate(doc);
+  File('output.docx').writeAsBytesSync(docxBytes);
 
-  // Save to file (or upload, send via API, etc.)
-  File('output.docx').writeAsBytesSync(bytes);
+  // Generate PDF (same document!)
+  final pdfBytes = PdfGenerator().generate(doc);
+  File('output.pdf').writeAsBytesSync(pdfBytes);
 }
 ```
+
+### Run the Full Demo
+
+To see all features in action, run the comprehensive example:
+
+```bash
+cd docx_generator
+dart run example/all_features_example.dart
+```
+
+This generates `all_features.docx` and `all_features.pdf` showcasing every feature.
 
 ## Usage Examples
 
