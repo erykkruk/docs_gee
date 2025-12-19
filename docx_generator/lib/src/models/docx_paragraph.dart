@@ -8,6 +8,7 @@ class DocxParagraph {
     this.style = DocxParagraphStyle.normal,
     this.alignment = DocxAlignment.left,
     this.pageBreakBefore = false,
+    this.indentLevel = 0,
   });
 
   /// Creates a simple paragraph with plain text.
@@ -83,27 +84,73 @@ class DocxParagraph {
     );
   }
 
-  /// Creates a bullet list item.
+  /// Creates a bullet list item (•).
   factory DocxParagraph.bulletItem(
     String text, {
     DocxAlignment alignment = DocxAlignment.left,
+    int indentLevel = 0,
   }) {
     return DocxParagraph(
       runs: [DocxRun(text)],
       style: DocxParagraphStyle.listBullet,
       alignment: alignment,
+      indentLevel: indentLevel,
     );
   }
 
-  /// Creates a numbered list item.
+  /// Creates a dash list item (-).
+  factory DocxParagraph.dashItem(
+    String text, {
+    DocxAlignment alignment = DocxAlignment.left,
+    int indentLevel = 0,
+  }) {
+    return DocxParagraph(
+      runs: [DocxRun(text)],
+      style: DocxParagraphStyle.listDash,
+      alignment: alignment,
+      indentLevel: indentLevel,
+    );
+  }
+
+  /// Creates a numbered list item (1, 2, 3...).
   factory DocxParagraph.numberedItem(
     String text, {
     DocxAlignment alignment = DocxAlignment.left,
+    int indentLevel = 0,
   }) {
     return DocxParagraph(
       runs: [DocxRun(text)],
       style: DocxParagraphStyle.listNumber,
       alignment: alignment,
+      indentLevel: indentLevel,
+    );
+  }
+
+  /// Creates an alphabetic list item (a, b, c...).
+  factory DocxParagraph.alphaItem(
+    String text, {
+    DocxAlignment alignment = DocxAlignment.left,
+    int indentLevel = 0,
+  }) {
+    return DocxParagraph(
+      runs: [DocxRun(text)],
+      style: DocxParagraphStyle.listNumberAlpha,
+      alignment: alignment,
+      indentLevel: indentLevel,
+    );
+  }
+
+  /// Creates a roman numeral list item (I, II, III...).
+  factory DocxParagraph.romanItem(
+    String text, {
+    DocxAlignment alignment = DocxAlignment.left,
+    int indentLevel = 0,
+  }) {
+    return DocxParagraph(
+      runs: [DocxRun(text)],
+      style: DocxParagraphStyle.listNumberRoman,
+      alignment: alignment,
+      indentLevel: indentLevel,
     );
   }
 
@@ -118,6 +165,10 @@ class DocxParagraph {
 
   /// Whether to insert a page break before this paragraph.
   final bool pageBreakBefore;
+
+  /// Indent level for nested lists (0 = top level, 1 = first nested, etc.).
+  /// Maximum supported level is 8.
+  final int indentLevel;
 
   /// Returns the plain text content of this paragraph.
   String get plainText => runs.map((r) => r.text).join();

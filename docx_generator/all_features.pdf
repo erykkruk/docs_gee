@@ -1,0 +1,1533 @@
+%PDF-1.4
+%âãÏÓ
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Kids [8 0 R 10 0 R 12 0 R 14 0 R 16 0 R 18 0 R ]
+/Count 6
+>>
+endobj
+3 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+/Encoding /WinAnsiEncoding
+>>
+endobj
+4 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica-Bold
+/Encoding /WinAnsiEncoding
+>>
+endobj
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica-Oblique
+/Encoding /WinAnsiEncoding
+>>
+endobj
+6 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica-BoldOblique
+/Encoding /WinAnsiEncoding
+>>
+endobj
+7 0 obj
+<<
+/Title (All Features Demo)
+/Author (docs_gee library)
+/Creator (docs_gee)
+/Producer (docs_gee Dart library)
+/CreationDate (D:20251219063821)
+/ModDate (D:20251219063821)
+>>
+endobj
+8 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 9 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+  >>
+>>
+>>
+endobj
+9 0 obj
+<<
+/Length 4982
+>>
+stream
+BT
+1 0 0 1 72.0 720.0 Tm
+0 0 0 rg
+/F2 24 Tf
+(1.) Tj
+0 0 0 rg
+/F2 24 Tf
+( Headings) Tj
+1 0 0 1 72.0 676.8 Tm
+0 0 0 rg
+/F2 24 Tf
+(Heading) Tj
+0 0 0 rg
+/F2 24 Tf
+( Level) Tj
+0 0 0 rg
+/F2 24 Tf
+( 1) Tj
+1 0 0 1 72.0 633.5999999999999 Tm
+0 0 0 rg
+/F2 18 Tf
+(Heading) Tj
+0 0 0 rg
+/F2 18 Tf
+( Level) Tj
+0 0 0 rg
+/F2 18 Tf
+( 2) Tj
+1 0 0 1 72.0 601.1999999999998 Tm
+0 0 0 rg
+/F2 15 Tf
+(Heading) Tj
+0 0 0 rg
+/F2 15 Tf
+( Level) Tj
+0 0 0 rg
+/F2 15 Tf
+( 3) Tj
+1 0 0 1 72.0 574.1999999999998 Tm
+0 0 0 rg
+/F2 13 Tf
+(Heading) Tj
+0 0 0 rg
+/F2 13 Tf
+( Level) Tj
+0 0 0 rg
+/F2 13 Tf
+( 4) Tj
+1 0 0 1 72.0 550.7999999999997 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+1 0 0 1 72.0 529.1999999999998 Tm
+0 0 0 rg
+/F2 24 Tf
+(2.) Tj
+0 0 0 rg
+/F2 24 Tf
+( Semantic) Tj
+0 0 0 rg
+/F2 24 Tf
+( Styles) Tj
+1 0 0 1 72.0 485.9999999999998 Tm
+0 0 0 rg
+/F3 14 Tf
+(This) Tj
+0 0 0 rg
+/F3 14 Tf
+( is) Tj
+0 0 0 rg
+/F3 14 Tf
+( a) Tj
+0 0 0 rg
+/F3 14 Tf
+( subtitle) Tj
+0 0 0 rg
+/F3 14 Tf
+( -) Tj
+0 0 0 rg
+/F3 14 Tf
+( great) Tj
+0 0 0 rg
+/F3 14 Tf
+( for) Tj
+0 0 0 rg
+/F3 14 Tf
+( document) Tj
+0 0 0 rg
+/F3 14 Tf
+( subtitles) Tj
+1 0 0 1 72.0 460.7999999999997 Tm
+0 0 0 rg
+/F1 10 Tf
+(This) Tj
+0 0 0 rg
+/F1 10 Tf
+( is) Tj
+0 0 0 rg
+/F1 10 Tf
+( a) Tj
+0 0 0 rg
+/F1 10 Tf
+( caption) Tj
+0 0 0 rg
+/F1 10 Tf
+( -) Tj
+0 0 0 rg
+/F1 10 Tf
+( perfect) Tj
+0 0 0 rg
+/F1 10 Tf
+( for) Tj
+0 0 0 rg
+/F1 10 Tf
+( image) Tj
+0 0 0 rg
+/F1 10 Tf
+( captions) Tj
+1 0 0 1 72.0 442.7999999999997 Tm
+0 0 0 rg
+/F3 12 Tf
+(This) Tj
+0 0 0 rg
+/F3 12 Tf
+( is) Tj
+0 0 0 rg
+/F3 12 Tf
+( a) Tj
+0 0 0 rg
+/F3 12 Tf
+( blockquote) Tj
+0 0 0 rg
+/F3 12 Tf
+( -) Tj
+0 0 0 rg
+/F3 12 Tf
+( ideal) Tj
+0 0 0 rg
+/F3 12 Tf
+( for) Tj
+0 0 0 rg
+/F3 12 Tf
+( citations) Tj
+0 0 0 rg
+/F3 12 Tf
+( and) Tj
+0 0 0 rg
+/F3 12 Tf
+( quotes.) Tj
+0 0 0 rg
+/F3 12 Tf
+( It) Tj
+0 0 0 rg
+/F3 12 Tf
+( appears) Tj
+0 0 0 rg
+/F3 12 Tf
+( indented) Tj
+0 0 0 rg
+/F3 12 Tf
+( and) Tj
+1 0 0 1 72.0 425.9999999999997 Tm
+0 0 0 rg
+/F3 12 Tf
+(in) Tj
+0 0 0 rg
+/F3 12 Tf
+( italic) Tj
+0 0 0 rg
+/F3 12 Tf
+( style.) Tj
+1 0 0 1 72.0 404.3999999999997 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+1 0 0 1 72.0 382.79999999999967 Tm
+0 0 0 rg
+/F2 24 Tf
+(3.) Tj
+0 0 0 rg
+/F2 24 Tf
+( Text) Tj
+0 0 0 rg
+/F2 24 Tf
+( Formatting) Tj
+1 0 0 1 72.0 339.5999999999997 Tm
+0 0 0 rg
+/F1 12 Tf
+(Regular) Tj
+0 0 0 rg
+/F1 12 Tf
+( text,) Tj
+0 0 0 rg
+/F2 12 Tf
+( bold) Tj
+0 0 0 rg
+/F2 12 Tf
+( text,) Tj
+0 0 0 rg
+/F3 12 Tf
+( italic) Tj
+0 0 0 rg
+/F3 12 Tf
+( text,) Tj
+0 0 0 rg
+/F1 12 Tf
+( underlined) Tj
+ET
+q
+0 0 0 RG
+0.5 w
+294.0 337.5999999999997 m
+360.0 337.5999999999997 l
+S
+Q
+BT
+1 0 0 1 360.0 339.5999999999997 Tm
+0 0 0 rg
+/F1 12 Tf
+( text,) Tj
+ET
+q
+0 0 0 RG
+0.5 w
+360.0 337.5999999999997 m
+396.0 337.5999999999997 l
+S
+Q
+BT
+1 0 0 1 396.0 339.5999999999997 Tm
+0 0 0 rg
+/F1 12 Tf
+( strikethrough) Tj
+ET
+q
+0 0 0 RG
+0.5 w
+396.0 343.1999999999997 m
+480.0 343.1999999999997 l
+S
+Q
+BT
+1 0 0 1 480.0 339.5999999999997 Tm
+0 0 0 rg
+/F1 12 Tf
+( text.) Tj
+ET
+q
+0 0 0 RG
+0.5 w
+480.0 343.1999999999997 m
+516.0 343.1999999999997 l
+S
+Q
+BT
+1 0 0 1 516.0 339.5999999999997 Tm
+1 0 0 1 72.0 317.99999999999966 Tm
+0 0 0 rg
+/F2 12 Tf
+(Combined:) Tj
+0 0 0 rg
+/F4 12 Tf
+( bold) Tj
+0 0 0 rg
+/F4 12 Tf
+( +) Tj
+0 0 0 rg
+/F4 12 Tf
+( italic) Tj
+0 0 0 rg
+/F1 12 Tf
+( ,) Tj
+0 0 0 rg
+/F2 12 Tf
+( bold) Tj
+ET
+q
+0 0 0 RG
+0.5 w
+222.0 315.99999999999966 m
+252.0 315.99999999999966 l
+S
+Q
+BT
+1 0 0 1 252.0 317.99999999999966 Tm
+0 0 0 rg
+/F2 12 Tf
+( +) Tj
+ET
+q
+0 0 0 RG
+0.5 w
+252.0 315.99999999999966 m
+264.0 315.99999999999966 l
+S
+Q
+BT
+1 0 0 1 264.0 317.99999999999966 Tm
+0 0 0 rg
+/F2 12 Tf
+( underline) Tj
+ET
+q
+0 0 0 RG
+0.5 w
+264.0 315.99999999999966 m
+324.0 315.99999999999966 l
+S
+Q
+BT
+1 0 0 1 324.0 317.99999999999966 Tm
+0 0 0 rg
+/F1 12 Tf
+( ,) Tj
+0 0 0 rg
+/F4 12 Tf
+( all) Tj
+ET
+q
+0 0 0 RG
+0.5 w
+336.0 315.99999999999966 m
+360.0 315.99999999999966 l
+S
+336.0 321.5999999999997 m
+360.0 321.5999999999997 l
+S
+Q
+BT
+1 0 0 1 360.0 317.99999999999966 Tm
+0 0 0 rg
+/F4 12 Tf
+( styles) Tj
+ET
+q
+0 0 0 RG
+0.5 w
+360.0 315.99999999999966 m
+402.0 315.99999999999966 l
+S
+360.0 321.5999999999997 m
+402.0 321.5999999999997 l
+S
+Q
+BT
+1 0 0 1 402.0 317.99999999999966 Tm
+1 0 0 1 72.0 296.39999999999964 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+1 0 0 1 72.0 274.7999999999996 Tm
+0 0 0 rg
+/F2 24 Tf
+(4.) Tj
+0 0 0 rg
+/F2 24 Tf
+( Text) Tj
+0 0 0 rg
+/F2 24 Tf
+( Colors) Tj
+1 0 0 1 72.0 231.59999999999962 Tm
+1.0 0.0 0.0 rg
+/F1 12 Tf
+(Red) Tj
+1.0 0.0 0.0 rg
+/F1 12 Tf
+( text) Tj
+0.0 1.0 0.0 rg
+/F1 12 Tf
+( Green) Tj
+0.0 1.0 0.0 rg
+/F1 12 Tf
+( text) Tj
+0.0 0.0 1.0 rg
+/F1 12 Tf
+( Blue) Tj
+0.0 0.0 1.0 rg
+/F1 12 Tf
+( text) Tj
+1.0 0.6470588235294118 0.0 rg
+/F1 12 Tf
+( Orange) Tj
+1.0 0.6470588235294118 0.0 rg
+/F1 12 Tf
+( text) Tj
+0.5019607843137255 0.0 0.5019607843137255 rg
+/F1 12 Tf
+( Purple) Tj
+0.5019607843137255 0.0 0.5019607843137255 rg
+/F1 12 Tf
+( text) Tj
+1 0 0 1 72.0 209.9999999999996 Tm
+0 0 0 rg
+/F1 12 Tf
+(Yellow) Tj
+0 0 0 rg
+/F1 12 Tf
+( highlight) Tj
+0 0 0 rg
+/F1 12 Tf
+( Cyan) Tj
+0 0 0 rg
+/F1 12 Tf
+( highlight) Tj
+0 0 0 rg
+/F1 12 Tf
+( Magenta) Tj
+0 0 0 rg
+/F1 12 Tf
+( highlight) Tj
+1 0 0 1 72.0 188.39999999999958 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+ET
+
+endstream
+endobj
+10 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 11 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+  >>
+>>
+>>
+endobj
+11 0 obj
+<<
+/Length 3573
+>>
+stream
+BT
+1 0 0 1 72.0 720.0 Tm
+0 0 0 rg
+/F2 24 Tf
+(5.) Tj
+0 0 0 rg
+/F2 24 Tf
+( Text) Tj
+0 0 0 rg
+/F2 24 Tf
+( Alignment) Tj
+1 0 0 1 72.0 676.8 Tm
+0 0 0 rg
+/F1 12 Tf
+(Left) Tj
+0 0 0 rg
+/F1 12 Tf
+( aligned) Tj
+0 0 0 rg
+/F1 12 Tf
+( text) Tj
+0 0 0 rg
+/F1 12 Tf
+( \(default\)) Tj
+1 0 0 1 249.0 655.2 Tm
+0 0 0 rg
+/F1 12 Tf
+(Center) Tj
+0 0 0 rg
+/F1 12 Tf
+( aligned) Tj
+0 0 0 rg
+/F1 12 Tf
+( text) Tj
+1 0 0 1 432.0 633.6000000000001 Tm
+0 0 0 rg
+/F1 12 Tf
+(Right) Tj
+0 0 0 rg
+/F1 12 Tf
+( aligned) Tj
+0 0 0 rg
+/F1 12 Tf
+( text) Tj
+1 0 0 1 72.0 612.0000000000002 Tm
+0 0 0 rg
+/F1 12 Tf
+(Justified) Tj
+0 0 0 rg
+/F1 12 Tf
+( text) Tj
+0 0 0 rg
+/F1 12 Tf
+( fills) Tj
+0 0 0 rg
+/F1 12 Tf
+( the) Tj
+0 0 0 rg
+/F1 12 Tf
+( entire) Tj
+0 0 0 rg
+/F1 12 Tf
+( line) Tj
+0 0 0 rg
+/F1 12 Tf
+( width) Tj
+0 0 0 rg
+/F1 12 Tf
+( by) Tj
+0 0 0 rg
+/F1 12 Tf
+( adjusting) Tj
+0 0 0 rg
+/F1 12 Tf
+( spacing) Tj
+0 0 0 rg
+/F1 12 Tf
+( between) Tj
+0 0 0 rg
+/F1 12 Tf
+( words.) Tj
+1 0 0 1 72.0 595.2000000000003 Tm
+0 0 0 rg
+/F1 12 Tf
+(This) Tj
+0 0 0 rg
+/F1 12 Tf
+( creates) Tj
+0 0 0 rg
+/F1 12 Tf
+( a) Tj
+0 0 0 rg
+/F1 12 Tf
+( clean,) Tj
+0 0 0 rg
+/F1 12 Tf
+( professional) Tj
+0 0 0 rg
+/F1 12 Tf
+( look) Tj
+0 0 0 rg
+/F1 12 Tf
+( for) Tj
+0 0 0 rg
+/F1 12 Tf
+( longer) Tj
+0 0 0 rg
+/F1 12 Tf
+( paragraphs.) Tj
+1 0 0 1 72.0 573.6000000000004 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+1 0 0 1 72.0 552.0000000000005 Tm
+0 0 0 rg
+/F2 24 Tf
+(6.) Tj
+0 0 0 rg
+/F2 24 Tf
+( Unordered) Tj
+0 0 0 rg
+/F2 24 Tf
+( Lists) Tj
+1 0 0 1 72.0 508.8000000000004 Tm
+0 0 0 rg
+/F2 15 Tf
+(Bullet) Tj
+0 0 0 rg
+/F2 15 Tf
+( List:) Tj
+1 0 0 1 72.0 481.8000000000004 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( First) Tj
+0 0 0 rg
+/F1 12 Tf
+( bullet) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 460.2000000000004 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Second) Tj
+0 0 0 rg
+/F1 12 Tf
+( bullet) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 438.60000000000036 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Third) Tj
+0 0 0 rg
+/F1 12 Tf
+( bullet) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 417.00000000000034 Tm
+0 0 0 rg
+/F2 15 Tf
+(Dash) Tj
+0 0 0 rg
+/F2 15 Tf
+( List:) Tj
+1 0 0 1 72.0 390.00000000000034 Tm
+0 0 0 rg
+/F1 12 Tf
+(-) Tj
+0 0 0 rg
+/F1 12 Tf
+( First) Tj
+0 0 0 rg
+/F1 12 Tf
+( dash) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 368.4000000000003 Tm
+0 0 0 rg
+/F1 12 Tf
+(-) Tj
+0 0 0 rg
+/F1 12 Tf
+( Second) Tj
+0 0 0 rg
+/F1 12 Tf
+( dash) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 346.8000000000003 Tm
+0 0 0 rg
+/F1 12 Tf
+(-) Tj
+0 0 0 rg
+/F1 12 Tf
+( Third) Tj
+0 0 0 rg
+/F1 12 Tf
+( dash) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 325.2000000000003 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+1 0 0 1 72.0 303.60000000000025 Tm
+0 0 0 rg
+/F2 24 Tf
+(7.) Tj
+0 0 0 rg
+/F2 24 Tf
+( Ordered) Tj
+0 0 0 rg
+/F2 24 Tf
+( Lists) Tj
+1 0 0 1 72.0 260.4000000000002 Tm
+0 0 0 rg
+/F2 15 Tf
+(Numeric) Tj
+0 0 0 rg
+/F2 15 Tf
+( List) Tj
+0 0 0 rg
+/F2 15 Tf
+( \(1,) Tj
+0 0 0 rg
+/F2 15 Tf
+( 2,) Tj
+0 0 0 rg
+/F2 15 Tf
+( 3\):) Tj
+1 0 0 1 72.0 233.4000000000002 Tm
+0 0 0 rg
+/F1 12 Tf
+(1.) Tj
+0 0 0 rg
+/F1 12 Tf
+( First) Tj
+0 0 0 rg
+/F1 12 Tf
+( numbered) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 211.80000000000018 Tm
+0 0 0 rg
+/F1 12 Tf
+(2.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Second) Tj
+0 0 0 rg
+/F1 12 Tf
+( numbered) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 190.20000000000016 Tm
+0 0 0 rg
+/F1 12 Tf
+(3.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Third) Tj
+0 0 0 rg
+/F1 12 Tf
+( numbered) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 168.60000000000014 Tm
+0 0 0 rg
+/F2 15 Tf
+(Alphabetic) Tj
+0 0 0 rg
+/F2 15 Tf
+( List) Tj
+0 0 0 rg
+/F2 15 Tf
+( \(a,) Tj
+0 0 0 rg
+/F2 15 Tf
+( b,) Tj
+0 0 0 rg
+/F2 15 Tf
+( c\):) Tj
+ET
+
+endstream
+endobj
+12 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 13 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+  >>
+>>
+>>
+endobj
+13 0 obj
+<<
+/Length 3519
+>>
+stream
+BT
+1 0 0 1 72.0 720.0 Tm
+0 0 0 rg
+/F1 12 Tf
+(a\)) Tj
+0 0 0 rg
+/F1 12 Tf
+( First) Tj
+0 0 0 rg
+/F1 12 Tf
+( alpha) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 698.4000000000001 Tm
+0 0 0 rg
+/F1 12 Tf
+(b\)) Tj
+0 0 0 rg
+/F1 12 Tf
+( Second) Tj
+0 0 0 rg
+/F1 12 Tf
+( alpha) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 676.8000000000002 Tm
+0 0 0 rg
+/F1 12 Tf
+(c\)) Tj
+0 0 0 rg
+/F1 12 Tf
+( Third) Tj
+0 0 0 rg
+/F1 12 Tf
+( alpha) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 655.2000000000003 Tm
+0 0 0 rg
+/F2 15 Tf
+(Roman) Tj
+0 0 0 rg
+/F2 15 Tf
+( Numeral) Tj
+0 0 0 rg
+/F2 15 Tf
+( List) Tj
+0 0 0 rg
+/F2 15 Tf
+( \(I,) Tj
+0 0 0 rg
+/F2 15 Tf
+( II,) Tj
+0 0 0 rg
+/F2 15 Tf
+( III\):) Tj
+1 0 0 1 72.0 628.2000000000003 Tm
+0 0 0 rg
+/F1 12 Tf
+(I.) Tj
+0 0 0 rg
+/F1 12 Tf
+( First) Tj
+0 0 0 rg
+/F1 12 Tf
+( roman) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 606.6000000000004 Tm
+0 0 0 rg
+/F1 12 Tf
+(II.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Second) Tj
+0 0 0 rg
+/F1 12 Tf
+( roman) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 585.0000000000005 Tm
+0 0 0 rg
+/F1 12 Tf
+(III.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Third) Tj
+0 0 0 rg
+/F1 12 Tf
+( roman) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 563.4000000000005 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+1 0 0 1 72.0 541.8000000000006 Tm
+0 0 0 rg
+/F2 24 Tf
+(8.) Tj
+0 0 0 rg
+/F2 24 Tf
+( Nested) Tj
+0 0 0 rg
+/F2 24 Tf
+( Lists) Tj
+1 0 0 1 72.0 498.6000000000006 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Top) Tj
+0 0 0 rg
+/F1 12 Tf
+( level) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+0 0 0 rg
+/F1 12 Tf
+( 1) Tj
+1 0 0 1 72.0 477.00000000000057 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Nested) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+0 0 0 rg
+/F1 12 Tf
+( 1.1) Tj
+1 0 0 1 72.0 455.40000000000055 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Nested) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+0 0 0 rg
+/F1 12 Tf
+( 1.2) Tj
+1 0 0 1 72.0 433.8000000000005 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Deep) Tj
+0 0 0 rg
+/F1 12 Tf
+( nested) Tj
+0 0 0 rg
+/F1 12 Tf
+( 1.2.1) Tj
+1 0 0 1 72.0 412.2000000000005 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Deep) Tj
+0 0 0 rg
+/F1 12 Tf
+( nested) Tj
+0 0 0 rg
+/F1 12 Tf
+( 1.2.2) Tj
+1 0 0 1 72.0 390.6000000000005 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Top) Tj
+0 0 0 rg
+/F1 12 Tf
+( level) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+0 0 0 rg
+/F1 12 Tf
+( 2) Tj
+1 0 0 1 72.0 369.00000000000045 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Nested) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+0 0 0 rg
+/F1 12 Tf
+( 2.1) Tj
+1 0 0 1 72.0 347.40000000000043 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+1 0 0 1 72.0 325.8000000000004 Tm
+0 0 0 rg
+/F2 15 Tf
+(Mixed) Tj
+0 0 0 rg
+/F2 15 Tf
+( Nested) Tj
+0 0 0 rg
+/F2 15 Tf
+( Lists:) Tj
+1 0 0 1 72.0 298.8000000000004 Tm
+0 0 0 rg
+/F1 12 Tf
+(1.) Tj
+0 0 0 rg
+/F1 12 Tf
+( First) Tj
+0 0 0 rg
+/F1 12 Tf
+( main) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 277.2000000000004 Tm
+0 0 0 rg
+/F1 12 Tf
+(a\)) Tj
+0 0 0 rg
+/F1 12 Tf
+( Sub-item) Tj
+0 0 0 rg
+/F1 12 Tf
+( a) Tj
+1 0 0 1 72.0 255.60000000000036 Tm
+0 0 0 rg
+/F1 12 Tf
+(b\)) Tj
+0 0 0 rg
+/F1 12 Tf
+( Sub-item) Tj
+0 0 0 rg
+/F1 12 Tf
+( b) Tj
+1 0 0 1 72.0 234.00000000000034 Tm
+0 0 0 rg
+/F1 12 Tf
+(I.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Detail) Tj
+0 0 0 rg
+/F1 12 Tf
+( i) Tj
+1 0 0 1 72.0 212.40000000000032 Tm
+0 0 0 rg
+/F1 12 Tf
+(II.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Detail) Tj
+0 0 0 rg
+/F1 12 Tf
+( ii) Tj
+1 0 0 1 72.0 190.8000000000003 Tm
+0 0 0 rg
+/F1 12 Tf
+(1.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Second) Tj
+0 0 0 rg
+/F1 12 Tf
+( main) Tj
+0 0 0 rg
+/F1 12 Tf
+( item) Tj
+1 0 0 1 72.0 169.20000000000027 Tm
+0 0 0 rg
+/F1 12 Tf
+(-) Tj
+0 0 0 rg
+/F1 12 Tf
+( Note) Tj
+ET
+
+endstream
+endobj
+14 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 15 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+  >>
+>>
+>>
+endobj
+15 0 obj
+<<
+/Length 53
+>>
+stream
+BT
+1 0 0 1 72.0 720.0 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+ET
+
+endstream
+endobj
+16 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 17 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+  >>
+>>
+>>
+endobj
+17 0 obj
+<<
+/Length 683
+>>
+stream
+BT
+1 0 0 1 72.0 720.0 Tm
+0 0 0 rg
+/F2 24 Tf
+(9.) Tj
+0 0 0 rg
+/F2 24 Tf
+( Page) Tj
+0 0 0 rg
+/F2 24 Tf
+( Break) Tj
+0 0 0 rg
+/F2 24 Tf
+( Demo) Tj
+1 0 0 1 72.0 676.8 Tm
+0 0 0 rg
+/F1 12 Tf
+(This) Tj
+0 0 0 rg
+/F1 12 Tf
+( section) Tj
+0 0 0 rg
+/F1 12 Tf
+( starts) Tj
+0 0 0 rg
+/F1 12 Tf
+( on) Tj
+0 0 0 rg
+/F1 12 Tf
+( a) Tj
+0 0 0 rg
+/F1 12 Tf
+( new) Tj
+0 0 0 rg
+/F1 12 Tf
+( page!) Tj
+0 0 0 rg
+/F1 12 Tf
+( Page) Tj
+0 0 0 rg
+/F1 12 Tf
+( breaks) Tj
+0 0 0 rg
+/F1 12 Tf
+( are) Tj
+0 0 0 rg
+/F1 12 Tf
+( useful) Tj
+0 0 0 rg
+/F1 12 Tf
+( for) Tj
+0 0 0 rg
+/F1 12 Tf
+( separating) Tj
+1 0 0 1 72.0 660.0 Tm
+0 0 0 rg
+/F1 12 Tf
+(chapters) Tj
+0 0 0 rg
+/F1 12 Tf
+( or) Tj
+0 0 0 rg
+/F1 12 Tf
+( sections.) Tj
+ET
+
+endstream
+endobj
+18 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 19 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+  >>
+>>
+>>
+endobj
+19 0 obj
+<<
+/Length 2485
+>>
+stream
+BT
+1 0 0 1 72.0 720.0 Tm
+0 0 0 rg
+/F2 24 Tf
+(Summary) Tj
+1 0 0 1 72.0 676.8 Tm
+0 0 0 rg
+/F1 12 Tf
+(This) Tj
+0 0 0 rg
+/F1 12 Tf
+( document) Tj
+0 0 0 rg
+/F1 12 Tf
+( demonstrates) Tj
+0 0 0 rg
+/F1 12 Tf
+( all) Tj
+0 0 0 rg
+/F1 12 Tf
+( the) Tj
+0 0 0 rg
+/F1 12 Tf
+( features) Tj
+0 0 0 rg
+/F1 12 Tf
+( available) Tj
+0 0 0 rg
+/F1 12 Tf
+( in) Tj
+0 0 0 rg
+/F1 12 Tf
+( docs_gee) Tj
+0 0 0 rg
+/F1 12 Tf
+( library:) Tj
+1 0 0 1 72.0 655.2 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( 4) Tj
+0 0 0 rg
+/F1 12 Tf
+( heading) Tj
+0 0 0 rg
+/F1 12 Tf
+( levels) Tj
+0 0 0 rg
+/F1 12 Tf
+( \(H1-H4\)) Tj
+1 0 0 1 72.0 633.6000000000001 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Semantic) Tj
+0 0 0 rg
+/F1 12 Tf
+( styles:) Tj
+0 0 0 rg
+/F1 12 Tf
+( subtitle,) Tj
+0 0 0 rg
+/F1 12 Tf
+( caption,) Tj
+0 0 0 rg
+/F1 12 Tf
+( quote) Tj
+1 0 0 1 72.0 612.0000000000002 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Text) Tj
+0 0 0 rg
+/F1 12 Tf
+( formatting:) Tj
+0 0 0 rg
+/F1 12 Tf
+( bold,) Tj
+0 0 0 rg
+/F1 12 Tf
+( italic,) Tj
+0 0 0 rg
+/F1 12 Tf
+( underline,) Tj
+0 0 0 rg
+/F1 12 Tf
+( strikethrough) Tj
+1 0 0 1 72.0 590.4000000000003 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Text) Tj
+0 0 0 rg
+/F1 12 Tf
+( colors) Tj
+0 0 0 rg
+/F1 12 Tf
+( and) Tj
+0 0 0 rg
+/F1 12 Tf
+( background) Tj
+0 0 0 rg
+/F1 12 Tf
+( colors) Tj
+1 0 0 1 72.0 568.8000000000004 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Text) Tj
+0 0 0 rg
+/F1 12 Tf
+( alignment:) Tj
+0 0 0 rg
+/F1 12 Tf
+( left,) Tj
+0 0 0 rg
+/F1 12 Tf
+( center,) Tj
+0 0 0 rg
+/F1 12 Tf
+( right,) Tj
+0 0 0 rg
+/F1 12 Tf
+( justify) Tj
+1 0 0 1 72.0 547.2000000000005 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( 5) Tj
+0 0 0 rg
+/F1 12 Tf
+( list) Tj
+0 0 0 rg
+/F1 12 Tf
+( types:) Tj
+0 0 0 rg
+/F1 12 Tf
+( bullet,) Tj
+0 0 0 rg
+/F1 12 Tf
+( dash,) Tj
+0 0 0 rg
+/F1 12 Tf
+( numbered,) Tj
+0 0 0 rg
+/F1 12 Tf
+( alpha,) Tj
+0 0 0 rg
+/F1 12 Tf
+( roman) Tj
+1 0 0 1 72.0 525.6000000000006 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Nested) Tj
+0 0 0 rg
+/F1 12 Tf
+( lists) Tj
+0 0 0 rg
+/F1 12 Tf
+( up) Tj
+0 0 0 rg
+/F1 12 Tf
+( to) Tj
+0 0 0 rg
+/F1 12 Tf
+( 9) Tj
+0 0 0 rg
+/F1 12 Tf
+( levels) Tj
+0 0 0 rg
+/F1 12 Tf
+( deep) Tj
+1 0 0 1 72.0 504.00000000000057 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Page) Tj
+0 0 0 rg
+/F1 12 Tf
+( breaks) Tj
+1 0 0 1 72.0 482.40000000000055 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+0 0 0 rg
+/F1 12 Tf
+( Document) Tj
+0 0 0 rg
+/F1 12 Tf
+( metadata:) Tj
+0 0 0 rg
+/F1 12 Tf
+( title,) Tj
+0 0 0 rg
+/F1 12 Tf
+( author,) Tj
+0 0 0 rg
+/F1 12 Tf
+( dates) Tj
+ET
+
+endstream
+endobj
+xref
+0 20
+0000000000 65535 f 
+0000000019 00000 n 
+0000000068 00000 n 
+0000000161 00000 n 
+0000000258 00000 n 
+0000000360 00000 n 
+0000000465 00000 n 
+0000000574 00000 n 
+0000000764 00000 n 
+0000000944 00000 n 
+0000005978 00000 n 
+0000006160 00000 n 
+0000009786 00000 n 
+0000009968 00000 n 
+0000013540 00000 n 
+0000013722 00000 n 
+0000013826 00000 n 
+0000014008 00000 n 
+0000014743 00000 n 
+0000014925 00000 n 
+trailer
+<<
+/Size 20
+/Root 1 0 R
+/Info 7 0 R
+>>
+startxref
+17463
+%%EOF

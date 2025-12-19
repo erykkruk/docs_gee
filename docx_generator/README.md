@@ -79,6 +79,26 @@ doc.addParagraph(DocxParagraph(
 doc.addParagraph(DocxParagraph.heading('Main Title', level: 1));
 doc.addParagraph(DocxParagraph.heading('Section', level: 2));
 doc.addParagraph(DocxParagraph.heading('Subsection', level: 3));
+doc.addParagraph(DocxParagraph.heading('Minor Section', level: 4));
+```
+
+### Semantic Styles
+
+```dart
+doc.addParagraph(DocxParagraph.subtitle('Document subtitle'));
+doc.addParagraph(DocxParagraph.caption('Figure 1: Example caption'));
+doc.addParagraph(DocxParagraph.quote('This is a blockquote...'));
+```
+
+### Text Colors
+
+```dart
+doc.addParagraph(DocxParagraph(
+  runs: [
+    const DocxRun('Red text ', color: 'FF0000'),
+    const DocxRun('with yellow highlight', backgroundColor: 'FFFF00'),
+  ],
+));
 ```
 
 ### Text Alignment
@@ -98,12 +118,37 @@ doc.addParagraph(DocxParagraph.bulletItem('Second item'));
 doc.addParagraph(DocxParagraph.bulletItem('Third item'));
 ```
 
+### Dash Lists
+
+```dart
+doc.addParagraph(DocxParagraph.dashItem('First item'));
+doc.addParagraph(DocxParagraph.dashItem('Second item'));
+doc.addParagraph(DocxParagraph.dashItem('Third item'));
+```
+
 ### Numbered Lists
 
 ```dart
+// Numeric (1, 2, 3...)
 doc.addParagraph(DocxParagraph.numberedItem('Step one'));
 doc.addParagraph(DocxParagraph.numberedItem('Step two'));
-doc.addParagraph(DocxParagraph.numberedItem('Step three'));
+
+// Alphabetic (a, b, c...)
+doc.addParagraph(DocxParagraph.alphaItem('Item a'));
+doc.addParagraph(DocxParagraph.alphaItem('Item b'));
+
+// Roman numerals (I, II, III...)
+doc.addParagraph(DocxParagraph.romanItem('Section I'));
+doc.addParagraph(DocxParagraph.romanItem('Section II'));
+```
+
+### Nested Lists
+
+```dart
+doc.addParagraph(DocxParagraph.bulletItem('Top level'));
+doc.addParagraph(DocxParagraph.bulletItem('Nested item', indentLevel: 1));
+doc.addParagraph(DocxParagraph.bulletItem('Deep nested', indentLevel: 2));
+doc.addParagraph(DocxParagraph.bulletItem('Back to top level'));
 ```
 
 ### Page Breaks
@@ -265,12 +310,12 @@ Tabela pokazuje aktualny stan implementacji funkcji dla DOCX i PDF.
 | Funkcja | DOCX | PDF |
 |---------|:----:|:---:|
 | **unordered list (bullet •)** | ✅ | ✅ |
-| unordered list (dash -) | ❌ | ❌ |
+| **unordered list (dash -)** | ✅ | ✅ |
 | unordered list (custom symbol) | ❌ | ❌ |
 | **ordered list (1, 2, 3)** | ✅ | ✅ |
-| ordered list (a, b, c) | ❌ | ❌ |
-| ordered list (I, II, III) | ❌ | ❌ |
-| nested lists | ❌ | ❌ |
+| **ordered list (a, b, c)** | ✅ | ✅ |
+| **ordered list (I, II, III)** | ✅ | ✅ |
+| **nested lists** | ✅ | ✅ |
 | list item spacing | ❌ | ❌ |
 | start index | ❌ | ❌ |
 

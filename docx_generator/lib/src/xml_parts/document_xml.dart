@@ -34,8 +34,9 @@ class DocumentXml {
     // Paragraph properties
     final hasStyle = paragraph.style != DocxParagraphStyle.normal;
     final hasAlignment = paragraph.alignment != DocxAlignment.left;
+    final hasIndent = paragraph.indentLevel > 0 && paragraph.style.isList;
     final hasParagraphProps =
-        hasStyle || hasAlignment || paragraph.pageBreakBefore;
+        hasStyle || hasAlignment || paragraph.pageBreakBefore || hasIndent;
 
     if (hasParagraphProps) {
       buffer.writeln('      <w:pPr>');
@@ -48,6 +49,15 @@ class DocumentXml {
         buffer.writeln(
           '        <w:pStyle w:val="${paragraph.style.styleId}"/>',
         );
+      }
+
+      // Add numPr with ilvl for nested lists
+      if (hasIndent) {
+        final numId = _getNumIdForStyle(paragraph.style);
+        buffer.writeln('        <w:numPr>');
+        buffer.writeln('          <w:ilvl w:val="${paragraph.indentLevel}"/>');
+        buffer.writeln('          <w:numId w:val="$numId"/>');
+        buffer.writeln('        </w:numPr>');
       }
 
       if (hasAlignment) {
@@ -65,6 +75,18 @@ class DocumentXml {
     }
 
     buffer.writeln('    </w:p>');
+  }
+
+  /// Returns the numId for a given list style.
+  static int _getNumIdForStyle(DocxParagraphStyle style) {
+    return switch (style) {
+      DocxParagraphStyle.listBullet => 1,
+      DocxParagraphStyle.listNumber => 2,
+      DocxParagraphStyle.listDash => 3,
+      DocxParagraphStyle.listNumberAlpha => 4,
+      DocxParagraphStyle.listNumberRoman => 5,
+      _ => 1,
+    };
   }
 
   static void _writeRun(StringBuffer buffer, DocxRun run) {

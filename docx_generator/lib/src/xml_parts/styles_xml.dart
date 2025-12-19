@@ -161,7 +161,7 @@ class StylesXml {
     buffer.writeln('    </w:rPr>');
     buffer.writeln('  </w:style>');
 
-    // List Bullet
+    // List Bullet (•)
     buffer.writeln('  <w:style w:type="paragraph" w:styleId="ListBullet">');
     buffer.writeln('    <w:name w:val="List Bullet"/>');
     buffer.writeln('    <w:basedOn w:val="Normal"/>');
@@ -173,7 +173,7 @@ class StylesXml {
     buffer.writeln('    </w:pPr>');
     buffer.writeln('  </w:style>');
 
-    // List Number
+    // List Number (1, 2, 3...)
     buffer.writeln('  <w:style w:type="paragraph" w:styleId="ListNumber">');
     buffer.writeln('    <w:name w:val="List Number"/>');
     buffer.writeln('    <w:basedOn w:val="Normal"/>');
@@ -181,6 +181,44 @@ class StylesXml {
     buffer.writeln('    <w:pPr>');
     buffer.writeln('      <w:numPr>');
     buffer.writeln('        <w:numId w:val="2"/>');
+    buffer.writeln('      </w:numPr>');
+    buffer.writeln('    </w:pPr>');
+    buffer.writeln('  </w:style>');
+
+    // List Dash (-)
+    buffer.writeln('  <w:style w:type="paragraph" w:styleId="ListDash">');
+    buffer.writeln('    <w:name w:val="List Dash"/>');
+    buffer.writeln('    <w:basedOn w:val="Normal"/>');
+    buffer.writeln('    <w:qFormat/>');
+    buffer.writeln('    <w:pPr>');
+    buffer.writeln('      <w:numPr>');
+    buffer.writeln('        <w:numId w:val="3"/>');
+    buffer.writeln('      </w:numPr>');
+    buffer.writeln('    </w:pPr>');
+    buffer.writeln('  </w:style>');
+
+    // List Number Alpha (a, b, c...)
+    buffer
+        .writeln('  <w:style w:type="paragraph" w:styleId="ListNumberAlpha">');
+    buffer.writeln('    <w:name w:val="List Number Alpha"/>');
+    buffer.writeln('    <w:basedOn w:val="Normal"/>');
+    buffer.writeln('    <w:qFormat/>');
+    buffer.writeln('    <w:pPr>');
+    buffer.writeln('      <w:numPr>');
+    buffer.writeln('        <w:numId w:val="4"/>');
+    buffer.writeln('      </w:numPr>');
+    buffer.writeln('    </w:pPr>');
+    buffer.writeln('  </w:style>');
+
+    // List Number Roman (I, II, III...)
+    buffer
+        .writeln('  <w:style w:type="paragraph" w:styleId="ListNumberRoman">');
+    buffer.writeln('    <w:name w:val="List Number Roman"/>');
+    buffer.writeln('    <w:basedOn w:val="Normal"/>');
+    buffer.writeln('    <w:qFormat/>');
+    buffer.writeln('    <w:pPr>');
+    buffer.writeln('      <w:numPr>');
+    buffer.writeln('        <w:numId w:val="5"/>');
     buffer.writeln('      </w:numPr>');
     buffer.writeln('    </w:pPr>');
     buffer.writeln('  </w:style>');

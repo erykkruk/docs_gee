@@ -388,7 +388,12 @@ class _PdfBuilder {
     buffer.writeln('BT'); // Begin text
 
     var currentY = pageHeight - marginTop;
-    var numberCounter = 0;
+
+    // Track counters for each list type and level
+    // Key: "styleType_level", Value: current counter
+    final listCounters = <String, int>{};
+    DocxParagraphStyle? lastListStyle;
+    int lastIndentLevel = -1;
 
     for (final paragraph in paragraphs) {
       final size = _getFontSizeForStyle(paragraph.style);
@@ -396,14 +401,50 @@ class _PdfBuilder {
 
       // Handle list prefixes
       String prefix = '';
-      if (paragraph.style == DocxParagraphStyle.listBullet) {
-        prefix = '  \x95 '; // Bullet character with indent
-        numberCounter = 0;
-      } else if (paragraph.style == DocxParagraphStyle.listNumber) {
-        numberCounter++;
-        prefix = '  $numberCounter. ';
+      final indentSpaces = '  ' * (paragraph.indentLevel + 1);
+
+      if (paragraph.style.isList) {
+        // Reset counters if switching list type at same level
+        if (lastListStyle != paragraph.style ||
+            paragraph.indentLevel < lastIndentLevel) {
+          // Reset all counters at this level and deeper
+          listCounters.removeWhere((key, _) {
+            final parts = key.split('_');
+            if (parts.length == 2) {
+              final level = int.tryParse(parts[1]) ?? 0;
+              return level >= paragraph.indentLevel;
+            }
+            return false;
+          });
+        }
+
+        final counterKey = '${paragraph.style.name}_${paragraph.indentLevel}';
+
+        if (paragraph.style == DocxParagraphStyle.listBullet) {
+          prefix = '$indentSpaces\x95 '; // Bullet character
+        } else if (paragraph.style == DocxParagraphStyle.listDash) {
+          prefix = '$indentSpaces- '; // Dash character
+        } else if (paragraph.style == DocxParagraphStyle.listNumber) {
+          final count = (listCounters[counterKey] ?? 0) + 1;
+          listCounters[counterKey] = count;
+          prefix = '$indentSpaces$count. ';
+        } else if (paragraph.style == DocxParagraphStyle.listNumberAlpha) {
+          final count = (listCounters[counterKey] ?? 0) + 1;
+          listCounters[counterKey] = count;
+          prefix = '$indentSpaces${_toAlpha(count)}) ';
+        } else if (paragraph.style == DocxParagraphStyle.listNumberRoman) {
+          final count = (listCounters[counterKey] ?? 0) + 1;
+          listCounters[counterKey] = count;
+          prefix = '$indentSpaces${_toRoman(count)}. ';
+        }
+
+        lastListStyle = paragraph.style;
+        lastIndentLevel = paragraph.indentLevel;
       } else {
-        numberCounter = 0;
+        // Reset all list counters when not in a list
+        listCounters.clear();
+        lastListStyle = null;
+        lastIndentLevel = -1;
       }
 
       // Combine all runs into text segments with formatting info
@@ -549,6 +590,50 @@ class _PdfBuilder {
     final g = int.parse(cleanHex.substring(2, 4), radix: 16) / 255;
     final b = int.parse(cleanHex.substring(4, 6), radix: 16) / 255;
     return (r, g, b);
+  }
+
+  /// Converts number to lowercase alphabetic (1=a, 2=b, ..., 26=z, 27=aa, etc.)
+  String _toAlpha(int n) {
+    if (n <= 0) return '';
+    String result = '';
+    int num = n;
+    while (num > 0) {
+      num--;
+      result = String.fromCharCode('a'.codeUnitAt(0) + (num % 26)) + result;
+      num ~/= 26;
+    }
+    return result;
+  }
+
+  /// Converts number to uppercase Roman numerals.
+  String _toRoman(int n) {
+    if (n <= 0 || n > 3999) return n.toString();
+
+    const romanNumerals = [
+      (1000, 'M'),
+      (900, 'CM'),
+      (500, 'D'),
+      (400, 'CD'),
+      (100, 'C'),
+      (90, 'XC'),
+      (50, 'L'),
+      (40, 'XL'),
+      (10, 'X'),
+      (9, 'IX'),
+      (5, 'V'),
+      (4, 'IV'),
+      (1, 'I'),
+    ];
+
+    final buffer = StringBuffer();
+    int remaining = n;
+    for (final (value, numeral) in romanNumerals) {
+      while (remaining >= value) {
+        buffer.write(numeral);
+        remaining -= value;
+      }
+    }
+    return buffer.toString();
   }
 
   /// Wraps text segments into lines that fit within content width.
