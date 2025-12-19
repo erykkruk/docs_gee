@@ -1,0 +1,87 @@
+import 'docx_enums.dart';
+import 'docx_run.dart';
+
+/// Represents a paragraph in a DOCX document.
+class DocxParagraph {
+  const DocxParagraph({
+    required this.runs,
+    this.style = DocxParagraphStyle.normal,
+    this.alignment = DocxAlignment.left,
+    this.pageBreakBefore = false,
+  });
+
+  /// Creates a simple paragraph with plain text.
+  factory DocxParagraph.text(
+    String text, {
+    DocxParagraphStyle style = DocxParagraphStyle.normal,
+    DocxAlignment alignment = DocxAlignment.left,
+    bool pageBreakBefore = false,
+  }) {
+    return DocxParagraph(
+      runs: [DocxRun(text)],
+      style: style,
+      alignment: alignment,
+      pageBreakBefore: pageBreakBefore,
+    );
+  }
+
+  /// Creates a heading paragraph.
+  factory DocxParagraph.heading(
+    String text, {
+    required int level,
+    DocxAlignment alignment = DocxAlignment.left,
+    bool pageBreakBefore = false,
+  }) {
+    final style = switch (level) {
+      1 => DocxParagraphStyle.heading1,
+      2 => DocxParagraphStyle.heading2,
+      3 => DocxParagraphStyle.heading3,
+      _ => DocxParagraphStyle.heading1,
+    };
+    return DocxParagraph(
+      runs: [DocxRun(text)],
+      style: style,
+      alignment: alignment,
+      pageBreakBefore: pageBreakBefore,
+    );
+  }
+
+  /// Creates a bullet list item.
+  factory DocxParagraph.bulletItem(
+    String text, {
+    DocxAlignment alignment = DocxAlignment.left,
+  }) {
+    return DocxParagraph(
+      runs: [DocxRun(text)],
+      style: DocxParagraphStyle.listBullet,
+      alignment: alignment,
+    );
+  }
+
+  /// Creates a numbered list item.
+  factory DocxParagraph.numberedItem(
+    String text, {
+    DocxAlignment alignment = DocxAlignment.left,
+  }) {
+    return DocxParagraph(
+      runs: [DocxRun(text)],
+      style: DocxParagraphStyle.listNumber,
+      alignment: alignment,
+    );
+  }
+
+  /// The text runs in this paragraph.
+  final List<DocxRun> runs;
+
+  /// The paragraph style.
+  final DocxParagraphStyle style;
+
+  /// Text alignment.
+  final DocxAlignment alignment;
+
+  /// Whether to insert a page break before this paragraph.
+  final bool pageBreakBefore;
+
+  /// Returns the plain text content of this paragraph.
+  String get plainText => runs.map((r) => r.text).join();
+}
