@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'document_generator.dart';
 import 'models/models.dart';
 
 /// Generates PDF files from [DocxDocument] without external dependencies.
+///
+/// Implements [DocumentGenerator] interface for interchangeable use with [DocxGenerator].
 ///
 /// PDF is built manually by creating the required objects:
 /// - Catalog (document root)
@@ -11,7 +14,7 @@ import 'models/models.dart';
 /// - Page objects
 /// - Font resources
 /// - Content streams
-class PdfGenerator {
+class PdfGenerator implements DocumentGenerator {
   PdfGenerator({
     this.fontName = 'Helvetica',
     this.fontSize = 12,
@@ -48,6 +51,7 @@ class PdfGenerator {
   final double marginRight;
 
   /// Generates a PDF document and returns it as bytes.
+  @override
   Uint8List generate(DocxDocument document) {
     final builder = _PdfBuilder(
       fontName: fontName,
@@ -350,40 +354,83 @@ class _PdfBuilder {
 
     for (final paragraph in paragraphs) {
       final size = _getFontSizeForStyle(paragraph.style);
-      final lineHeight = size * 1.5;
-
-      // Calculate X position based on alignment
-      final textWidth = _estimateTextWidth(paragraph.plainText, size);
-      double xPos;
-      switch (paragraph.alignment) {
-        case DocxAlignment.center:
-          xPos = marginLeft + (_contentWidth - textWidth) / 2;
-        case DocxAlignment.right:
-          xPos = marginLeft + _contentWidth - textWidth;
-        case DocxAlignment.justify:
-        case DocxAlignment.left:
-          xPos = marginLeft;
-      }
+      final lineHeight = size * 1.4;
 
       // Handle list prefixes
       String prefix = '';
       if (paragraph.style == DocxParagraphStyle.listBullet) {
-        prefix = '\x95 '; // Bullet character
+        prefix = '  \x95 '; // Bullet character with indent
         numberCounter = 0;
       } else if (paragraph.style == DocxParagraphStyle.listNumber) {
         numberCounter++;
-        prefix = '$numberCounter. ';
+        prefix = '  $numberCounter. ';
       } else {
         numberCounter = 0;
       }
 
-      // Move to position
-      buffer.writeln('1 0 0 1 $xPos $currentY Tm');
+      // Combine all runs into text segments with formatting info
+      final segments = <_TextSegment>[];
 
-      // Render runs with formatting
-      _renderParagraphRuns(buffer, paragraph, size, prefix);
+      // Determine if heading (bold by default)
+      final isHeading = paragraph.style == DocxParagraphStyle.heading1 ||
+          paragraph.style == DocxParagraphStyle.heading2 ||
+          paragraph.style == DocxParagraphStyle.heading3;
 
-      currentY -= lineHeight + (size * 0.3);
+      // Add prefix as regular text
+      if (prefix.isNotEmpty) {
+        segments.add(_TextSegment(prefix, '/F1'));
+      }
+
+      // Add runs with their formatting
+      for (final run in paragraph.runs) {
+        String fontRef;
+        if ((run.bold || isHeading) && run.italic) {
+          fontRef = '/F4';
+        } else if (run.bold || isHeading) {
+          fontRef = '/F2';
+        } else if (run.italic) {
+          fontRef = '/F3';
+        } else {
+          fontRef = '/F1';
+        }
+        segments.add(_TextSegment(run.text, fontRef));
+      }
+
+      // Wrap text into lines
+      final lines = _wrapTextSegments(segments, size);
+
+      // Render each line
+      for (int i = 0; i < lines.length; i++) {
+        final line = lines[i];
+        final lineText = line.map((s) => s.text).join();
+        final lineWidth = _estimateTextWidth(lineText, size);
+
+        // Calculate X position based on alignment
+        double xPos;
+        switch (paragraph.alignment) {
+          case DocxAlignment.center:
+            xPos = marginLeft + (_contentWidth - lineWidth) / 2;
+          case DocxAlignment.right:
+            xPos = marginLeft + _contentWidth - lineWidth;
+          case DocxAlignment.justify:
+          case DocxAlignment.left:
+            xPos = marginLeft;
+        }
+
+        // Move to position for this line
+        buffer.writeln('1 0 0 1 $xPos $currentY Tm');
+
+        // Render segments in this line
+        for (final segment in line) {
+          buffer.writeln('${segment.fontRef} $size Tf');
+          buffer.writeln('(${_escapePdfString(segment.text)}) Tj');
+        }
+
+        currentY -= lineHeight;
+      }
+
+      // Add paragraph spacing
+      currentY -= size * 0.4;
     }
 
     buffer.writeln('ET'); // End text
@@ -391,43 +438,59 @@ class _PdfBuilder {
     return buffer.toString();
   }
 
-  void _renderParagraphRuns(
-    StringBuffer buffer,
-    DocxParagraph paragraph,
-    int size,
-    String prefix,
-  ) {
-    // Determine if heading (bold by default)
-    final isHeading = paragraph.style == DocxParagraphStyle.heading1 ||
-        paragraph.style == DocxParagraphStyle.heading2 ||
-        paragraph.style == DocxParagraphStyle.heading3;
+  /// Wraps text segments into lines that fit within content width.
+  List<List<_TextSegment>> _wrapTextSegments(List<_TextSegment> segments, int size) {
+    final lines = <List<_TextSegment>>[];
+    var currentLine = <_TextSegment>[];
+    var currentLineWidth = 0.0;
+    final maxWidth = _contentWidth;
+    final spaceWidth = _estimateTextWidth(' ', size);
 
-    // Write prefix with regular font
-    if (prefix.isNotEmpty) {
-      buffer.writeln('/F1 $size Tf');
-      buffer.writeln('(${_escapePdfString(prefix)}) Tj');
-    }
+    for (final segment in segments) {
+      final words = segment.text.split(' ');
 
-    for (final run in paragraph.runs) {
-      // Select font based on formatting
-      String fontRef;
-      if ((run.bold || isHeading) && run.italic) {
-        fontRef = '/F4'; // Bold-Italic
-      } else if (run.bold || isHeading) {
-        fontRef = '/F2'; // Bold
-      } else if (run.italic) {
-        fontRef = '/F3'; // Italic
-      } else {
-        fontRef = '/F1'; // Regular
+      for (int i = 0; i < words.length; i++) {
+        final word = words[i];
+        if (word.isEmpty) continue;
+
+        final wordWidth = _estimateTextWidth(word, size);
+        final needsSpace = currentLine.isNotEmpty &&
+            (currentLine.last.text.isNotEmpty && !currentLine.last.text.endsWith(' '));
+        final additionalWidth = needsSpace ? spaceWidth + wordWidth : wordWidth;
+
+        if (currentLineWidth + additionalWidth > maxWidth && currentLine.isNotEmpty) {
+          // Start new line
+          lines.add(currentLine);
+          currentLine = <_TextSegment>[];
+          currentLineWidth = 0.0;
+
+          // Add word to new line
+          currentLine.add(_TextSegment(word, segment.fontRef));
+          currentLineWidth = wordWidth;
+        } else {
+          // Add to current line
+          if (needsSpace) {
+            currentLine.add(_TextSegment(' $word', segment.fontRef));
+            currentLineWidth += spaceWidth + wordWidth;
+          } else {
+            currentLine.add(_TextSegment(word, segment.fontRef));
+            currentLineWidth += wordWidth;
+          }
+        }
       }
-
-      buffer.writeln('$fontRef $size Tf');
-
-      // Handle underline/strikethrough (simplified - just renders text)
-      // Full underline/strikethrough would require graphics operators
-      final escapedText = _escapePdfString(run.text);
-      buffer.writeln('($escapedText) Tj');
     }
+
+    // Add remaining line
+    if (currentLine.isNotEmpty) {
+      lines.add(currentLine);
+    }
+
+    // Ensure at least one empty line for empty paragraphs
+    if (lines.isEmpty) {
+      lines.add([_TextSegment('', '/F1')]);
+    }
+
+    return lines;
   }
 
   double _estimateTextWidth(String text, int size) {
@@ -452,4 +515,12 @@ class _PdfObject {
 
   final int id;
   final String content;
+}
+
+/// Internal representation of a text segment with font reference.
+class _TextSegment {
+  _TextSegment(this.text, this.fontRef);
+
+  final String text;
+  final String fontRef;
 }

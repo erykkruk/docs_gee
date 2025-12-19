@@ -3,10 +3,13 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 
+import 'document_generator.dart';
 import 'models/models.dart';
 import 'xml_parts/xml_parts.dart';
 
 /// Generator for creating DOCX files.
+///
+/// Implements [DocumentGenerator] interface for interchangeable use with [PdfGenerator].
 ///
 /// Example usage:
 /// ```dart
@@ -18,7 +21,7 @@ import 'xml_parts/xml_parts.dart';
 /// final bytes = generator.generate(doc);
 /// await File('output.docx').writeAsBytes(bytes);
 /// ```
-class DocxGenerator {
+class DocxGenerator implements DocumentGenerator {
   /// Creates a new DOCX generator.
   ///
   /// [fontName] - default font name for the document.
@@ -37,6 +40,7 @@ class DocxGenerator {
   /// Generates a DOCX file from the given document.
   ///
   /// Returns the DOCX file as bytes that can be written to a file.
+  @override
   Uint8List generate(DocxDocument document) {
     final hasLists = _documentHasLists(document);
 
