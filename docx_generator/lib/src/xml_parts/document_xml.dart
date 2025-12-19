@@ -77,6 +77,15 @@ class DocumentXml {
       if (run.italic) buffer.write('<w:i/>');
       if (run.underline) buffer.write('<w:u w:val="single"/>');
       if (run.strikethrough) buffer.write('<w:strike/>');
+      if (run.color != null) {
+        buffer.write('<w:color w:val="${run.color}"/>');
+      }
+      if (run.backgroundColor != null) {
+        buffer.write(
+            '<w:highlight w:val="${_mapHighlightColor(run.backgroundColor!)}"/>');
+        // Alternative: shading for exact colors
+        // buffer.write('<w:shd w:val="clear" w:fill="${run.backgroundColor}"/>');
+      }
       buffer.write('</w:rPr>');
     }
 
@@ -90,5 +99,30 @@ class DocumentXml {
     }
 
     buffer.writeln('</w:r>');
+  }
+
+  /// Maps hex color to Word highlight color name.
+  /// Word only supports a limited set of highlight colors.
+  static String _mapHighlightColor(String hexColor) {
+    final hex = hexColor.toUpperCase();
+    return switch (hex) {
+      'FFFF00' || 'FFD700' => 'yellow',
+      '00FF00' || '90EE90' => 'green',
+      '00FFFF' || 'E0FFFF' => 'cyan',
+      'FF00FF' || 'FF69B4' => 'magenta',
+      '0000FF' || '4169E1' => 'blue',
+      'FF0000' || 'DC143C' => 'red',
+      '000080' => 'darkBlue',
+      '008080' => 'darkCyan',
+      '008000' => 'darkGreen',
+      '800080' => 'darkMagenta',
+      '800000' => 'darkRed',
+      '808000' => 'darkYellow',
+      '808080' => 'darkGray',
+      'C0C0C0' || 'D3D3D3' => 'lightGray',
+      '000000' => 'black',
+      'FFFFFF' => 'white',
+      _ => 'yellow', // Default to yellow for unknown colors
+    };
   }
 }

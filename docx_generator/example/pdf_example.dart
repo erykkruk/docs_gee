@@ -188,7 +188,8 @@ Uint8List generateSamplePdfDocument() {
   doc.addParagraph(DocxParagraph.text('Features of this library:'));
 
   doc.addParagraph(DocxParagraph.bulletItem('Pure Dart implementation'));
-  doc.addParagraph(DocxParagraph.bulletItem('Zero external dependencies for PDF'));
+  doc.addParagraph(
+      DocxParagraph.bulletItem('Zero external dependencies for PDF'));
   doc.addParagraph(DocxParagraph.bulletItem('Cross-platform support'));
   doc.addParagraph(DocxParagraph.bulletItem('Same API for DOCX and PDF'));
   doc.addParagraph(DocxParagraph.bulletItem('Lightweight footprint'));

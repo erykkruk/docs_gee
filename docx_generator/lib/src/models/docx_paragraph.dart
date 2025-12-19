@@ -36,6 +36,7 @@ class DocxParagraph {
       1 => DocxParagraphStyle.heading1,
       2 => DocxParagraphStyle.heading2,
       3 => DocxParagraphStyle.heading3,
+      4 => DocxParagraphStyle.heading4,
       _ => DocxParagraphStyle.heading1,
     };
     return DocxParagraph(
@@ -43,6 +44,42 @@ class DocxParagraph {
       style: style,
       alignment: alignment,
       pageBreakBefore: pageBreakBefore,
+    );
+  }
+
+  /// Creates a subtitle paragraph.
+  factory DocxParagraph.subtitle(
+    String text, {
+    DocxAlignment alignment = DocxAlignment.left,
+  }) {
+    return DocxParagraph(
+      runs: [DocxRun(text)],
+      style: DocxParagraphStyle.subtitle,
+      alignment: alignment,
+    );
+  }
+
+  /// Creates a caption paragraph.
+  factory DocxParagraph.caption(
+    String text, {
+    DocxAlignment alignment = DocxAlignment.left,
+  }) {
+    return DocxParagraph(
+      runs: [DocxRun(text)],
+      style: DocxParagraphStyle.caption,
+      alignment: alignment,
+    );
+  }
+
+  /// Creates a quote/blockquote paragraph.
+  factory DocxParagraph.quote(
+    String text, {
+    DocxAlignment alignment = DocxAlignment.left,
+  }) {
+    return DocxParagraph(
+      runs: [DocxRun(text)],
+      style: DocxParagraphStyle.quote,
+      alignment: alignment,
     );
   }
 

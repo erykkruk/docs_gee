@@ -61,7 +61,8 @@ void main() {
 }
 
 /// Exports a document using any DocumentGenerator implementation.
-void exportDocument(Document doc, DocumentGenerator generator, String filename) {
+void exportDocument(
+    Document doc, DocumentGenerator generator, String filename) {
   final bytes = generator.generate(doc);
   File(filename).writeAsBytesSync(bytes);
   print('Generated: $filename (${bytes.length} bytes)');

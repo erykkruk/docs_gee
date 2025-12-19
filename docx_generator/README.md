@@ -214,14 +214,14 @@ Tabela pokazuje aktualny stan implementacji funkcji dla DOCX i PDF.
 |---------|:----:|:---:|
 | **bold** | ✅ | ✅ |
 | **italic** | ✅ | ✅ |
-| **underline** | ✅ | ❌ |
-| **strikethrough** | ✅ | ❌ |
+| **underline** | ✅ | ✅ |
+| **strikethrough** | ✅ | ✅ |
 | superscript | ❌ | ❌ |
 | subscript | ❌ | ❌ |
 | **font family** | ✅ | ✅ |
 | **font size (pt)** | ✅ | ✅ |
-| text color | ❌ | ❌ |
-| background / highlight color | ❌ | ❌ |
+| **text color** | ✅ | ✅ |
+| **background / highlight color** | ✅ | ❌ |
 | letter spacing | ❌ | ❌ |
 | word spacing | ❌ | ❌ |
 | text shadow | ❌ | ❌ |
@@ -252,10 +252,10 @@ Tabela pokazuje aktualny stan implementacji funkcji dla DOCX i PDF.
 | **H1** | ✅ | ✅ |
 | **H2** | ✅ | ✅ |
 | **H3** | ✅ | ✅ |
-| H4 | ❌ | ❌ |
-| subtitle | ❌ | ❌ |
-| caption | ❌ | ❌ |
-| quote / blockquote | ❌ | ❌ |
+| **H4** | ✅ | ✅ |
+| **subtitle** | ✅ | ✅ |
+| **caption** | ✅ | ✅ |
+| **quote / blockquote** | ✅ | ✅ |
 | code block | ❌ | ❌ |
 | footnote text | ❌ | ❌ |
 | small print / disclaimer | ❌ | ❌ |
@@ -343,12 +343,12 @@ Tabela pokazuje aktualny stan implementacji funkcji dla DOCX i PDF.
 
 | Funkcja | DOCX | PDF |
 |---------|:----:|:---:|
-| **title** | ✅ | ❌ |
-| **author** | ✅ | ❌ |
+| **title** | ✅ | ✅ |
+| **author** | ✅ | ✅ |
 | subject | ❌ | ❌ |
 | keywords | ❌ | ❌ |
-| creation date | ❌ | ❌ |
-| modification date | ❌ | ❌ |
+| **creation date** | ❌ | ✅ |
+| **modification date** | ❌ | ✅ |
 | language | ❌ | ❌ |
 | reading direction (LTR / RTL) | ❌ | ❌ |
 

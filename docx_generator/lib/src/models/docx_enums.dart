@@ -15,6 +15,10 @@ enum DocxParagraphStyle {
   heading1('Heading1'),
   heading2('Heading2'),
   heading3('Heading3'),
+  heading4('Heading4'),
+  subtitle('Subtitle'),
+  caption('Caption'),
+  quote('Quote'),
   listBullet('ListBullet'),
   listNumber('ListNumber');
 

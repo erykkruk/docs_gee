@@ -134,14 +134,19 @@ class _PdfBuilder {
     final boldItalicFontObj = _PdfObject(6, _buildBoldItalicFont());
     _objects.add(boldItalicFontObj);
 
+    // Object 7: Info dictionary (metadata)
+    final infoObj = _PdfObject(7, _buildInfo(document));
+    _objects.add(infoObj);
+
     // Create page objects and content streams
-    int nextObjId = 7;
+    int nextObjId = 8;
     for (int i = 0; i < pages.length; i++) {
       final pageObjId = nextObjId++;
       final contentObjId = nextObjId++;
 
       final contentStream = _buildContentStream(pages[i]);
-      final contentObj = _PdfObject(contentObjId, _buildStreamObject(contentStream));
+      final contentObj =
+          _PdfObject(contentObjId, _buildStreamObject(contentStream));
 
       final pageObj = _PdfObject(pageObjId, _buildPage(contentObjId));
 
@@ -170,6 +175,7 @@ class _PdfBuilder {
     _writeBytes(buffer, '<<\n');
     _writeBytes(buffer, '/Size ${_objects.length + 1}\n');
     _writeBytes(buffer, '/Root 1 0 R\n');
+    _writeBytes(buffer, '/Info 7 0 R\n');
     _writeBytes(buffer, '>>\n');
     _writeBytes(buffer, 'startxref\n');
     _writeBytes(buffer, '$xrefOffset\n');
@@ -191,9 +197,9 @@ class _PdfBuilder {
   String _buildPages(int pageCount) {
     final kids = StringBuffer();
     kids.write('/Kids [');
-    // Page objects start at ID 7, every other object (page, content, page, content...)
+    // Page objects start at ID 8, every other object (page, content, page, content...)
     for (int i = 0; i < pageCount; i++) {
-      final pageObjId = 7 + (i * 2);
+      final pageObjId = 8 + (i * 2);
       kids.write('$pageObjId 0 R ');
     }
     kids.write(']');
@@ -263,6 +269,31 @@ class _PdfBuilder {
     if (fontName == 'Times-Roman') return 'Times-BoldItalic';
     if (fontName == 'Courier') return 'Courier-BoldOblique';
     return '$fontName-BoldItalic';
+  }
+
+  String _buildInfo(DocxDocument document) {
+    final buffer = StringBuffer();
+    buffer.writeln('<<');
+    if (document.title != null) {
+      buffer.writeln('/Title (${_escapePdfString(document.title!)})');
+    }
+    if (document.author != null) {
+      buffer.writeln('/Author (${_escapePdfString(document.author!)})');
+    }
+    buffer.writeln('/Creator (docs_gee)');
+    buffer.writeln('/Producer (docs_gee Dart library)');
+    // Add creation date in PDF format: D:YYYYMMDDHHmmss
+    final now = DateTime.now();
+    final dateStr = 'D:${now.year.toString().padLeft(4, '0')}'
+        '${now.month.toString().padLeft(2, '0')}'
+        '${now.day.toString().padLeft(2, '0')}'
+        '${now.hour.toString().padLeft(2, '0')}'
+        '${now.minute.toString().padLeft(2, '0')}'
+        '${now.second.toString().padLeft(2, '0')}';
+    buffer.writeln('/CreationDate ($dateStr)');
+    buffer.writeln('/ModDate ($dateStr)');
+    buffer.write('>>');
+    return buffer.toString();
   }
 
   String _buildPage(int contentObjId) {
@@ -343,6 +374,10 @@ class _PdfBuilder {
       DocxParagraphStyle.heading1 => (fontSize * 2).round(),
       DocxParagraphStyle.heading2 => (fontSize * 1.5).round(),
       DocxParagraphStyle.heading3 => (fontSize * 1.25).round(),
+      DocxParagraphStyle.heading4 => (fontSize * 1.1).round(),
+      DocxParagraphStyle.subtitle => (fontSize * 1.2).round(),
+      DocxParagraphStyle.caption => (fontSize * 0.85).round(),
+      DocxParagraphStyle.quote => fontSize,
       _ => fontSize,
     };
   }
@@ -377,7 +412,12 @@ class _PdfBuilder {
       // Determine if heading (bold by default)
       final isHeading = paragraph.style == DocxParagraphStyle.heading1 ||
           paragraph.style == DocxParagraphStyle.heading2 ||
-          paragraph.style == DocxParagraphStyle.heading3;
+          paragraph.style == DocxParagraphStyle.heading3 ||
+          paragraph.style == DocxParagraphStyle.heading4;
+
+      // Determine if italic style (quote, subtitle)
+      final isItalicStyle = paragraph.style == DocxParagraphStyle.quote ||
+          paragraph.style == DocxParagraphStyle.subtitle;
 
       // Add prefix as regular text
       if (prefix.isNotEmpty) {
@@ -387,16 +427,24 @@ class _PdfBuilder {
       // Add runs with their formatting
       for (final run in paragraph.runs) {
         String fontRef;
-        if ((run.bold || isHeading) && run.italic) {
+        final isBold = run.bold || isHeading;
+        final isItalic = run.italic || isItalicStyle;
+        if (isBold && isItalic) {
           fontRef = '/F4';
-        } else if (run.bold || isHeading) {
+        } else if (isBold) {
           fontRef = '/F2';
-        } else if (run.italic) {
+        } else if (isItalic) {
           fontRef = '/F3';
         } else {
           fontRef = '/F1';
         }
-        segments.add(_TextSegment(run.text, fontRef));
+        segments.add(_TextSegment(
+          run.text,
+          fontRef,
+          color: run.color,
+          underline: run.underline,
+          strikethrough: run.strikethrough,
+        ));
       }
 
       // Wrap text into lines
@@ -423,10 +471,61 @@ class _PdfBuilder {
         // Move to position for this line
         buffer.writeln('1 0 0 1 $xPos $currentY Tm');
 
+        // Track current x position for underline/strikethrough
+        var segmentX = xPos;
+
         // Render segments in this line
         for (final segment in line) {
+          // Set color if specified
+          if (segment.color != null) {
+            final rgb = _hexToRgb(segment.color!);
+            buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} rg');
+          } else {
+            buffer.writeln('0 0 0 rg'); // Default black
+          }
+
           buffer.writeln('${segment.fontRef} $size Tf');
           buffer.writeln('(${_escapePdfString(segment.text)}) Tj');
+
+          // Calculate segment width for decorations
+          final segmentWidth = _estimateTextWidth(segment.text, size);
+
+          // Store decoration info for later (will be drawn outside BT/ET)
+          if (segment.underline || segment.strikethrough) {
+            // We need to end text block, draw line, then continue
+            buffer.writeln('ET');
+            buffer.writeln('q'); // Save graphics state
+
+            // Set line color
+            if (segment.color != null) {
+              final rgb = _hexToRgb(segment.color!);
+              buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} RG');
+            } else {
+              buffer.writeln('0 0 0 RG'); // Default black stroke
+            }
+
+            buffer.writeln('0.5 w'); // Line width
+
+            if (segment.underline) {
+              final underlineY = currentY - 2;
+              buffer.writeln('$segmentX $underlineY m');
+              buffer.writeln('${segmentX + segmentWidth} $underlineY l');
+              buffer.writeln('S');
+            }
+
+            if (segment.strikethrough) {
+              final strikeY = currentY + size * 0.3;
+              buffer.writeln('$segmentX $strikeY m');
+              buffer.writeln('${segmentX + segmentWidth} $strikeY l');
+              buffer.writeln('S');
+            }
+
+            buffer.writeln('Q'); // Restore graphics state
+            buffer.writeln('BT'); // Begin text again
+            buffer.writeln('1 0 0 1 ${segmentX + segmentWidth} $currentY Tm');
+          }
+
+          segmentX += segmentWidth;
         }
 
         currentY -= lineHeight;
@@ -441,8 +540,20 @@ class _PdfBuilder {
     return buffer.toString();
   }
 
+  /// Converts hex color string to RGB values (0-1 range).
+  (double, double, double) _hexToRgb(String hex) {
+    final cleanHex = hex.replaceAll('#', '');
+    if (cleanHex.length != 6) return (0.0, 0.0, 0.0);
+
+    final r = int.parse(cleanHex.substring(0, 2), radix: 16) / 255;
+    final g = int.parse(cleanHex.substring(2, 4), radix: 16) / 255;
+    final b = int.parse(cleanHex.substring(4, 6), radix: 16) / 255;
+    return (r, g, b);
+  }
+
   /// Wraps text segments into lines that fit within content width.
-  List<List<_TextSegment>> _wrapTextSegments(List<_TextSegment> segments, int size) {
+  List<List<_TextSegment>> _wrapTextSegments(
+      List<_TextSegment> segments, int size) {
     final lines = <List<_TextSegment>>[];
     var currentLine = <_TextSegment>[];
     var currentLineWidth = 0.0;
@@ -458,25 +569,45 @@ class _PdfBuilder {
 
         final wordWidth = _estimateTextWidth(word, size);
         final needsSpace = currentLine.isNotEmpty &&
-            (currentLine.last.text.isNotEmpty && !currentLine.last.text.endsWith(' '));
+            (currentLine.last.text.isNotEmpty &&
+                !currentLine.last.text.endsWith(' '));
         final additionalWidth = needsSpace ? spaceWidth + wordWidth : wordWidth;
 
-        if (currentLineWidth + additionalWidth > maxWidth && currentLine.isNotEmpty) {
+        if (currentLineWidth + additionalWidth > maxWidth &&
+            currentLine.isNotEmpty) {
           // Start new line
           lines.add(currentLine);
           currentLine = <_TextSegment>[];
           currentLineWidth = 0.0;
 
-          // Add word to new line
-          currentLine.add(_TextSegment(word, segment.fontRef));
+          // Add word to new line with preserved formatting
+          currentLine.add(_TextSegment(
+            word,
+            segment.fontRef,
+            color: segment.color,
+            underline: segment.underline,
+            strikethrough: segment.strikethrough,
+          ));
           currentLineWidth = wordWidth;
         } else {
-          // Add to current line
+          // Add to current line with preserved formatting
           if (needsSpace) {
-            currentLine.add(_TextSegment(' $word', segment.fontRef));
+            currentLine.add(_TextSegment(
+              ' $word',
+              segment.fontRef,
+              color: segment.color,
+              underline: segment.underline,
+              strikethrough: segment.strikethrough,
+            ));
             currentLineWidth += spaceWidth + wordWidth;
           } else {
-            currentLine.add(_TextSegment(word, segment.fontRef));
+            currentLine.add(_TextSegment(
+              word,
+              segment.fontRef,
+              color: segment.color,
+              underline: segment.underline,
+              strikethrough: segment.strikethrough,
+            ));
             currentLineWidth += wordWidth;
           }
         }
@@ -520,10 +651,19 @@ class _PdfObject {
   final String content;
 }
 
-/// Internal representation of a text segment with font reference.
+/// Internal representation of a text segment with font reference and formatting.
 class _TextSegment {
-  _TextSegment(this.text, this.fontRef);
+  _TextSegment(
+    this.text,
+    this.fontRef, {
+    this.color,
+    this.underline = false,
+    this.strikethrough = false,
+  });
 
   final String text;
   final String fontRef;
+  final String? color; // Hex color like "FF0000"
+  final bool underline;
+  final bool strikethrough;
 }

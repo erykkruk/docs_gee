@@ -95,6 +95,72 @@ class StylesXml {
     buffer.writeln('    </w:rPr>');
     buffer.writeln('  </w:style>');
 
+    // Heading 4
+    buffer.writeln('  <w:style w:type="paragraph" w:styleId="Heading4">');
+    buffer.writeln('    <w:name w:val="heading 4"/>');
+    buffer.writeln('    <w:basedOn w:val="Normal"/>');
+    buffer.writeln('    <w:next w:val="Normal"/>');
+    buffer.writeln('    <w:qFormat/>');
+    buffer.writeln('    <w:pPr>');
+    buffer.writeln('      <w:keepNext/>');
+    buffer.writeln('      <w:spacing w:before="200" w:after="120"/>');
+    buffer.writeln('      <w:outlineLvl w:val="3"/>');
+    buffer.writeln('    </w:pPr>');
+    buffer.writeln('    <w:rPr>');
+    buffer.writeln('      <w:b/>');
+    buffer.writeln('      <w:sz w:val="26"/>');
+    buffer.writeln('      <w:szCs w:val="26"/>');
+    buffer.writeln('    </w:rPr>');
+    buffer.writeln('  </w:style>');
+
+    // Subtitle
+    buffer.writeln('  <w:style w:type="paragraph" w:styleId="Subtitle">');
+    buffer.writeln('    <w:name w:val="Subtitle"/>');
+    buffer.writeln('    <w:basedOn w:val="Normal"/>');
+    buffer.writeln('    <w:next w:val="Normal"/>');
+    buffer.writeln('    <w:qFormat/>');
+    buffer.writeln('    <w:pPr>');
+    buffer.writeln('      <w:spacing w:after="200"/>');
+    buffer.writeln('    </w:pPr>');
+    buffer.writeln('    <w:rPr>');
+    buffer.writeln('      <w:i/>');
+    buffer.writeln('      <w:color w:val="5A5A5A"/>');
+    buffer.writeln('      <w:sz w:val="28"/>');
+    buffer.writeln('      <w:szCs w:val="28"/>');
+    buffer.writeln('    </w:rPr>');
+    buffer.writeln('  </w:style>');
+
+    // Caption
+    buffer.writeln('  <w:style w:type="paragraph" w:styleId="Caption">');
+    buffer.writeln('    <w:name w:val="Caption"/>');
+    buffer.writeln('    <w:basedOn w:val="Normal"/>');
+    buffer.writeln('    <w:qFormat/>');
+    buffer.writeln('    <w:pPr>');
+    buffer.writeln('      <w:spacing w:before="120" w:after="120"/>');
+    buffer.writeln('    </w:pPr>');
+    buffer.writeln('    <w:rPr>');
+    buffer.writeln('      <w:color w:val="595959"/>');
+    buffer.writeln('      <w:sz w:val="20"/>');
+    buffer.writeln('      <w:szCs w:val="20"/>');
+    buffer.writeln('    </w:rPr>');
+    buffer.writeln('  </w:style>');
+
+    // Quote
+    buffer.writeln('  <w:style w:type="paragraph" w:styleId="Quote">');
+    buffer.writeln('    <w:name w:val="Quote"/>');
+    buffer.writeln('    <w:basedOn w:val="Normal"/>');
+    buffer.writeln('    <w:next w:val="Normal"/>');
+    buffer.writeln('    <w:qFormat/>');
+    buffer.writeln('    <w:pPr>');
+    buffer.writeln('      <w:spacing w:before="200" w:after="200"/>');
+    buffer.writeln('      <w:ind w:left="720" w:right="720"/>');
+    buffer.writeln('    </w:pPr>');
+    buffer.writeln('    <w:rPr>');
+    buffer.writeln('      <w:i/>');
+    buffer.writeln('      <w:color w:val="404040"/>');
+    buffer.writeln('    </w:rPr>');
+    buffer.writeln('  </w:style>');
+
     // List Bullet
     buffer.writeln('  <w:style w:type="paragraph" w:styleId="ListBullet">');
     buffer.writeln('    <w:name w:val="List Bullet"/>');

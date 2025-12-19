@@ -9,6 +9,8 @@ class DocxRun {
     this.italic = false,
     this.underline = false,
     this.strikethrough = false,
+    this.color,
+    this.backgroundColor,
   });
 
   /// The text content.
@@ -26,8 +28,22 @@ class DocxRun {
   /// Whether the text has strikethrough.
   final bool strikethrough;
 
+  /// Text color in hex format (e.g., "FF0000" for red).
+  /// Without the # prefix.
+  final String? color;
+
+  /// Background/highlight color in hex format (e.g., "FFFF00" for yellow).
+  /// Without the # prefix.
+  final String? backgroundColor;
+
   /// Returns true if any formatting is applied.
-  bool get hasFormatting => bold || italic || underline || strikethrough;
+  bool get hasFormatting =>
+      bold ||
+      italic ||
+      underline ||
+      strikethrough ||
+      color != null ||
+      backgroundColor != null;
 
   /// Creates a copy with modified properties.
   DocxRun copyWith({
@@ -36,6 +52,8 @@ class DocxRun {
     bool? italic,
     bool? underline,
     bool? strikethrough,
+    String? color,
+    String? backgroundColor,
   }) {
     return DocxRun(
       text ?? this.text,
@@ -43,6 +61,8 @@ class DocxRun {
       italic: italic ?? this.italic,
       underline: underline ?? this.underline,
       strikethrough: strikethrough ?? this.strikethrough,
+      color: color ?? this.color,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
     );
   }
 }
