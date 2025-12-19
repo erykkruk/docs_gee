@@ -1,0 +1,409 @@
+%PDF-1.4
+%âãÏÓ
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Kids [7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R ]
+/Count 6
+>>
+endobj
+3 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+/Encoding /WinAnsiEncoding
+>>
+endobj
+4 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica-Bold
+/Encoding /WinAnsiEncoding
+>>
+endobj
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica-Oblique
+/Encoding /WinAnsiEncoding
+>>
+endobj
+6 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica-BoldOblique
+/Encoding /WinAnsiEncoding
+>>
+endobj
+7 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 8 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+  >>
+>>
+>>
+endobj
+8 0 obj
+<<
+/Length 435
+>>
+stream
+BT
+1 0 0 1 180.0 720.0 Tm
+/F2 24 Tf
+(PDF Generator Library) Tj
+1 0 0 1 168.0 676.8 Tm
+/F1 12 Tf
+(A demonstration of PDF generation capabilities) Tj
+1 0 0 1 72.0 655.1999999999999 Tm
+/F1 12 Tf
+() Tj
+1 0 0 1 72.0 633.5999999999999 Tm
+/F1 12 Tf
+(This document was generated programmatically using the docs_gee Dart library. It demonstrates various formatting options available for PDF generation without any external dependencies.) Tj
+ET
+
+endstream
+endobj
+9 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 10 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+  >>
+>>
+>>
+endobj
+10 0 obj
+<<
+/Length 802
+>>
+stream
+BT
+1 0 0 1 72.0 720.0 Tm
+/F2 24 Tf
+(Text Formatting) Tj
+1 0 0 1 72.0 676.8 Tm
+/F1 12 Tf
+(The library supports various text formatting options. You can apply formatting to individual text runs within a paragraph.) Tj
+1 0 0 1 72.0 655.1999999999999 Tm
+/F2 18 Tf
+(Basic Formatting) Tj
+1 0 0 1 72.0 622.8 Tm
+/F1 12 Tf
+(This paragraph contains ) Tj
+/F2 12 Tf
+(bold text) Tj
+/F1 12 Tf
+(, ) Tj
+/F3 12 Tf
+(italic text) Tj
+/F1 12 Tf
+(, and ) Tj
+/F4 12 Tf
+(bold italic text) Tj
+/F1 12 Tf
+(.) Tj
+1 0 0 1 72.0 601.1999999999999 Tm
+/F2 18 Tf
+(Combined Formatting) Tj
+1 0 0 1 72.0 568.8 Tm
+/F1 12 Tf
+(PDF uses the standard ) Tj
+/F2 12 Tf
+(Base 14 fonts) Tj
+/F1 12 Tf
+( \(Helvetica, Times-Roman, Courier\) which support ) Tj
+/F2 12 Tf
+(bold) Tj
+/F1 12 Tf
+( and ) Tj
+/F3 12 Tf
+(italic) Tj
+/F1 12 Tf
+( variants.) Tj
+ET
+
+endstream
+endobj
+11 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 12 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+  >>
+>>
+>>
+endobj
+12 0 obj
+<<
+/Length 601
+>>
+stream
+BT
+1 0 0 1 72.0 720.0 Tm
+/F2 24 Tf
+(Text Alignment) Tj
+1 0 0 1 72.0 676.8 Tm
+/F1 12 Tf
+(LEFT ALIGNED: This paragraph is aligned to the left margin. This is the default alignment for most text content.) Tj
+1 0 0 1 72.0 655.1999999999999 Tm
+/F1 12 Tf
+() Tj
+1 0 0 1 21.0 633.5999999999999 Tm
+/F1 12 Tf
+(CENTER ALIGNED: This paragraph is centered between the margins. Useful for titles and headings.) Tj
+1 0 0 1 72.0 611.9999999999999 Tm
+/F1 12 Tf
+() Tj
+1 0 0 1 -42.0 590.3999999999999 Tm
+/F1 12 Tf
+(RIGHT ALIGNED: This paragraph is aligned to the right margin. Often used for dates or signatures.) Tj
+ET
+
+endstream
+endobj
+13 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 14 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+  >>
+>>
+>>
+endobj
+14 0 obj
+<<
+/Length 615
+>>
+stream
+BT
+1 0 0 1 72.0 720.0 Tm
+/F2 24 Tf
+(Heading Levels) Tj
+1 0 0 1 72.0 676.8 Tm
+/F1 12 Tf
+(The library supports three heading levels for document structure:) Tj
+1 0 0 1 72.0 655.1999999999999 Tm
+/F2 24 Tf
+(Heading Level 1) Tj
+1 0 0 1 72.0 611.9999999999999 Tm
+/F1 12 Tf
+(Primary headings for main sections.) Tj
+1 0 0 1 72.0 590.3999999999999 Tm
+/F2 18 Tf
+(Heading Level 2) Tj
+1 0 0 1 72.0 557.9999999999999 Tm
+/F1 12 Tf
+(Secondary headings for subsections.) Tj
+1 0 0 1 72.0 536.3999999999999 Tm
+/F2 15 Tf
+(Heading Level 3) Tj
+1 0 0 1 72.0 509.39999999999986 Tm
+/F1 12 Tf
+(Tertiary headings for sub-subsections.) Tj
+ET
+
+endstream
+endobj
+15 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 16 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+  >>
+>>
+>>
+endobj
+16 0 obj
+<<
+/Length 1230
+>>
+stream
+BT
+1 0 0 1 72.0 720.0 Tm
+/F2 24 Tf
+(Lists) Tj
+1 0 0 1 72.0 676.8 Tm
+/F2 18 Tf
+(Bullet List) Tj
+1 0 0 1 72.0 644.4 Tm
+/F1 12 Tf
+(Features of this library:) Tj
+1 0 0 1 72.0 622.8 Tm
+/F1 12 Tf
+( ) Tj
+/F1 12 Tf
+(Pure Dart implementation) Tj
+1 0 0 1 72.0 601.1999999999999 Tm
+/F1 12 Tf
+( ) Tj
+/F1 12 Tf
+(Zero external dependencies for PDF) Tj
+1 0 0 1 72.0 579.5999999999999 Tm
+/F1 12 Tf
+( ) Tj
+/F1 12 Tf
+(Cross-platform support) Tj
+1 0 0 1 72.0 557.9999999999999 Tm
+/F1 12 Tf
+( ) Tj
+/F1 12 Tf
+(Same API for DOCX and PDF) Tj
+1 0 0 1 72.0 536.3999999999999 Tm
+/F1 12 Tf
+( ) Tj
+/F1 12 Tf
+(Lightweight footprint) Tj
+1 0 0 1 72.0 514.7999999999998 Tm
+/F2 18 Tf
+(Numbered List) Tj
+1 0 0 1 72.0 482.39999999999986 Tm
+/F1 12 Tf
+(Steps to generate a PDF:) Tj
+1 0 0 1 72.0 460.79999999999984 Tm
+/F1 12 Tf
+(1. ) Tj
+/F1 12 Tf
+(Create a DocxDocument) Tj
+1 0 0 1 72.0 439.1999999999998 Tm
+/F1 12 Tf
+(2. ) Tj
+/F1 12 Tf
+(Add paragraphs with content) Tj
+1 0 0 1 72.0 417.5999999999998 Tm
+/F1 12 Tf
+(3. ) Tj
+/F1 12 Tf
+(Create a PdfGenerator) Tj
+1 0 0 1 72.0 395.9999999999998 Tm
+/F1 12 Tf
+(4. ) Tj
+/F1 12 Tf
+(Call generate\(\) to get bytes) Tj
+1 0 0 1 72.0 374.39999999999975 Tm
+/F1 12 Tf
+(5. ) Tj
+/F1 12 Tf
+(Save or transmit the bytes) Tj
+ET
+
+endstream
+endobj
+17 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 18 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+  >>
+>>
+>>
+endobj
+18 0 obj
+<<
+/Length 504
+>>
+stream
+BT
+1 0 0 1 72.0 720.0 Tm
+/F2 24 Tf
+(Conclusion) Tj
+1 0 0 1 72.0 676.8 Tm
+/F1 12 Tf
+(This document demonstrates the core capabilities of the docs_gee PDF generator. The generated PDF file is compatible with all standard PDF readers including Adobe Acrobat, Preview, Chrome, and others.) Tj
+1 0 0 1 72.0 655.1999999999999 Tm
+/F1 12 Tf
+() Tj
+1 0 0 1 66.0 633.5999999999999 Tm
+/F1 12 Tf
+(Key advantage: ) Tj
+/F2 12 Tf
+(same document model) Tj
+/F1 12 Tf
+( can be exported to both DOCX and PDF formats!) Tj
+ET
+
+endstream
+endobj
+xref
+0 19
+0000000000 65535 f 
+0000000019 00000 n 
+0000000068 00000 n 
+0000000160 00000 n 
+0000000257 00000 n 
+0000000359 00000 n 
+0000000464 00000 n 
+0000000573 00000 n 
+0000000753 00000 n 
+0000001239 00000 n 
+0000001420 00000 n 
+0000002274 00000 n 
+0000002456 00000 n 
+0000003109 00000 n 
+0000003291 00000 n 
+0000003958 00000 n 
+0000004140 00000 n 
+0000005423 00000 n 
+0000005605 00000 n 
+trailer
+<<
+/Size 19
+/Root 1 0 R
+>>
+startxref
+6161
+%%EOF

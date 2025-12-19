@@ -21,11 +21,6 @@
       ]
     },
     {
-      "name": "lints",
-      "version": "4.0.0",
-      "dependencies": []
-    },
-    {
       "name": "archive",
       "version": "4.0.7",
       "dependencies": [
@@ -33,6 +28,11 @@
         "path",
         "posix"
       ]
+    },
+    {
+      "name": "lints",
+      "version": "4.0.0",
+      "dependencies": []
     },
     {
       "name": "posix",
@@ -56,11 +56,9 @@
       ]
     },
     {
-      "name": "typed_data",
-      "version": "1.4.0",
-      "dependencies": [
-        "collection"
-      ]
+      "name": "meta",
+      "version": "1.17.0",
+      "dependencies": []
     },
     {
       "name": "ffi",
@@ -68,13 +66,15 @@
       "dependencies": []
     },
     {
-      "name": "collection",
-      "version": "1.19.1",
-      "dependencies": []
+      "name": "typed_data",
+      "version": "1.4.0",
+      "dependencies": [
+        "collection"
+      ]
     },
     {
-      "name": "meta",
-      "version": "1.17.0",
+      "name": "collection",
+      "version": "1.19.1",
       "dependencies": []
     }
   ],

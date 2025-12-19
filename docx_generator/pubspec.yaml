@@ -1,6 +1,6 @@
 name: docs_gee
 description: >-
-  Pure Dart library for generating Microsoft Word DOCX files.
+  Pure Dart library for generating Microsoft Word DOCX and PDF files.
   Cross-platform support for iOS, Android, Web, macOS, Windows, and Linux.
   No native dependencies required.
 version: 1.0.0
@@ -12,10 +12,10 @@ documentation: https://github.com/erykkruk/docs_gee#readme
 
 topics:
   - docx
+  - pdf
   - word
   - document
   - file-generation
-  - cross-platform
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
