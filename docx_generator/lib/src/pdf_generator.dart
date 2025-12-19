@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'document_generator.dart';
@@ -49,6 +50,24 @@ class PdfGenerator implements DocumentGenerator {
 
   /// Right margin in points.
   final double marginRight;
+
+  /// Default file extension for PDF files.
+  @override
+  String get defaultExtension => '.pdf';
+
+  /// Generates a PDF file and saves it to the specified path.
+  ///
+  /// [filePath] - optional path where to save the file.
+  /// If not provided, saves as 'document.pdf' in the current directory.
+  ///
+  /// Returns the actual file path where the document was saved.
+  @override
+  Future<String> generateToFile(DocxDocument document, {String? filePath}) async {
+    final bytes = generate(document);
+    final path = filePath ?? 'document$defaultExtension';
+    await File(path).writeAsBytes(bytes);
+    return path;
+  }
 
   /// Generates a PDF document and returns it as bytes.
   @override
