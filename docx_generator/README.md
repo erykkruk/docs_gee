@@ -28,6 +28,9 @@ A **pure Dart** library for generating **Microsoft Word (DOCX)** and **PDF** doc
 | Nested lists (up to 9 levels) | ✅ | ✅ |
 | Tables with borders & colors | ✅ | ✅ |
 | Page breaks | ✅ | ✅ |
+| Hyperlinks (external URLs) | ✅ | - |
+| Internal links (bookmarks) | ✅ | - |
+| Table of Contents | ✅ | - |
 | Document metadata | ✅ | ✅ |
 | Custom fonts | ✅ | ✅ |
 | Emoji support | ✅ | - |
@@ -36,7 +39,7 @@ A **pure Dart** library for generating **Microsoft Word (DOCX)** and **PDF** doc
 
 ```yaml
 dependencies:
-  docs_gee: ^1.0.0
+  docs_gee: ^1.0.1
 ```
 
 ```bash
@@ -148,6 +151,54 @@ doc.addParagraph(Paragraph.heading(
 ));
 ```
 
+### Hyperlinks
+
+```dart
+// External link
+doc.addParagraph(Paragraph(
+  runs: [
+    TextRun('Visit '),
+    TextRun('our website', hyperlink: 'https://example.com'),
+    TextRun(' for more info.'),
+  ],
+));
+```
+
+### Internal Links (Bookmarks)
+
+```dart
+// Create a bookmark
+doc.addParagraph(Paragraph.heading(
+  'Chapter 1: Introduction',
+  level: 1,
+  bookmarkName: 'chapter1',
+));
+
+// Link to the bookmark
+doc.addParagraph(Paragraph(
+  runs: [
+    TextRun('Go to '),
+    TextRun('Chapter 1', bookmarkRef: 'chapter1'),
+  ],
+));
+```
+
+### Table of Contents
+
+```dart
+// Enable automatic Table of Contents
+final doc = Document(
+  title: 'My Document',
+  includeTableOfContents: true,
+  tocTitle: 'Contents',
+  tocMaxLevel: 3,  // Include Heading 1-3
+);
+
+doc.addParagraph(Paragraph.heading('Introduction', level: 1));
+doc.addParagraph(Paragraph.heading('Getting Started', level: 2));
+// TOC will be auto-generated with links to these headings
+```
+
 ## Platform Support
 
 | Platform | Support |
@@ -230,6 +281,8 @@ Future<void> shareDocument(Uint8List bytes) async {
 | `strikethrough` | `bool` | Strikethrough text |
 | `color` | `String` | Hex color (e.g., `'FF0000'`) |
 | `backgroundColor` | `String` | Highlight color |
+| `hyperlink` | `String?` | External URL link |
+| `bookmarkRef` | `String?` | Internal bookmark reference |
 
 ## Compatibility
 
@@ -249,7 +302,7 @@ Generated documents are compatible with:
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit issues and pull requests on [GitHub](https://github.com/ArcaneArts/docs_gee).
+Contributions are welcome! Please feel free to submit issues and pull requests on [GitHub](https://github.com/erykkruk/docs_gee).
 
 ## License
 
