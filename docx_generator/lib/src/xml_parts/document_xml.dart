@@ -5,18 +5,36 @@ import 'xml_utils.dart';
 class DocumentXml {
   DocumentXml._();
 
+  /// Counter for generating unique bookmark IDs.
+  static int _bookmarkIdCounter = 0;
+
+  /// Counter for generating unique hyperlink relationship IDs.
+  static int _hyperlinkIdCounter = 0;
+
   /// Generates the document.xml content.
-  static String generate(DocxDocument document) {
+  /// Returns a record with the XML content and a map of hyperlink IDs to URLs.
+  static ({String xml, Map<String, String> hyperlinks}) generate(
+      DocxDocument document) {
     final buffer = StringBuffer();
+    final hyperlinks = <String, String>{};
+    _bookmarkIdCounter = 0;
+    _hyperlinkIdCounter = 0;
+
     buffer.writeln(XmlUtils.xmlDeclaration);
-    buffer.writeln('<w:document xmlns:w="${XmlUtils.wNamespace}">');
+    buffer.writeln(
+        '<w:document xmlns:w="${XmlUtils.wNamespace}" xmlns:r="${XmlUtils.rNamespace}">');
     buffer.writeln('  <w:body>');
+
+    // Generate Table of Contents if enabled
+    if (document.includeTableOfContents) {
+      _writeTableOfContents(buffer, document.tocTitle, document.tocMaxLevel);
+    }
 
     for (final item in document.content) {
       if (item is DocxParagraph) {
-        _writeParagraph(buffer, item);
+        _writeParagraph(buffer, item, hyperlinks);
       } else if (item is DocxTable) {
-        _writeTable(buffer, item);
+        _writeTable(buffer, item, hyperlinks);
       }
     }
 
@@ -29,11 +47,64 @@ class DocumentXml {
 
     buffer.writeln('  </w:body>');
     buffer.writeln('</w:document>');
-    return buffer.toString();
+    return (xml: buffer.toString(), hyperlinks: hyperlinks);
   }
 
-  static void _writeParagraph(StringBuffer buffer, DocxParagraph paragraph) {
+  /// Writes a Table of Contents field.
+  static void _writeTableOfContents(
+      StringBuffer buffer, String title, int maxLevel) {
+    // TOC title
     buffer.writeln('    <w:p>');
+    buffer.writeln('      <w:pPr>');
+    buffer.writeln('        <w:pStyle w:val="Heading1"/>');
+    buffer.writeln('      </w:pPr>');
+    buffer.writeln('      <w:r>');
+    buffer.writeln('        <w:t>${XmlUtils.escapeXml(title)}</w:t>');
+    buffer.writeln('      </w:r>');
+    buffer.writeln('    </w:p>');
+
+    // TOC field
+    buffer.writeln('    <w:p>');
+    buffer.writeln('      <w:r>');
+    buffer.writeln('        <w:fldChar w:fldCharType="begin"/>');
+    buffer.writeln('      </w:r>');
+    buffer.writeln('      <w:r>');
+    buffer.writeln(
+        '        <w:instrText xml:space="preserve"> TOC \\o "1-$maxLevel" \\h \\z \\u </w:instrText>');
+    buffer.writeln('      </w:r>');
+    buffer.writeln('      <w:r>');
+    buffer.writeln('        <w:fldChar w:fldCharType="separate"/>');
+    buffer.writeln('      </w:r>');
+    buffer.writeln('      <w:r>');
+    buffer.writeln('        <w:rPr><w:i/></w:rPr>');
+    buffer.writeln(
+        '        <w:t>Update this field to generate table of contents</w:t>');
+    buffer.writeln('      </w:r>');
+    buffer.writeln('      <w:r>');
+    buffer.writeln('        <w:fldChar w:fldCharType="end"/>');
+    buffer.writeln('      </w:r>');
+    buffer.writeln('    </w:p>');
+
+    // Page break after TOC
+    buffer.writeln('    <w:p>');
+    buffer.writeln('      <w:pPr>');
+    buffer.writeln('        <w:pageBreakBefore/>');
+    buffer.writeln('      </w:pPr>');
+    buffer.writeln('    </w:p>');
+  }
+
+  static void _writeParagraph(StringBuffer buffer, DocxParagraph paragraph,
+      Map<String, String> hyperlinks) {
+    buffer.writeln('    <w:p>');
+
+    // Write bookmark start if paragraph has a bookmark
+    String? bookmarkId;
+    if (paragraph.bookmarkName != null) {
+      bookmarkId = _bookmarkIdCounter.toString();
+      _bookmarkIdCounter++;
+      buffer.writeln(
+          '      <w:bookmarkStart w:id="$bookmarkId" w:name="${XmlUtils.escapeXml(paragraph.bookmarkName!)}"/>');
+    }
 
     // Paragraph properties
     final hasStyle = paragraph.style != DocxParagraphStyle.normal;
@@ -75,7 +146,12 @@ class DocumentXml {
 
     // Write runs
     for (final run in paragraph.runs) {
-      _writeRun(buffer, run);
+      _writeRun(buffer, run, hyperlinks);
+    }
+
+    // Write bookmark end if paragraph has a bookmark
+    if (bookmarkId != null) {
+      buffer.writeln('      <w:bookmarkEnd w:id="$bookmarkId"/>');
     }
 
     buffer.writeln('    </w:p>');
@@ -93,24 +169,57 @@ class DocumentXml {
     };
   }
 
-  static void _writeRun(StringBuffer buffer, DocxRun run) {
-    buffer.write('      <w:r>');
+  static void _writeRun(
+      StringBuffer buffer, DocxRun run, Map<String, String> hyperlinks) {
+    // Handle external hyperlinks
+    if (run.hyperlink != null) {
+      final rId = 'rId${100 + _hyperlinkIdCounter}';
+      _hyperlinkIdCounter++;
+      hyperlinks[rId] = run.hyperlink!;
+      buffer.write('      <w:hyperlink r:id="$rId">');
+      _writeRunContent(buffer, run, isHyperlink: true);
+      buffer.writeln('</w:hyperlink>');
+      return;
+    }
+
+    // Handle internal bookmark references
+    if (run.bookmarkRef != null) {
+      buffer.write(
+          '      <w:hyperlink w:anchor="${XmlUtils.escapeXml(run.bookmarkRef!)}">');
+      _writeRunContent(buffer, run, isHyperlink: true);
+      buffer.writeln('</w:hyperlink>');
+      return;
+    }
+
+    // Regular run
+    buffer.write('      ');
+    _writeRunContent(buffer, run, isHyperlink: false);
+    buffer.writeln();
+  }
+
+  /// Writes the run content (used by both regular runs and hyperlinks).
+  static void _writeRunContent(StringBuffer buffer, DocxRun run,
+      {required bool isHyperlink}) {
+    buffer.write('<w:r>');
 
     // Run properties (formatting)
-    if (run.hasFormatting) {
+    final hasLinkStyle = isHyperlink && !run.underline && run.color == null;
+    if (run.hasFormatting || hasLinkStyle) {
       buffer.write('<w:rPr>');
       if (run.bold) buffer.write('<w:b/>');
       if (run.italic) buffer.write('<w:i/>');
-      if (run.underline) buffer.write('<w:u w:val="single"/>');
+      if (run.underline || hasLinkStyle) {
+        buffer.write('<w:u w:val="single"/>');
+      }
       if (run.strikethrough) buffer.write('<w:strike/>');
       if (run.color != null) {
         buffer.write('<w:color w:val="${run.color}"/>');
+      } else if (hasLinkStyle) {
+        buffer.write('<w:color w:val="0000FF"/>'); // Blue for links
       }
       if (run.backgroundColor != null) {
         buffer.write(
             '<w:highlight w:val="${_mapHighlightColor(run.backgroundColor!)}"/>');
-        // Alternative: shading for exact colors
-        // buffer.write('<w:shd w:val="clear" w:fill="${run.backgroundColor}"/>');
       }
       buffer.write('</w:rPr>');
     }
@@ -124,7 +233,7 @@ class DocumentXml {
       buffer.write('<w:t>$escapedText</w:t>');
     }
 
-    buffer.writeln('</w:r>');
+    buffer.write('</w:r>');
   }
 
   /// Maps hex color to Word highlight color name.
@@ -157,7 +266,8 @@ class DocumentXml {
   // ============================================
 
   /// Writes a table element to the buffer.
-  static void _writeTable(StringBuffer buffer, DocxTable table) {
+  static void _writeTable(
+      StringBuffer buffer, DocxTable table, Map<String, String> hyperlinks) {
     buffer.writeln('    <w:tbl>');
 
     // Table properties
@@ -191,7 +301,7 @@ class DocumentXml {
 
     // Rows
     for (final row in table.rows) {
-      _writeTableRow(buffer, row, table.columnCount);
+      _writeTableRow(buffer, row, table.columnCount, hyperlinks);
     }
 
     buffer.writeln('    </w:tbl>');
@@ -209,21 +319,21 @@ class DocumentXml {
   }
 
   /// Writes a table row element.
-  static void _writeTableRow(
-      StringBuffer buffer, DocxTableRow row, int columnCount) {
+  static void _writeTableRow(StringBuffer buffer, DocxTableRow row,
+      int columnCount, Map<String, String> hyperlinks) {
     buffer.writeln('      <w:tr>');
 
     final colWidth = columnCount > 0 ? 9360 ~/ columnCount : 9360;
     for (final cell in row.cells) {
-      _writeTableCell(buffer, cell, colWidth);
+      _writeTableCell(buffer, cell, colWidth, hyperlinks);
     }
 
     buffer.writeln('      </w:tr>');
   }
 
   /// Writes a table cell element.
-  static void _writeTableCell(
-      StringBuffer buffer, DocxTableCell cell, int width) {
+  static void _writeTableCell(StringBuffer buffer, DocxTableCell cell,
+      int width, Map<String, String> hyperlinks) {
     buffer.writeln('        <w:tc>');
 
     // Cell properties
@@ -243,7 +353,7 @@ class DocumentXml {
       buffer.writeln('          <w:p/>');
     } else {
       for (final paragraph in cell.paragraphs) {
-        _writeCellParagraph(buffer, paragraph);
+        _writeCellParagraph(buffer, paragraph, hyperlinks);
       }
     }
 
@@ -251,8 +361,18 @@ class DocumentXml {
   }
 
   /// Writes a paragraph inside a table cell (with adjusted indentation).
-  static void _writeCellParagraph(StringBuffer buffer, DocxParagraph paragraph) {
+  static void _writeCellParagraph(StringBuffer buffer, DocxParagraph paragraph,
+      Map<String, String> hyperlinks) {
     buffer.writeln('          <w:p>');
+
+    // Write bookmark start if paragraph has a bookmark
+    String? bookmarkId;
+    if (paragraph.bookmarkName != null) {
+      bookmarkId = _bookmarkIdCounter.toString();
+      _bookmarkIdCounter++;
+      buffer.writeln(
+          '            <w:bookmarkStart w:id="$bookmarkId" w:name="${XmlUtils.escapeXml(paragraph.bookmarkName!)}"/>');
+    }
 
     // Paragraph properties
     final hasStyle = paragraph.style != DocxParagraphStyle.normal;
@@ -294,41 +414,43 @@ class DocumentXml {
 
     // Write runs
     for (final run in paragraph.runs) {
-      _writeCellRun(buffer, run);
+      _writeCellRun(buffer, run, hyperlinks);
+    }
+
+    // Write bookmark end if paragraph has a bookmark
+    if (bookmarkId != null) {
+      buffer.writeln('            <w:bookmarkEnd w:id="$bookmarkId"/>');
     }
 
     buffer.writeln('          </w:p>');
   }
 
   /// Writes a run inside a table cell (with adjusted indentation).
-  static void _writeCellRun(StringBuffer buffer, DocxRun run) {
-    buffer.write('            <w:r>');
-
-    // Run properties (formatting)
-    if (run.hasFormatting) {
-      buffer.write('<w:rPr>');
-      if (run.bold) buffer.write('<w:b/>');
-      if (run.italic) buffer.write('<w:i/>');
-      if (run.underline) buffer.write('<w:u w:val="single"/>');
-      if (run.strikethrough) buffer.write('<w:strike/>');
-      if (run.color != null) {
-        buffer.write('<w:color w:val="${run.color}"/>');
-      }
-      if (run.backgroundColor != null) {
-        buffer.write(
-            '<w:highlight w:val="${_mapHighlightColor(run.backgroundColor!)}"/>');
-      }
-      buffer.write('</w:rPr>');
+  static void _writeCellRun(
+      StringBuffer buffer, DocxRun run, Map<String, String> hyperlinks) {
+    // Handle external hyperlinks
+    if (run.hyperlink != null) {
+      final rId = 'rId${100 + _hyperlinkIdCounter}';
+      _hyperlinkIdCounter++;
+      hyperlinks[rId] = run.hyperlink!;
+      buffer.write('            <w:hyperlink r:id="$rId">');
+      _writeRunContent(buffer, run, isHyperlink: true);
+      buffer.writeln('</w:hyperlink>');
+      return;
     }
 
-    // Text content
-    final escapedText = XmlUtils.escapeXml(run.text);
-    if (run.text.startsWith(' ') || run.text.endsWith(' ')) {
-      buffer.write('<w:t xml:space="preserve">$escapedText</w:t>');
-    } else {
-      buffer.write('<w:t>$escapedText</w:t>');
+    // Handle internal bookmark references
+    if (run.bookmarkRef != null) {
+      buffer.write(
+          '            <w:hyperlink w:anchor="${XmlUtils.escapeXml(run.bookmarkRef!)}">');
+      _writeRunContent(buffer, run, isHyperlink: true);
+      buffer.writeln('</w:hyperlink>');
+      return;
     }
 
-    buffer.writeln('</w:r>');
+    // Regular run
+    buffer.write('            ');
+    _writeRunContent(buffer, run, isHyperlink: false);
+    buffer.writeln();
   }
 }

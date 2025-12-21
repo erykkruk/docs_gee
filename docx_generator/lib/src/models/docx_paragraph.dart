@@ -9,6 +9,7 @@ class DocxParagraph {
     this.alignment = DocxAlignment.left,
     this.pageBreakBefore = false,
     this.indentLevel = 0,
+    this.bookmarkName,
   });
 
   /// Creates a simple paragraph with plain text.
@@ -17,12 +18,14 @@ class DocxParagraph {
     DocxParagraphStyle style = DocxParagraphStyle.normal,
     DocxAlignment alignment = DocxAlignment.left,
     bool pageBreakBefore = false,
+    String? bookmarkName,
   }) {
     return DocxParagraph(
       runs: [DocxRun(text)],
       style: style,
       alignment: alignment,
       pageBreakBefore: pageBreakBefore,
+      bookmarkName: bookmarkName,
     );
   }
 
@@ -32,6 +35,7 @@ class DocxParagraph {
     required int level,
     DocxAlignment alignment = DocxAlignment.left,
     bool pageBreakBefore = false,
+    String? bookmarkName,
   }) {
     final style = switch (level) {
       1 => DocxParagraphStyle.heading1,
@@ -45,6 +49,7 @@ class DocxParagraph {
       style: style,
       alignment: alignment,
       pageBreakBefore: pageBreakBefore,
+      bookmarkName: bookmarkName,
     );
   }
 
@@ -193,6 +198,11 @@ class DocxParagraph {
   /// Indent level for nested lists (0 = top level, 1 = first nested, etc.).
   /// Maximum supported level is 8.
   final int indentLevel;
+
+  /// Optional bookmark name for this paragraph.
+  /// When set, this paragraph can be referenced by internal links.
+  /// Also used for Table of Contents generation.
+  final String? bookmarkName;
 
   /// Returns the plain text content of this paragraph.
   String get plainText => runs.map((r) => r.text).join();

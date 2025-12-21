@@ -24,6 +24,10 @@ class XmlUtils {
   static const String relsNamespace =
       'http://schemas.openxmlformats.org/package/2006/relationships';
 
+  /// Relationship reference namespace (for r: prefix in documents).
+  static const String rNamespace =
+      'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+
   /// Content Types namespace.
   static const String contentTypesNamespace =
       'http://schemas.openxmlformats.org/package/2006/content-types';

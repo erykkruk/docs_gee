@@ -172,7 +172,8 @@ class StylesXml {
     buffer.writeln('      <w:shd w:val="clear" w:fill="F5F5F5"/>');
     buffer.writeln('    </w:pPr>');
     buffer.writeln('    <w:rPr>');
-    buffer.writeln('      <w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"/>');
+    buffer.writeln(
+        '      <w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"/>');
     buffer.writeln('      <w:sz w:val="20"/>');
     buffer.writeln('      <w:szCs w:val="20"/>');
     buffer.writeln('    </w:rPr>');

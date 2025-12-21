@@ -7,6 +7,9 @@ class DocxDocument {
     List<DocxParagraph>? paragraphs,
     this.title,
     this.author,
+    this.includeTableOfContents = false,
+    this.tocTitle = 'Table of Contents',
+    this.tocMaxLevel = 3,
   }) : _content = paragraphs?.cast<Object>() ?? [];
 
   /// Internal list holding both paragraphs and tables.
@@ -17,6 +20,16 @@ class DocxDocument {
 
   /// Optional document author (metadata).
   final String? author;
+
+  /// Whether to include a Table of Contents at the beginning.
+  final bool includeTableOfContents;
+
+  /// Title for the Table of Contents section.
+  final String tocTitle;
+
+  /// Maximum heading level to include in TOC (1-4).
+  /// Default is 3 (includes Heading1, Heading2, Heading3).
+  final int tocMaxLevel;
 
   /// Returns all paragraphs in the document (for backward compatibility).
   List<DocxParagraph> get paragraphs =>

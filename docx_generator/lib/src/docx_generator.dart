@@ -47,6 +47,9 @@ class DocxGenerator implements DocumentGenerator {
   Uint8List generate(DocxDocument document) {
     final hasLists = _documentHasLists(document);
 
+    // Generate document.xml and collect hyperlinks
+    final documentResult = DocumentXml.generate(document);
+
     final archive = Archive();
 
     // Add [Content_Types].xml
@@ -63,18 +66,21 @@ class DocxGenerator implements DocumentGenerator {
       RelsXml.generateMainRels(),
     );
 
-    // Add word/_rels/document.xml.rels
+    // Add word/_rels/document.xml.rels (with hyperlinks)
     _addFile(
       archive,
       'word/_rels/document.xml.rels',
-      RelsXml.generateDocumentRels(hasNumbering: hasLists),
+      RelsXml.generateDocumentRels(
+        hasNumbering: hasLists,
+        hyperlinks: documentResult.hyperlinks,
+      ),
     );
 
     // Add word/document.xml
     _addFile(
       archive,
       'word/document.xml',
-      DocumentXml.generate(document),
+      documentResult.xml,
     );
 
     // Add word/styles.xml

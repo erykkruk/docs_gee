@@ -11,6 +11,8 @@ class DocxRun {
     this.strikethrough = false,
     this.color,
     this.backgroundColor,
+    this.hyperlink,
+    this.bookmarkRef,
   });
 
   /// The text content.
@@ -36,6 +38,17 @@ class DocxRun {
   /// Without the # prefix.
   final String? backgroundColor;
 
+  /// External hyperlink URL (e.g., "https://example.com").
+  /// When set, this run will be rendered as a clickable link.
+  final String? hyperlink;
+
+  /// Reference to an internal bookmark name.
+  /// When set, this run will link to the bookmark within the document.
+  final String? bookmarkRef;
+
+  /// Returns true if this run is a link (external or internal).
+  bool get isLink => hyperlink != null || bookmarkRef != null;
+
   /// Returns true if any formatting is applied.
   bool get hasFormatting =>
       bold ||
@@ -54,6 +67,8 @@ class DocxRun {
     bool? strikethrough,
     String? color,
     String? backgroundColor,
+    String? hyperlink,
+    String? bookmarkRef,
   }) {
     return DocxRun(
       text ?? this.text,
@@ -63,6 +78,8 @@ class DocxRun {
       strikethrough: strikethrough ?? this.strikethrough,
       color: color ?? this.color,
       backgroundColor: backgroundColor ?? this.backgroundColor,
+      hyperlink: hyperlink ?? this.hyperlink,
+      bookmarkRef: bookmarkRef ?? this.bookmarkRef,
     );
   }
 }
