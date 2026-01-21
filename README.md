@@ -28,6 +28,7 @@ A **pure Dart** library for generating **Microsoft Word (DOCX)** and **PDF** doc
 | Nested lists (up to 9 levels) | ✅ | ✅ |
 | Tables with borders & colors | ✅ | ✅ |
 | Page breaks | ✅ | ✅ |
+| Line breaks (soft return) | ✅ | - |
 | Hyperlinks (external URLs) | ✅ | - |
 | Internal links (bookmarks) | ✅ | - |
 | Table of Contents | ✅ | - |
@@ -39,7 +40,7 @@ A **pure Dart** library for generating **Microsoft Word (DOCX)** and **PDF** doc
 
 ```yaml
 dependencies:
-  docs_gee: ^1.0.1
+  docs_gee: ^1.1.0
 ```
 
 ```bash
@@ -148,6 +149,26 @@ doc.addParagraph(Paragraph.heading(
   'New Chapter',
   level: 1,
   pageBreakBefore: true,
+));
+```
+
+### Line Breaks (Soft Return) - DOCX only
+
+Line breaks allow multiple lines within a single paragraph (like Shift+Enter in Word).
+
+```dart
+// Using \n in text (automatic conversion)
+doc.addParagraph(Paragraph.text('Line 1\nLine 2\nLine 3'));
+
+// Using explicit line break runs (for different formatting per line)
+doc.addParagraph(Paragraph(
+  runs: [
+    TextRun('Bold line', bold: true),
+    TextRun.lineBreak(),
+    TextRun('Normal line'),
+    TextRun.lineBreak(),
+    TextRun('Italic line', italic: true),
+  ],
 ));
 ```
 
@@ -283,6 +304,7 @@ Future<void> shareDocument(Uint8List bytes) async {
 | `backgroundColor` | `String` | Highlight color |
 | `hyperlink` | `String?` | External URL link |
 | `bookmarkRef` | `String?` | Internal bookmark reference |
+| `isLineBreak` | `bool` | Line break (use `TextRun.lineBreak()`) |
 
 ## Compatibility
 

@@ -13,7 +13,22 @@ class DocxRun {
     this.backgroundColor,
     this.hyperlink,
     this.bookmarkRef,
+    this.isLineBreak = false,
   });
+
+  /// Creates a line break run (soft return within a paragraph).
+  /// This is equivalent to Shift+Enter in Word.
+  const DocxRun.lineBreak()
+      : text = '',
+        bold = false,
+        italic = false,
+        underline = false,
+        strikethrough = false,
+        color = null,
+        backgroundColor = null,
+        hyperlink = null,
+        bookmarkRef = null,
+        isLineBreak = true;
 
   /// The text content.
   final String text;
@@ -46,6 +61,10 @@ class DocxRun {
   /// When set, this run will link to the bookmark within the document.
   final String? bookmarkRef;
 
+  /// Whether this run represents a line break (soft return).
+  /// When true, this generates a <w:br/> element instead of text.
+  final bool isLineBreak;
+
   /// Returns true if this run is a link (external or internal).
   bool get isLink => hyperlink != null || bookmarkRef != null;
 
@@ -69,6 +88,7 @@ class DocxRun {
     String? backgroundColor,
     String? hyperlink,
     String? bookmarkRef,
+    bool? isLineBreak,
   }) {
     return DocxRun(
       text ?? this.text,
@@ -80,6 +100,7 @@ class DocxRun {
       backgroundColor: backgroundColor ?? this.backgroundColor,
       hyperlink: hyperlink ?? this.hyperlink,
       bookmarkRef: bookmarkRef ?? this.bookmarkRef,
+      isLineBreak: isLineBreak ?? this.isLineBreak,
     );
   }
 }

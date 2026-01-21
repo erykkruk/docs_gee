@@ -647,21 +647,58 @@ class _PdfBuilder {
     return currentY;
   }
 
+  /// Calculates column widths for PDF based on table configuration.
+  List<double> _calculatePdfColumnWidths(DocxTable table) {
+    final colCount = table.columnCount;
+    if (colCount == 0) return [];
+
+    if (table.columnWidths != null && table.columnWidths!.length == colCount) {
+      // Use custom widths (percentages converted to points)
+      return table.columnWidths!
+          .map((percent) => _contentWidth * percent / 100)
+          .toList();
+    } else {
+      // Even distribution
+      final width = _contentWidth / colCount;
+      return List.filled(colCount, width);
+    }
+  }
+
   /// Renders a table and returns the new Y position.
   double _renderTable(StringBuffer buffer, DocxTable table, double startY) {
     if (table.rows.isEmpty || table.columnCount == 0) return startY;
 
     var currentY = startY;
-    final tableWidth = _contentWidth;
-    final columnWidth = tableWidth / table.columnCount;
+    final columnWidths = _calculatePdfColumnWidths(table);
 
     for (int rowIndex = 0; rowIndex < table.rows.length; rowIndex++) {
       final row = table.rows[rowIndex];
       final rowHeight = _estimateRowHeight(row);
       var currentX = marginLeft;
+      int gridColIndex = 0;
 
-      for (int colIndex = 0; colIndex < row.cells.length; colIndex++) {
-        final cell = row.cells[colIndex];
+      for (int cellIndex = 0; cellIndex < row.cells.length; cellIndex++) {
+        final cell = row.cells[cellIndex];
+
+        // Skip merged continuation cells (they don't render content)
+        if (cell.isMergedContinuation) {
+          if (gridColIndex < columnWidths.length) {
+            currentX += columnWidths[gridColIndex];
+            gridColIndex++;
+          }
+          continue;
+        }
+
+        // Calculate cell width based on colspan
+        double cellWidth = 0;
+        for (int i = 0;
+            i < cell.colSpan && gridColIndex + i < columnWidths.length;
+            i++) {
+          cellWidth += columnWidths[gridColIndex + i];
+        }
+        if (cellWidth == 0 && columnWidths.isNotEmpty) {
+          cellWidth = columnWidths.first;
+        }
 
         // Draw cell background
         if (cell.backgroundColor != null) {
@@ -669,7 +706,7 @@ class _PdfBuilder {
           buffer.writeln('q');
           buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} rg');
           buffer.writeln(
-              '$currentX ${currentY - rowHeight} $columnWidth $rowHeight re');
+              '$currentX ${currentY - rowHeight} $cellWidth $rowHeight re');
           buffer.writeln('f');
           buffer.writeln('Q');
         }
@@ -680,17 +717,27 @@ class _PdfBuilder {
           table.borders,
           currentX,
           currentY,
-          columnWidth,
+          cellWidth,
           rowHeight,
           isFirstRow: rowIndex == 0,
           isLastRow: rowIndex == table.rows.length - 1,
-          isFirstCol: colIndex == 0,
-          isLastCol: colIndex == row.cells.length - 1,
+          isFirstCol: gridColIndex == 0,
+          isLastCol: gridColIndex + cell.colSpan >= columnWidths.length,
         );
 
-        // Render cell content
+        // Render cell content with vertical alignment
         const cellPadding = 4.0;
-        var cellY = currentY - cellPadding;
+        final contentHeight = _estimateCellContentHeight(cell);
+        double cellY;
+
+        switch (cell.verticalAlignment) {
+          case DocxVerticalAlignment.center:
+            cellY = currentY - cellPadding - (rowHeight - contentHeight) / 2;
+          case DocxVerticalAlignment.bottom:
+            cellY = currentY - rowHeight + contentHeight;
+          case DocxVerticalAlignment.top:
+            cellY = currentY - cellPadding;
+        }
 
         for (final paragraph in cell.paragraphs) {
           cellY = _renderCellParagraph(
@@ -698,17 +745,30 @@ class _PdfBuilder {
             paragraph,
             cellY,
             currentX + cellPadding,
-            columnWidth - (cellPadding * 2),
+            cellWidth - (cellPadding * 2),
           );
         }
 
-        currentX += columnWidth;
+        currentX += cellWidth;
+        gridColIndex += cell.colSpan;
       }
 
       currentY -= rowHeight;
     }
 
     return currentY - 10; // Add spacing after table
+  }
+
+  /// Estimates the content height of a cell for vertical alignment.
+  double _estimateCellContentHeight(DocxTableCell cell) {
+    double height = 0;
+    for (final paragraph in cell.paragraphs) {
+      final size = _getFontSizeForStyle(paragraph.style);
+      final lineHeight = size * 1.4;
+      // Rough estimate: one line per paragraph
+      height += lineHeight;
+    }
+    return height;
   }
 
   /// Draws cell borders.

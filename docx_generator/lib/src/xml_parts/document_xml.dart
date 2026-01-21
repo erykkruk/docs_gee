@@ -171,6 +171,12 @@ class DocumentXml {
 
   static void _writeRun(
       StringBuffer buffer, DocxRun run, Map<String, String> hyperlinks) {
+    // Handle line break runs
+    if (run.isLineBreak) {
+      buffer.writeln('      <w:r><w:br/></w:r>');
+      return;
+    }
+
     // Handle external hyperlinks
     if (run.hyperlink != null) {
       final rId = 'rId${100 + _hyperlinkIdCounter}';
@@ -224,13 +230,21 @@ class DocumentXml {
       buffer.write('</w:rPr>');
     }
 
-    // Text content
-    final escapedText = XmlUtils.escapeXml(run.text);
-    // Use xml:space="preserve" if text has leading/trailing spaces
-    if (run.text.startsWith(' ') || run.text.endsWith(' ')) {
-      buffer.write('<w:t xml:space="preserve">$escapedText</w:t>');
-    } else {
-      buffer.write('<w:t>$escapedText</w:t>');
+    // Text content - handle line breaks (\n) by splitting into multiple <w:t> with <w:br/>
+    final lines = run.text.split('\n');
+    for (int i = 0; i < lines.length; i++) {
+      final line = lines[i];
+      final escapedText = XmlUtils.escapeXml(line);
+      // Use xml:space="preserve" if text has leading/trailing spaces
+      if (line.startsWith(' ') || line.endsWith(' ')) {
+        buffer.write('<w:t xml:space="preserve">$escapedText</w:t>');
+      } else {
+        buffer.write('<w:t>$escapedText</w:t>');
+      }
+      // Add line break between lines (not after the last one)
+      if (i < lines.length - 1) {
+        buffer.write('<w:br/>');
+      }
     }
 
     buffer.write('</w:r>');
@@ -265,6 +279,26 @@ class DocumentXml {
   // TABLE GENERATION
   // ============================================
 
+  /// Total usable table width in twips (6.5 inches at 1440 twips/inch).
+  static const int _tableWidth = 9360;
+
+  /// Calculates column widths in twips based on table configuration.
+  static List<int> _calculateColumnWidths(DocxTable table) {
+    final colCount = table.columnCount;
+    if (colCount == 0) return [];
+
+    if (table.columnWidths != null && table.columnWidths!.length == colCount) {
+      // Use custom widths (percentages converted to twips)
+      return table.columnWidths!
+          .map((percent) => (_tableWidth * percent / 100).round())
+          .toList();
+    } else {
+      // Even distribution
+      final width = _tableWidth ~/ colCount;
+      return List.filled(colCount, width);
+    }
+  }
+
   /// Writes a table element to the buffer.
   static void _writeTable(
       StringBuffer buffer, DocxTable table, Map<String, String> hyperlinks) {
@@ -288,20 +322,21 @@ class DocumentXml {
 
     buffer.writeln('      </w:tblPr>');
 
+    // Calculate column widths
+    final columnWidths = _calculateColumnWidths(table);
+
     // Table grid (column definitions)
-    if (table.columnCount > 0) {
+    if (columnWidths.isNotEmpty) {
       buffer.writeln('      <w:tblGrid>');
-      // Total usable width ~9360 twips (6.5 inches at 1440 twips/inch)
-      final colWidth = 9360 ~/ table.columnCount;
-      for (int i = 0; i < table.columnCount; i++) {
-        buffer.writeln('        <w:gridCol w:w="$colWidth"/>');
+      for (final width in columnWidths) {
+        buffer.writeln('        <w:gridCol w:w="$width"/>');
       }
       buffer.writeln('      </w:tblGrid>');
     }
 
     // Rows
     for (final row in table.rows) {
-      _writeTableRow(buffer, row, table.columnCount, hyperlinks);
+      _writeTableRow(buffer, row, columnWidths, hyperlinks);
     }
 
     buffer.writeln('    </w:tbl>');
@@ -320,12 +355,24 @@ class DocumentXml {
 
   /// Writes a table row element.
   static void _writeTableRow(StringBuffer buffer, DocxTableRow row,
-      int columnCount, Map<String, String> hyperlinks) {
+      List<int> columnWidths, Map<String, String> hyperlinks) {
     buffer.writeln('      <w:tr>');
 
-    final colWidth = columnCount > 0 ? 9360 ~/ columnCount : 9360;
+    int colIndex = 0;
     for (final cell in row.cells) {
-      _writeTableCell(buffer, cell, colWidth, hyperlinks);
+      // Calculate cell width (sum of spanned columns)
+      int cellWidth = 0;
+      for (int i = 0;
+          i < cell.colSpan && colIndex + i < columnWidths.length;
+          i++) {
+        cellWidth += columnWidths[colIndex + i];
+      }
+      if (cellWidth == 0 && columnWidths.isNotEmpty) {
+        cellWidth = columnWidths.first;
+      }
+
+      _writeTableCell(buffer, cell, cellWidth, hyperlinks);
+      colIndex += cell.colSpan;
     }
 
     buffer.writeln('      </w:tr>');
@@ -340,9 +387,28 @@ class DocumentXml {
     buffer.writeln('          <w:tcPr>');
     buffer.writeln('            <w:tcW w:w="$width" w:type="dxa"/>');
 
+    // Horizontal merge (colspan)
+    if (cell.colSpan > 1) {
+      buffer.writeln('            <w:gridSpan w:val="${cell.colSpan}"/>');
+    }
+
+    // Vertical merge (rowspan)
+    if (cell.rowSpan > 1) {
+      buffer.writeln('            <w:vMerge w:val="restart"/>');
+    } else if (cell.isMergedContinuation) {
+      buffer.writeln('            <w:vMerge/>');
+    }
+
+    // Background color
     if (cell.backgroundColor != null) {
       buffer.writeln(
           '            <w:shd w:val="clear" w:fill="${cell.backgroundColor}"/>');
+    }
+
+    // Vertical alignment
+    if (cell.verticalAlignment != DocxVerticalAlignment.top) {
+      buffer.writeln(
+          '            <w:vAlign w:val="${cell.verticalAlignment.value}"/>');
     }
 
     buffer.writeln('          </w:tcPr>');
@@ -428,6 +494,12 @@ class DocumentXml {
   /// Writes a run inside a table cell (with adjusted indentation).
   static void _writeCellRun(
       StringBuffer buffer, DocxRun run, Map<String, String> hyperlinks) {
+    // Handle line break runs
+    if (run.isLineBreak) {
+      buffer.writeln('            <w:r><w:br/></w:r>');
+      return;
+    }
+
     // Handle external hyperlinks
     if (run.hyperlink != null) {
       final rId = 'rId${100 + _hyperlinkIdCounter}';

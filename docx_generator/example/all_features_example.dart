@@ -262,7 +262,8 @@ void main() {
   // ============================================
   // EMOJI (DOCX ONLY)
   // ============================================
-  doc.addParagraph(Paragraph.heading('11. Emoji Support (DOCX only)', level: 1));
+  doc.addParagraph(
+      Paragraph.heading('11. Emoji Support (DOCX only)', level: 1));
   doc.addParagraph(Paragraph.text(
       'Emoji characters work in DOCX (Word handles them natively):'));
   doc.addParagraph(Paragraph.bulletItem('Hello World! 👋🌍'));

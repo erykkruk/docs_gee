@@ -66,3 +66,6 @@ typedef Border = DocxBorder;
 
 /// Alias for [DocxBorderStyle] - use for format-agnostic code.
 typedef BorderStyle = DocxBorderStyle;
+
+/// Alias for [DocxVerticalAlignment] - use for format-agnostic code.
+typedef VerticalAlignment = DocxVerticalAlignment;

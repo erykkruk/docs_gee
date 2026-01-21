@@ -9,6 +9,16 @@ enum DocxAlignment {
   final String value;
 }
 
+/// Vertical alignment options for table cells.
+enum DocxVerticalAlignment {
+  top('top'),
+  center('center'),
+  bottom('bottom');
+
+  const DocxVerticalAlignment(this.value);
+  final String value;
+}
+
 /// Paragraph style types.
 enum DocxParagraphStyle {
   normal('Normal'),

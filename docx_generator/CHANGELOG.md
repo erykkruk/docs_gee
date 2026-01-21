@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-01-21
+
+### Added
+
+#### Line Breaks (Soft Return) - DOCX only
+- **Automatic `\n` conversion** - Newline characters in text are now converted to `<w:br/>` line breaks
+  - `DocxParagraph.text('Line 1\nLine 2\nLine 3')`
+- **Explicit line break runs** - New `DocxRun.lineBreak()` constructor for manual line breaks
+  - Allows different formatting before and after line break
+  - `DocxParagraph(runs: [DocxRun('Bold', bold: true), DocxRun.lineBreak(), DocxRun('Normal')])`
+- Line breaks create soft returns within a paragraph (like Shift+Enter in Word)
+
 ## [1.0.1] - 2024-12-21
 
 ### Added
