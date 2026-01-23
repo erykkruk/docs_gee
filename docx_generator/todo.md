@@ -3,6 +3,7 @@
 ## High Priority
 
 - [ ] **Arabic/RTL Support (DOCX)** - Add right-to-left text direction for Arabic, Hebrew, Persian. Add `rtl` property to paragraphs and runs, generate `<w:bidi/>` and `<w:rtl/>` XML elements.
+- [ ] **Custom Styles (DOCX)** - Allow users to define custom paragraph and character styles
 
 ---
 
@@ -21,7 +22,6 @@
 - [ ] **Headers and Footers (DOCX)** - Add page headers and footers with custom content
 - [ ] **Page Numbers (DOCX)** - Add automatic page numbering (depends on headers/footers)
 - [ ] **Footnotes/Endnotes (DOCX)** - Proper footnote support with automatic numbering and references
-- [ ] **Custom Styles (DOCX)** - Allow users to define custom paragraph and character styles
 - [ ] **PDF Hyperlinks** - Add clickable external links in PDF output
 
 ---
