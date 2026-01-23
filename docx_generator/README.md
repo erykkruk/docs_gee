@@ -34,13 +34,17 @@ A **pure Dart** library for generating **Microsoft Word (DOCX)** and **PDF** doc
 | Table of Contents | ✅ | - |
 | Document metadata | ✅ | ✅ |
 | Custom fonts | ✅ | ✅ |
+| Extended characters (German, French) | ✅ | ✅ |
+| Polish characters | ✅ | Partial* |
 | Emoji support | ✅ | - |
+
+*PDF supports Ó/ó natively; other Polish characters (ą, ę, ć, etc.) fall back to ASCII equivalents due to font encoding limitations.
 
 ## Installation
 
 ```yaml
 dependencies:
-  docs_gee: ^1.1.0
+  docs_gee: ^1.1.2
 ```
 
 ```bash

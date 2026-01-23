@@ -96,6 +96,21 @@ PdfGenerator({
 | `fontName` | `String` | `'Helvetica'` | Base font (Helvetica, Times-Roman, Courier) |
 | `fontSize` | `double` | `12.0` | Font size in points |
 
+#### Character Support
+
+PDF uses WinAnsi encoding (Windows-1252), which supports:
+
+| Category | Characters | Support |
+|----------|------------|---------|
+| ASCII | A-Z, a-z, 0-9, symbols | Full |
+| Typography | bullet (•), en-dash (–), em-dash (—), smart quotes, ellipsis (…), euro (€), ™, ©, ® | Full |
+| German | Ä, Ö, Ü, ä, ö, ü, ß | Full |
+| French | À, Â, Ç, È, É, Ê, Ë, Î, Ï, Ô, Ù, Û, etc. | Full |
+| Polish | Ó, ó | Full |
+| Polish | ą, ę, ć, ź, ż, ń, ł, ś | Fallback to ASCII* |
+
+*Due to WinAnsi encoding limitations, Polish characters not in the standard set are converted to their base ASCII equivalents (e.g., ą → a, ł → l).
+
 #### Methods
 
 ##### generate()

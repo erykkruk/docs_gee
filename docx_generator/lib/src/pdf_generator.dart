@@ -501,7 +501,7 @@ class _PdfBuilder {
       final counterKey = '${paragraph.style.name}_${paragraph.indentLevel}';
 
       if (paragraph.style == DocxParagraphStyle.listBullet) {
-        prefix = '  \x95 ';
+        prefix = '  \u2022 '; // Unicode bullet, converted in _escapePdfString
       } else if (paragraph.style == DocxParagraphStyle.listDash) {
         prefix = '  - ';
       } else if (paragraph.style == DocxParagraphStyle.listNumber) {
@@ -1131,13 +1131,167 @@ class _PdfBuilder {
   }
 
   String _escapePdfString(String text) {
-    return text
-        .replaceAll('\\', '\\\\')
-        .replaceAll('(', '\\(')
-        .replaceAll(')', '\\)')
-        .replaceAll('\n', '\\n')
-        .replaceAll('\r', '\\r')
-        .replaceAll('\t', '\\t');
+    final buffer = StringBuffer();
+    for (final codeUnit in text.codeUnits) {
+      switch (codeUnit) {
+        // Basic escapes
+        case 0x5C: // backslash
+          buffer.write('\\\\');
+        case 0x28: // (
+          buffer.write('\\(');
+        case 0x29: // )
+          buffer.write('\\)');
+        case 0x0A: // newline
+          buffer.write('\\n');
+        case 0x0D: // carriage return
+          buffer.write('\\r');
+        case 0x09: // tab
+          buffer.write('\\t');
+
+        // Typography (WinAnsi codes)
+        case 0x2022: // bullet •
+          buffer.write('\\225'); // WinAnsi 149
+        case 0x2013: // en dash –
+          buffer.write('\\226'); // WinAnsi 150
+        case 0x2014: // em dash —
+          buffer.write('\\227'); // WinAnsi 151
+        case 0x2018: // left single quote '
+          buffer.write('\\221'); // WinAnsi 145
+        case 0x2019: // right single quote '
+          buffer.write('\\222'); // WinAnsi 146
+        case 0x201C: // left double quote "
+          buffer.write('\\223'); // WinAnsi 147
+        case 0x201D: // right double quote "
+          buffer.write('\\224'); // WinAnsi 148
+        case 0x2026: // ellipsis …
+          buffer.write('\\205'); // WinAnsi 133
+        case 0x20AC: // euro €
+          buffer.write('\\200'); // WinAnsi 128
+        case 0x2122: // trademark ™
+          buffer.write('\\231'); // WinAnsi 153
+        case 0x00A9: // copyright ©
+          buffer.write('\\251'); // WinAnsi 169
+        case 0x00AE: // registered ®
+          buffer.write('\\256'); // WinAnsi 174
+
+        // Polish characters (fallback to base letters - WinAnsi doesn't support these)
+        case 0x0104: // Ą
+          buffer.write('A');
+        case 0x0105: // ą
+          buffer.write('a');
+        case 0x0106: // Ć
+          buffer.write('C');
+        case 0x0107: // ć
+          buffer.write('c');
+        case 0x0118: // Ę
+          buffer.write('E');
+        case 0x0119: // ę
+          buffer.write('e');
+        case 0x0141: // Ł
+          buffer.write('L');
+        case 0x0142: // ł
+          buffer.write('l');
+        case 0x0143: // Ń
+          buffer.write('N');
+        case 0x0144: // ń
+          buffer.write('n');
+        case 0x00D3: // Ó (in WinAnsi)
+          buffer.write('\\323'); // WinAnsi 211
+        case 0x00F3: // ó (in WinAnsi)
+          buffer.write('\\363'); // WinAnsi 243
+        case 0x015A: // Ś
+          buffer.write('S');
+        case 0x015B: // ś
+          buffer.write('s');
+        case 0x0179: // Ź
+          buffer.write('Z');
+        case 0x017A: // ź
+          buffer.write('z');
+        case 0x017B: // Ż
+          buffer.write('Z');
+        case 0x017C: // ż
+          buffer.write('z');
+
+        // German characters (in WinAnsi)
+        case 0x00C4: // Ä
+          buffer.write('\\304'); // WinAnsi 196
+        case 0x00D6: // Ö
+          buffer.write('\\326'); // WinAnsi 214
+        case 0x00DC: // Ü
+          buffer.write('\\334'); // WinAnsi 220
+        case 0x00E4: // ä
+          buffer.write('\\344'); // WinAnsi 228
+        case 0x00F6: // ö
+          buffer.write('\\366'); // WinAnsi 246
+        case 0x00FC: // ü
+          buffer.write('\\374'); // WinAnsi 252
+        case 0x00DF: // ß
+          buffer.write('\\337'); // WinAnsi 223
+
+        // French characters (in WinAnsi)
+        case 0x00C0: // À
+          buffer.write('\\300'); // WinAnsi 192
+        case 0x00C2: // Â
+          buffer.write('\\302'); // WinAnsi 194
+        case 0x00C7: // Ç
+          buffer.write('\\307'); // WinAnsi 199
+        case 0x00C8: // È
+          buffer.write('\\310'); // WinAnsi 200
+        case 0x00C9: // É
+          buffer.write('\\311'); // WinAnsi 201
+        case 0x00CA: // Ê
+          buffer.write('\\312'); // WinAnsi 202
+        case 0x00CB: // Ë
+          buffer.write('\\313'); // WinAnsi 203
+        case 0x00CE: // Î
+          buffer.write('\\316'); // WinAnsi 206
+        case 0x00CF: // Ï
+          buffer.write('\\317'); // WinAnsi 207
+        case 0x00D4: // Ô
+          buffer.write('\\324'); // WinAnsi 212
+        case 0x00D9: // Ù
+          buffer.write('\\331'); // WinAnsi 217
+        case 0x00DB: // Û
+          buffer.write('\\333'); // WinAnsi 219
+        case 0x00E0: // à
+          buffer.write('\\340'); // WinAnsi 224
+        case 0x00E2: // â
+          buffer.write('\\342'); // WinAnsi 226
+        case 0x00E7: // ç
+          buffer.write('\\347'); // WinAnsi 231
+        case 0x00E8: // è
+          buffer.write('\\350'); // WinAnsi 232
+        case 0x00E9: // é
+          buffer.write('\\351'); // WinAnsi 233
+        case 0x00EA: // ê
+          buffer.write('\\352'); // WinAnsi 234
+        case 0x00EB: // ë
+          buffer.write('\\353'); // WinAnsi 235
+        case 0x00EE: // î
+          buffer.write('\\356'); // WinAnsi 238
+        case 0x00EF: // ï
+          buffer.write('\\357'); // WinAnsi 239
+        case 0x00F4: // ô
+          buffer.write('\\364'); // WinAnsi 244
+        case 0x00F9: // ù
+          buffer.write('\\371'); // WinAnsi 249
+        case 0x00FB: // û
+          buffer.write('\\373'); // WinAnsi 251
+
+        default:
+          if (codeUnit >= 32 && codeUnit <= 126) {
+            // Standard ASCII printable
+            buffer.writeCharCode(codeUnit);
+          } else if (codeUnit >= 160 && codeUnit <= 255) {
+            // Latin-1 supplement (maps to WinAnsi)
+            buffer.write('\\${codeUnit.toRadixString(8).padLeft(3, '0')}');
+          } else {
+            // Unmappable - use replacement character or skip
+            buffer.write('?');
+          }
+      }
+    }
+    return buffer.toString();
   }
 }
 

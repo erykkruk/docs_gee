@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2025-01-23
+
+### Fixed
+
+#### PDF Generator
+- **Bullet points display correctly** - Fixed encoding issue where bullet character (•) was displaying as "Â•"
+  - Rewrote `_escapePdfString` to properly convert Unicode characters to WinAnsi octal escapes
+- **Extended character support** - Added proper encoding for:
+  - Typography: bullet (•), en-dash (–), em-dash (—), smart quotes (' ' " "), ellipsis (…), euro (€), trademark (™), copyright (©), registered (®)
+  - German: Ä, Ö, Ü, ä, ö, ü, ß
+  - French: À, Â, Ç, È, É, Ê, Ë, Î, Ï, Ô, Ù, Û, à, â, ç, è, é, ê, ë, î, ï, ô, ù, û
+  - Polish: Ó, ó (native support), other Polish characters (ą, ę, ć, ź, ż, ń, ł, ś) fall back to base ASCII equivalents due to WinAnsi limitations
+
+#### DOCX Generator
+- **List detection fix** - Fixed issue where `listDash`, `listNumberAlpha`, and `listNumberRoman` styles didn't trigger inclusion of `numbering.xml`, causing lists to display incorrectly
+- **List level specification** - Added explicit `<w:ilvl w:val="0"/>` to all list styles in `styles.xml` for consistent formatting
+
 ## [1.1.0] - 2025-01-21
 
 ### Added

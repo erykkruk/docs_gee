@@ -201,6 +201,7 @@ class StylesXml {
     buffer.writeln('    <w:qFormat/>');
     buffer.writeln('    <w:pPr>');
     buffer.writeln('      <w:numPr>');
+    buffer.writeln('        <w:ilvl w:val="0"/>');
     buffer.writeln('        <w:numId w:val="1"/>');
     buffer.writeln('      </w:numPr>');
     buffer.writeln('    </w:pPr>');
@@ -213,6 +214,7 @@ class StylesXml {
     buffer.writeln('    <w:qFormat/>');
     buffer.writeln('    <w:pPr>');
     buffer.writeln('      <w:numPr>');
+    buffer.writeln('        <w:ilvl w:val="0"/>');
     buffer.writeln('        <w:numId w:val="2"/>');
     buffer.writeln('      </w:numPr>');
     buffer.writeln('    </w:pPr>');
@@ -225,6 +227,7 @@ class StylesXml {
     buffer.writeln('    <w:qFormat/>');
     buffer.writeln('    <w:pPr>');
     buffer.writeln('      <w:numPr>');
+    buffer.writeln('        <w:ilvl w:val="0"/>');
     buffer.writeln('        <w:numId w:val="3"/>');
     buffer.writeln('      </w:numPr>');
     buffer.writeln('    </w:pPr>');
@@ -238,6 +241,7 @@ class StylesXml {
     buffer.writeln('    <w:qFormat/>');
     buffer.writeln('    <w:pPr>');
     buffer.writeln('      <w:numPr>');
+    buffer.writeln('        <w:ilvl w:val="0"/>');
     buffer.writeln('        <w:numId w:val="4"/>');
     buffer.writeln('      </w:numPr>');
     buffer.writeln('    </w:pPr>');
@@ -251,6 +255,7 @@ class StylesXml {
     buffer.writeln('    <w:qFormat/>');
     buffer.writeln('    <w:pPr>');
     buffer.writeln('      <w:numPr>');
+    buffer.writeln('        <w:ilvl w:val="0"/>');
     buffer.writeln('        <w:numId w:val="5"/>');
     buffer.writeln('      </w:numPr>');
     buffer.writeln('    </w:pPr>');

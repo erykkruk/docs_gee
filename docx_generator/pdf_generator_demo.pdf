@@ -9,7 +9,7 @@ endobj
 2 0 obj
 <<
 /Type /Pages
-/Kids [7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R ]
+/Kids [9 0 R 11 0 R 13 0 R 15 0 R 17 0 R 19 0 R ]
 /Count 6
 >>
 endobj
@@ -47,41 +47,21 @@ endobj
 endobj
 7 0 obj
 <<
-/Type /Page
-/Parent 2 0 R
-/MediaBox [0 0 612.0 792.0]
-/Contents 8 0 R
-/Resources <<
-  /Font <<
-    /F1 3 0 R
-    /F2 4 0 R
-    /F3 5 0 R
-    /F4 6 0 R
-  >>
->>
+/Type /Font
+/Subtype /Type1
+/BaseFont /Courier
+/Encoding /WinAnsiEncoding
 >>
 endobj
 8 0 obj
 <<
-/Length 435
+/Title (PDF Generator Demo)
+/Author (docs_gee library)
+/Creator (docs_gee)
+/Producer (docs_gee Dart library)
+/CreationDate (D:20260123091715)
+/ModDate (D:20260123091715)
 >>
-stream
-BT
-1 0 0 1 180.0 720.0 Tm
-/F2 24 Tf
-(PDF Generator Library) Tj
-1 0 0 1 168.0 676.8 Tm
-/F1 12 Tf
-(A demonstration of PDF generation capabilities) Tj
-1 0 0 1 72.0 655.1999999999999 Tm
-/F1 12 Tf
-() Tj
-1 0 0 1 72.0 633.5999999999999 Tm
-/F1 12 Tf
-(This document was generated programmatically using the docs_gee Dart library. It demonstrates various formatting options available for PDF generation without any external dependencies.) Tj
-ET
-
-endstream
 endobj
 9 0 obj
 <<
@@ -95,58 +75,128 @@ endobj
     /F2 4 0 R
     /F3 5 0 R
     /F4 6 0 R
+    /F5 7 0 R
   >>
 >>
 >>
 endobj
 10 0 obj
 <<
-/Length 802
+/Length 1268
 >>
 stream
 BT
-1 0 0 1 72.0 720.0 Tm
+1 0 0 1 180.0 720.0 Tm
+0 0 0 rg
 /F2 24 Tf
-(Text Formatting) Tj
-1 0 0 1 72.0 676.8 Tm
+(PDF) Tj
+0 0 0 rg
+/F2 24 Tf
+( Generator) Tj
+0 0 0 rg
+/F2 24 Tf
+( Library) Tj
+ET
+BT
+1 0 0 1 168.0 676.8 Tm
+0 0 0 rg
 /F1 12 Tf
-(The library supports various text formatting options. You can apply formatting to individual text runs within a paragraph.) Tj
-1 0 0 1 72.0 655.1999999999999 Tm
-/F2 18 Tf
-(Basic Formatting) Tj
-1 0 0 1 72.0 622.8 Tm
+(A) Tj
+0 0 0 rg
 /F1 12 Tf
-(This paragraph contains ) Tj
-/F2 12 Tf
-(bold text) Tj
+( demonstration) Tj
+0 0 0 rg
 /F1 12 Tf
-(, ) Tj
-/F3 12 Tf
-(italic text) Tj
+( of) Tj
+0 0 0 rg
 /F1 12 Tf
-(, and ) Tj
-/F4 12 Tf
-(bold italic text) Tj
+( PDF) Tj
+0 0 0 rg
 /F1 12 Tf
-(.) Tj
-1 0 0 1 72.0 601.1999999999999 Tm
-/F2 18 Tf
-(Combined Formatting) Tj
-1 0 0 1 72.0 568.8 Tm
+( generation) Tj
+0 0 0 rg
 /F1 12 Tf
-(PDF uses the standard ) Tj
-/F2 12 Tf
-(Base 14 fonts) Tj
+( capabilities) Tj
+ET
+BT
+1 0 0 1 72.0 655.2 Tm
+0 0 0 rg
 /F1 12 Tf
-( \(Helvetica, Times-Roman, Courier\) which support ) Tj
-/F2 12 Tf
-(bold) Tj
+() Tj
+ET
+BT
+1 0 0 1 72.0 633.6000000000001 Tm
+0 0 0 rg
 /F1 12 Tf
-( and ) Tj
-/F3 12 Tf
-(italic) Tj
+(This) Tj
+0 0 0 rg
 /F1 12 Tf
-( variants.) Tj
+( document) Tj
+0 0 0 rg
+/F1 12 Tf
+( was) Tj
+0 0 0 rg
+/F1 12 Tf
+( generated) Tj
+0 0 0 rg
+/F1 12 Tf
+( programmatically) Tj
+0 0 0 rg
+/F1 12 Tf
+( using) Tj
+0 0 0 rg
+/F1 12 Tf
+( the) Tj
+0 0 0 rg
+/F1 12 Tf
+( docs_gee) Tj
+0 0 0 rg
+/F1 12 Tf
+( Dart) Tj
+0 0 0 rg
+/F1 12 Tf
+( library.) Tj
+1 0 0 1 72.0 616.8000000000002 Tm
+0 0 0 rg
+/F1 12 Tf
+(It) Tj
+0 0 0 rg
+/F1 12 Tf
+( demonstrates) Tj
+0 0 0 rg
+/F1 12 Tf
+( various) Tj
+0 0 0 rg
+/F1 12 Tf
+( formatting) Tj
+0 0 0 rg
+/F1 12 Tf
+( options) Tj
+0 0 0 rg
+/F1 12 Tf
+( available) Tj
+0 0 0 rg
+/F1 12 Tf
+( for) Tj
+0 0 0 rg
+/F1 12 Tf
+( PDF) Tj
+0 0 0 rg
+/F1 12 Tf
+( generation) Tj
+1 0 0 1 72.0 600.0000000000002 Tm
+0 0 0 rg
+/F1 12 Tf
+(without) Tj
+0 0 0 rg
+/F1 12 Tf
+( any) Tj
+0 0 0 rg
+/F1 12 Tf
+( external) Tj
+0 0 0 rg
+/F1 12 Tf
+( dependencies.) Tj
 ET
 
 endstream
@@ -163,34 +213,197 @@ endobj
     /F2 4 0 R
     /F3 5 0 R
     /F4 6 0 R
+    /F5 7 0 R
   >>
 >>
 >>
 endobj
 12 0 obj
 <<
-/Length 601
+/Length 1939
 >>
 stream
 BT
 1 0 0 1 72.0 720.0 Tm
+0 0 0 rg
 /F2 24 Tf
-(Text Alignment) Tj
+(Text) Tj
+0 0 0 rg
+/F2 24 Tf
+( Formatting) Tj
+ET
+BT
 1 0 0 1 72.0 676.8 Tm
+0 0 0 rg
 /F1 12 Tf
-(LEFT ALIGNED: This paragraph is aligned to the left margin. This is the default alignment for most text content.) Tj
-1 0 0 1 72.0 655.1999999999999 Tm
+(The) Tj
+0 0 0 rg
 /F1 12 Tf
-() Tj
-1 0 0 1 21.0 633.5999999999999 Tm
+( library) Tj
+0 0 0 rg
 /F1 12 Tf
-(CENTER ALIGNED: This paragraph is centered between the margins. Useful for titles and headings.) Tj
-1 0 0 1 72.0 611.9999999999999 Tm
+( supports) Tj
+0 0 0 rg
 /F1 12 Tf
-() Tj
-1 0 0 1 -42.0 590.3999999999999 Tm
+( various) Tj
+0 0 0 rg
 /F1 12 Tf
-(RIGHT ALIGNED: This paragraph is aligned to the right margin. Often used for dates or signatures.) Tj
+( text) Tj
+0 0 0 rg
+/F1 12 Tf
+( formatting) Tj
+0 0 0 rg
+/F1 12 Tf
+( options.) Tj
+0 0 0 rg
+/F1 12 Tf
+( You) Tj
+0 0 0 rg
+/F1 12 Tf
+( can) Tj
+0 0 0 rg
+/F1 12 Tf
+( apply) Tj
+0 0 0 rg
+/F1 12 Tf
+( formatting) Tj
+1 0 0 1 72.0 660.0 Tm
+0 0 0 rg
+/F1 12 Tf
+(to) Tj
+0 0 0 rg
+/F1 12 Tf
+( individual) Tj
+0 0 0 rg
+/F1 12 Tf
+( text) Tj
+0 0 0 rg
+/F1 12 Tf
+( runs) Tj
+0 0 0 rg
+/F1 12 Tf
+( within) Tj
+0 0 0 rg
+/F1 12 Tf
+( a) Tj
+0 0 0 rg
+/F1 12 Tf
+( paragraph.) Tj
+ET
+BT
+1 0 0 1 72.0 638.4000000000001 Tm
+0 0 0 rg
+/F2 18 Tf
+(Basic) Tj
+0 0 0 rg
+/F2 18 Tf
+( Formatting) Tj
+ET
+BT
+1 0 0 1 72.0 606.0 Tm
+0 0 0 rg
+/F1 12 Tf
+(This) Tj
+0 0 0 rg
+/F1 12 Tf
+( paragraph) Tj
+0 0 0 rg
+/F1 12 Tf
+( contains) Tj
+0 0 0 rg
+/F2 12 Tf
+( bold) Tj
+0 0 0 rg
+/F2 12 Tf
+( text) Tj
+0 0 0 rg
+/F1 12 Tf
+( ,) Tj
+0 0 0 rg
+/F3 12 Tf
+( italic) Tj
+0 0 0 rg
+/F3 12 Tf
+( text) Tj
+0 0 0 rg
+/F1 12 Tf
+( ,) Tj
+0 0 0 rg
+/F1 12 Tf
+( and) Tj
+0 0 0 rg
+/F4 12 Tf
+( bold) Tj
+0 0 0 rg
+/F4 12 Tf
+( italic) Tj
+0 0 0 rg
+/F4 12 Tf
+( text) Tj
+0 0 0 rg
+/F1 12 Tf
+( .) Tj
+ET
+BT
+1 0 0 1 72.0 584.4000000000001 Tm
+0 0 0 rg
+/F2 18 Tf
+(Combined) Tj
+0 0 0 rg
+/F2 18 Tf
+( Formatting) Tj
+ET
+BT
+1 0 0 1 72.0 552.0 Tm
+0 0 0 rg
+/F1 12 Tf
+(PDF) Tj
+0 0 0 rg
+/F1 12 Tf
+( uses) Tj
+0 0 0 rg
+/F1 12 Tf
+( the) Tj
+0 0 0 rg
+/F1 12 Tf
+( standard) Tj
+0 0 0 rg
+/F2 12 Tf
+( Base) Tj
+0 0 0 rg
+/F2 12 Tf
+( 14) Tj
+0 0 0 rg
+/F2 12 Tf
+( fonts) Tj
+0 0 0 rg
+/F1 12 Tf
+( \(Helvetica,) Tj
+0 0 0 rg
+/F1 12 Tf
+( Times-Roman,) Tj
+0 0 0 rg
+/F1 12 Tf
+( Courier\)) Tj
+0 0 0 rg
+/F1 12 Tf
+( which) Tj
+1 0 0 1 72.0 535.2 Tm
+0 0 0 rg
+/F1 12 Tf
+(support) Tj
+0 0 0 rg
+/F2 12 Tf
+( bold) Tj
+0 0 0 rg
+/F1 12 Tf
+( and) Tj
+0 0 0 rg
+/F3 12 Tf
+( italic) Tj
+0 0 0 rg
+/F1 12 Tf
+( variants.) Tj
 ET
 
 endstream
@@ -207,40 +420,195 @@ endobj
     /F2 4 0 R
     /F3 5 0 R
     /F4 6 0 R
+    /F5 7 0 R
   >>
 >>
 >>
 endobj
 14 0 obj
 <<
-/Length 615
+/Length 1948
 >>
 stream
 BT
 1 0 0 1 72.0 720.0 Tm
+0 0 0 rg
 /F2 24 Tf
-(Heading Levels) Tj
+(Text) Tj
+0 0 0 rg
+/F2 24 Tf
+( Alignment) Tj
+ET
+BT
 1 0 0 1 72.0 676.8 Tm
+0 0 0 rg
 /F1 12 Tf
-(The library supports three heading levels for document structure:) Tj
-1 0 0 1 72.0 655.1999999999999 Tm
-/F2 24 Tf
-(Heading Level 1) Tj
-1 0 0 1 72.0 611.9999999999999 Tm
+(LEFT) Tj
+0 0 0 rg
 /F1 12 Tf
-(Primary headings for main sections.) Tj
-1 0 0 1 72.0 590.3999999999999 Tm
-/F2 18 Tf
-(Heading Level 2) Tj
-1 0 0 1 72.0 557.9999999999999 Tm
+( ALIGNED:) Tj
+0 0 0 rg
 /F1 12 Tf
-(Secondary headings for subsections.) Tj
-1 0 0 1 72.0 536.3999999999999 Tm
-/F2 15 Tf
-(Heading Level 3) Tj
-1 0 0 1 72.0 509.39999999999986 Tm
+( This) Tj
+0 0 0 rg
 /F1 12 Tf
-(Tertiary headings for sub-subsections.) Tj
+( paragraph) Tj
+0 0 0 rg
+/F1 12 Tf
+( is) Tj
+0 0 0 rg
+/F1 12 Tf
+( aligned) Tj
+0 0 0 rg
+/F1 12 Tf
+( to) Tj
+0 0 0 rg
+/F1 12 Tf
+( the) Tj
+0 0 0 rg
+/F1 12 Tf
+( left) Tj
+0 0 0 rg
+/F1 12 Tf
+( margin.) Tj
+0 0 0 rg
+/F1 12 Tf
+( This) Tj
+0 0 0 rg
+/F1 12 Tf
+( is) Tj
+0 0 0 rg
+/F1 12 Tf
+( the) Tj
+1 0 0 1 72.0 660.0 Tm
+0 0 0 rg
+/F1 12 Tf
+(default) Tj
+0 0 0 rg
+/F1 12 Tf
+( alignment) Tj
+0 0 0 rg
+/F1 12 Tf
+( for) Tj
+0 0 0 rg
+/F1 12 Tf
+( most) Tj
+0 0 0 rg
+/F1 12 Tf
+( text) Tj
+0 0 0 rg
+/F1 12 Tf
+( content.) Tj
+ET
+BT
+1 0 0 1 72.0 638.4000000000001 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+ET
+BT
+1 0 0 1 84.0 616.8000000000002 Tm
+0 0 0 rg
+/F1 12 Tf
+(CENTER) Tj
+0 0 0 rg
+/F1 12 Tf
+( ALIGNED:) Tj
+0 0 0 rg
+/F1 12 Tf
+( This) Tj
+0 0 0 rg
+/F1 12 Tf
+( paragraph) Tj
+0 0 0 rg
+/F1 12 Tf
+( is) Tj
+0 0 0 rg
+/F1 12 Tf
+( centered) Tj
+0 0 0 rg
+/F1 12 Tf
+( between) Tj
+0 0 0 rg
+/F1 12 Tf
+( the) Tj
+0 0 0 rg
+/F1 12 Tf
+( margins.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Useful) Tj
+0 0 0 rg
+/F1 12 Tf
+( for) Tj
+1 0 0 1 246.0 600.0000000000002 Tm
+0 0 0 rg
+/F1 12 Tf
+(titles) Tj
+0 0 0 rg
+/F1 12 Tf
+( and) Tj
+0 0 0 rg
+/F1 12 Tf
+( headings.) Tj
+ET
+BT
+1 0 0 1 72.0 578.4000000000003 Tm
+0 0 0 rg
+/F1 12 Tf
+() Tj
+ET
+BT
+1 0 0 1 84.0 556.8000000000004 Tm
+0 0 0 rg
+/F1 12 Tf
+(RIGHT) Tj
+0 0 0 rg
+/F1 12 Tf
+( ALIGNED:) Tj
+0 0 0 rg
+/F1 12 Tf
+( This) Tj
+0 0 0 rg
+/F1 12 Tf
+( paragraph) Tj
+0 0 0 rg
+/F1 12 Tf
+( is) Tj
+0 0 0 rg
+/F1 12 Tf
+( aligned) Tj
+0 0 0 rg
+/F1 12 Tf
+( to) Tj
+0 0 0 rg
+/F1 12 Tf
+( the) Tj
+0 0 0 rg
+/F1 12 Tf
+( right) Tj
+0 0 0 rg
+/F1 12 Tf
+( margin.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Often) Tj
+0 0 0 rg
+/F1 12 Tf
+( used) Tj
+0 0 0 rg
+/F1 12 Tf
+( for) Tj
+1 0 0 1 420.0 540.0000000000005 Tm
+0 0 0 rg
+/F1 12 Tf
+(dates) Tj
+0 0 0 rg
+/F1 12 Tf
+( or) Tj
+0 0 0 rg
+/F1 12 Tf
+( signatures.) Tj
 ET
 
 endstream
@@ -257,81 +625,138 @@ endobj
     /F2 4 0 R
     /F3 5 0 R
     /F4 6 0 R
+    /F5 7 0 R
   >>
 >>
 >>
 endobj
 16 0 obj
 <<
-/Length 1230
+/Length 1317
 >>
 stream
 BT
 1 0 0 1 72.0 720.0 Tm
+0 0 0 rg
 /F2 24 Tf
-(Lists) Tj
+(Heading) Tj
+0 0 0 rg
+/F2 24 Tf
+( Levels) Tj
+ET
+BT
 1 0 0 1 72.0 676.8 Tm
+0 0 0 rg
+/F1 12 Tf
+(The) Tj
+0 0 0 rg
+/F1 12 Tf
+( library) Tj
+0 0 0 rg
+/F1 12 Tf
+( supports) Tj
+0 0 0 rg
+/F1 12 Tf
+( three) Tj
+0 0 0 rg
+/F1 12 Tf
+( heading) Tj
+0 0 0 rg
+/F1 12 Tf
+( levels) Tj
+0 0 0 rg
+/F1 12 Tf
+( for) Tj
+0 0 0 rg
+/F1 12 Tf
+( document) Tj
+0 0 0 rg
+/F1 12 Tf
+( structure:) Tj
+ET
+BT
+1 0 0 1 72.0 655.2 Tm
+0 0 0 rg
+/F2 24 Tf
+(Heading) Tj
+0 0 0 rg
+/F2 24 Tf
+( Level) Tj
+0 0 0 rg
+/F2 24 Tf
+( 1) Tj
+ET
+BT
+1 0 0 1 72.0 612.0 Tm
+0 0 0 rg
+/F1 12 Tf
+(Primary) Tj
+0 0 0 rg
+/F1 12 Tf
+( headings) Tj
+0 0 0 rg
+/F1 12 Tf
+( for) Tj
+0 0 0 rg
+/F1 12 Tf
+( main) Tj
+0 0 0 rg
+/F1 12 Tf
+( sections.) Tj
+ET
+BT
+1 0 0 1 72.0 590.4000000000001 Tm
+0 0 0 rg
 /F2 18 Tf
-(Bullet List) Tj
-1 0 0 1 72.0 644.4 Tm
-/F1 12 Tf
-(Features of this library:) Tj
-1 0 0 1 72.0 622.8 Tm
-/F1 12 Tf
-( ) Tj
-/F1 12 Tf
-(Pure Dart implementation) Tj
-1 0 0 1 72.0 601.1999999999999 Tm
-/F1 12 Tf
-( ) Tj
-/F1 12 Tf
-(Zero external dependencies for PDF) Tj
-1 0 0 1 72.0 579.5999999999999 Tm
-/F1 12 Tf
-( ) Tj
-/F1 12 Tf
-(Cross-platform support) Tj
-1 0 0 1 72.0 557.9999999999999 Tm
-/F1 12 Tf
-( ) Tj
-/F1 12 Tf
-(Same API for DOCX and PDF) Tj
-1 0 0 1 72.0 536.3999999999999 Tm
-/F1 12 Tf
-( ) Tj
-/F1 12 Tf
-(Lightweight footprint) Tj
-1 0 0 1 72.0 514.7999999999998 Tm
+(Heading) Tj
+0 0 0 rg
 /F2 18 Tf
-(Numbered List) Tj
-1 0 0 1 72.0 482.39999999999986 Tm
+( Level) Tj
+0 0 0 rg
+/F2 18 Tf
+( 2) Tj
+ET
+BT
+1 0 0 1 72.0 558.0 Tm
+0 0 0 rg
 /F1 12 Tf
-(Steps to generate a PDF:) Tj
-1 0 0 1 72.0 460.79999999999984 Tm
+(Secondary) Tj
+0 0 0 rg
 /F1 12 Tf
-(1. ) Tj
+( headings) Tj
+0 0 0 rg
 /F1 12 Tf
-(Create a DocxDocument) Tj
-1 0 0 1 72.0 439.1999999999998 Tm
+( for) Tj
+0 0 0 rg
 /F1 12 Tf
-(2. ) Tj
+( subsections.) Tj
+ET
+BT
+1 0 0 1 72.0 536.4000000000001 Tm
+0 0 0 rg
+/F2 15 Tf
+(Heading) Tj
+0 0 0 rg
+/F2 15 Tf
+( Level) Tj
+0 0 0 rg
+/F2 15 Tf
+( 3) Tj
+ET
+BT
+1 0 0 1 72.0 509.4000000000001 Tm
+0 0 0 rg
 /F1 12 Tf
-(Add paragraphs with content) Tj
-1 0 0 1 72.0 417.5999999999998 Tm
+(Tertiary) Tj
+0 0 0 rg
 /F1 12 Tf
-(3. ) Tj
+( headings) Tj
+0 0 0 rg
 /F1 12 Tf
-(Create a PdfGenerator) Tj
-1 0 0 1 72.0 395.9999999999998 Tm
+( for) Tj
+0 0 0 rg
 /F1 12 Tf
-(4. ) Tj
-/F1 12 Tf
-(Call generate\(\) to get bytes) Tj
-1 0 0 1 72.0 374.39999999999975 Tm
-/F1 12 Tf
-(5. ) Tj
-/F1 12 Tf
-(Save or transmit the bytes) Tj
+( sub-subsections.) Tj
 ET
 
 endstream
@@ -348,62 +773,454 @@ endobj
     /F2 4 0 R
     /F3 5 0 R
     /F4 6 0 R
+    /F5 7 0 R
   >>
 >>
 >>
 endobj
 18 0 obj
 <<
-/Length 504
+/Length 2474
 >>
 stream
 BT
 1 0 0 1 72.0 720.0 Tm
+0 0 0 rg
+/F2 24 Tf
+(Lists) Tj
+ET
+BT
+1 0 0 1 72.0 676.8 Tm
+0 0 0 rg
+/F2 18 Tf
+(Bullet) Tj
+0 0 0 rg
+/F2 18 Tf
+( List) Tj
+ET
+BT
+1 0 0 1 72.0 644.3999999999999 Tm
+0 0 0 rg
+/F1 12 Tf
+(Features) Tj
+0 0 0 rg
+/F1 12 Tf
+( of) Tj
+0 0 0 rg
+/F1 12 Tf
+( this) Tj
+0 0 0 rg
+/F1 12 Tf
+( library:) Tj
+ET
+BT
+1 0 0 1 72.0 622.8 Tm
+0 0 0 rg
+/F1 12 Tf
+(\225) Tj
+0 0 0 rg
+/F1 12 Tf
+( Pure) Tj
+0 0 0 rg
+/F1 12 Tf
+( Dart) Tj
+0 0 0 rg
+/F1 12 Tf
+( implementation) Tj
+ET
+BT
+1 0 0 1 72.0 601.2 Tm
+0 0 0 rg
+/F1 12 Tf
+(\225) Tj
+0 0 0 rg
+/F1 12 Tf
+( Zero) Tj
+0 0 0 rg
+/F1 12 Tf
+( external) Tj
+0 0 0 rg
+/F1 12 Tf
+( dependencies) Tj
+0 0 0 rg
+/F1 12 Tf
+( for) Tj
+0 0 0 rg
+/F1 12 Tf
+( PDF) Tj
+ET
+BT
+1 0 0 1 72.0 579.6000000000001 Tm
+0 0 0 rg
+/F1 12 Tf
+(\225) Tj
+0 0 0 rg
+/F1 12 Tf
+( Cross-platform) Tj
+0 0 0 rg
+/F1 12 Tf
+( support) Tj
+ET
+BT
+1 0 0 1 72.0 558.0000000000002 Tm
+0 0 0 rg
+/F1 12 Tf
+(\225) Tj
+0 0 0 rg
+/F1 12 Tf
+( Same) Tj
+0 0 0 rg
+/F1 12 Tf
+( API) Tj
+0 0 0 rg
+/F1 12 Tf
+( for) Tj
+0 0 0 rg
+/F1 12 Tf
+( DOCX) Tj
+0 0 0 rg
+/F1 12 Tf
+( and) Tj
+0 0 0 rg
+/F1 12 Tf
+( PDF) Tj
+ET
+BT
+1 0 0 1 72.0 536.4000000000003 Tm
+0 0 0 rg
+/F1 12 Tf
+(\225) Tj
+0 0 0 rg
+/F1 12 Tf
+( Lightweight) Tj
+0 0 0 rg
+/F1 12 Tf
+( footprint) Tj
+ET
+BT
+1 0 0 1 72.0 514.8000000000004 Tm
+0 0 0 rg
+/F2 18 Tf
+(Numbered) Tj
+0 0 0 rg
+/F2 18 Tf
+( List) Tj
+ET
+BT
+1 0 0 1 72.0 482.40000000000043 Tm
+0 0 0 rg
+/F1 12 Tf
+(Steps) Tj
+0 0 0 rg
+/F1 12 Tf
+( to) Tj
+0 0 0 rg
+/F1 12 Tf
+( generate) Tj
+0 0 0 rg
+/F1 12 Tf
+( a) Tj
+0 0 0 rg
+/F1 12 Tf
+( PDF:) Tj
+ET
+BT
+1 0 0 1 72.0 460.8000000000004 Tm
+0 0 0 rg
+/F1 12 Tf
+(1.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Create) Tj
+0 0 0 rg
+/F1 12 Tf
+( a) Tj
+0 0 0 rg
+/F1 12 Tf
+( DocxDocument) Tj
+ET
+BT
+1 0 0 1 72.0 439.2000000000004 Tm
+0 0 0 rg
+/F1 12 Tf
+(2.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Add) Tj
+0 0 0 rg
+/F1 12 Tf
+( paragraphs) Tj
+0 0 0 rg
+/F1 12 Tf
+( with) Tj
+0 0 0 rg
+/F1 12 Tf
+( content) Tj
+ET
+BT
+1 0 0 1 72.0 417.60000000000036 Tm
+0 0 0 rg
+/F1 12 Tf
+(3.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Create) Tj
+0 0 0 rg
+/F1 12 Tf
+( a) Tj
+0 0 0 rg
+/F1 12 Tf
+( PdfGenerator) Tj
+ET
+BT
+1 0 0 1 72.0 396.00000000000034 Tm
+0 0 0 rg
+/F1 12 Tf
+(4.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Call) Tj
+0 0 0 rg
+/F1 12 Tf
+( generate\(\)) Tj
+0 0 0 rg
+/F1 12 Tf
+( to) Tj
+0 0 0 rg
+/F1 12 Tf
+( get) Tj
+0 0 0 rg
+/F1 12 Tf
+( bytes) Tj
+ET
+BT
+1 0 0 1 72.0 374.4000000000003 Tm
+0 0 0 rg
+/F1 12 Tf
+(5.) Tj
+0 0 0 rg
+/F1 12 Tf
+( Save) Tj
+0 0 0 rg
+/F1 12 Tf
+( or) Tj
+0 0 0 rg
+/F1 12 Tf
+( transmit) Tj
+0 0 0 rg
+/F1 12 Tf
+( the) Tj
+0 0 0 rg
+/F1 12 Tf
+( bytes) Tj
+ET
+
+endstream
+endobj
+19 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612.0 792.0]
+/Contents 20 0 R
+/Resources <<
+  /Font <<
+    /F1 3 0 R
+    /F2 4 0 R
+    /F3 5 0 R
+    /F4 6 0 R
+    /F5 7 0 R
+  >>
+>>
+>>
+endobj
+20 0 obj
+<<
+/Length 1627
+>>
+stream
+BT
+1 0 0 1 72.0 720.0 Tm
+0 0 0 rg
 /F2 24 Tf
 (Conclusion) Tj
+ET
+BT
 1 0 0 1 72.0 676.8 Tm
+0 0 0 rg
 /F1 12 Tf
-(This document demonstrates the core capabilities of the docs_gee PDF generator. The generated PDF file is compatible with all standard PDF readers including Adobe Acrobat, Preview, Chrome, and others.) Tj
-1 0 0 1 72.0 655.1999999999999 Tm
+(This) Tj
+0 0 0 rg
+/F1 12 Tf
+( document) Tj
+0 0 0 rg
+/F1 12 Tf
+( demonstrates) Tj
+0 0 0 rg
+/F1 12 Tf
+( the) Tj
+0 0 0 rg
+/F1 12 Tf
+( core) Tj
+0 0 0 rg
+/F1 12 Tf
+( capabilities) Tj
+0 0 0 rg
+/F1 12 Tf
+( of) Tj
+0 0 0 rg
+/F1 12 Tf
+( the) Tj
+0 0 0 rg
+/F1 12 Tf
+( docs_gee) Tj
+0 0 0 rg
+/F1 12 Tf
+( PDF) Tj
+1 0 0 1 72.0 660.0 Tm
+0 0 0 rg
+/F1 12 Tf
+(generator.) Tj
+0 0 0 rg
+/F1 12 Tf
+( The) Tj
+0 0 0 rg
+/F1 12 Tf
+( generated) Tj
+0 0 0 rg
+/F1 12 Tf
+( PDF) Tj
+0 0 0 rg
+/F1 12 Tf
+( file) Tj
+0 0 0 rg
+/F1 12 Tf
+( is) Tj
+0 0 0 rg
+/F1 12 Tf
+( compatible) Tj
+0 0 0 rg
+/F1 12 Tf
+( with) Tj
+0 0 0 rg
+/F1 12 Tf
+( all) Tj
+0 0 0 rg
+/F1 12 Tf
+( standard) Tj
+0 0 0 rg
+/F1 12 Tf
+( PDF) Tj
+0 0 0 rg
+/F1 12 Tf
+( readers) Tj
+1 0 0 1 72.0 643.2 Tm
+0 0 0 rg
+/F1 12 Tf
+(including) Tj
+0 0 0 rg
+/F1 12 Tf
+( Adobe) Tj
+0 0 0 rg
+/F1 12 Tf
+( Acrobat,) Tj
+0 0 0 rg
+/F1 12 Tf
+( Preview,) Tj
+0 0 0 rg
+/F1 12 Tf
+( Chrome,) Tj
+0 0 0 rg
+/F1 12 Tf
+( and) Tj
+0 0 0 rg
+/F1 12 Tf
+( others.) Tj
+ET
+BT
+1 0 0 1 72.0 621.6000000000001 Tm
+0 0 0 rg
 /F1 12 Tf
 () Tj
-1 0 0 1 66.0 633.5999999999999 Tm
+ET
+BT
+1 0 0 1 93.0 600.0000000000002 Tm
+0 0 0 rg
 /F1 12 Tf
-(Key advantage: ) Tj
+(Key) Tj
+0 0 0 rg
+/F1 12 Tf
+( advantage:) Tj
+0 0 0 rg
 /F2 12 Tf
-(same document model) Tj
+( same) Tj
+0 0 0 rg
+/F2 12 Tf
+( document) Tj
+0 0 0 rg
+/F2 12 Tf
+( model) Tj
+0 0 0 rg
 /F1 12 Tf
-( can be exported to both DOCX and PDF formats!) Tj
+( can) Tj
+0 0 0 rg
+/F1 12 Tf
+( be) Tj
+0 0 0 rg
+/F1 12 Tf
+( exported) Tj
+0 0 0 rg
+/F1 12 Tf
+( to) Tj
+0 0 0 rg
+/F1 12 Tf
+( both) Tj
+0 0 0 rg
+/F1 12 Tf
+( DOCX) Tj
+0 0 0 rg
+/F1 12 Tf
+( and) Tj
+0 0 0 rg
+/F1 12 Tf
+( PDF) Tj
+1 0 0 1 282.0 583.2000000000003 Tm
+0 0 0 rg
+/F1 12 Tf
+(formats!) Tj
 ET
 
 endstream
 endobj
 xref
-0 19
+0 21
 0000000000 65535 f 
 0000000019 00000 n 
 0000000068 00000 n 
-0000000160 00000 n 
-0000000257 00000 n 
-0000000359 00000 n 
-0000000464 00000 n 
-0000000573 00000 n 
-0000000753 00000 n 
-0000001239 00000 n 
-0000001420 00000 n 
-0000002274 00000 n 
-0000002456 00000 n 
-0000003109 00000 n 
-0000003291 00000 n 
-0000003958 00000 n 
-0000004140 00000 n 
-0000005423 00000 n 
-0000005605 00000 n 
+0000000161 00000 n 
+0000000258 00000 n 
+0000000360 00000 n 
+0000000465 00000 n 
+0000000574 00000 n 
+0000000669 00000 n 
+0000000860 00000 n 
+0000001055 00000 n 
+0000002376 00000 n 
+0000002572 00000 n 
+0000004564 00000 n 
+0000004760 00000 n 
+0000006761 00000 n 
+0000006957 00000 n 
+0000008327 00000 n 
+0000008523 00000 n 
+0000011050 00000 n 
+0000011246 00000 n 
 trailer
 <<
-/Size 19
+/Size 21
 /Root 1 0 R
+/Info 8 0 R
 >>
 startxref
-6161
+12926
 %%EOF

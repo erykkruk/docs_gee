@@ -112,10 +112,6 @@ class DocxGenerator implements DocumentGenerator {
   }
 
   bool _documentHasLists(DocxDocument document) {
-    return document.paragraphs.any(
-      (p) =>
-          p.style == DocxParagraphStyle.listBullet ||
-          p.style == DocxParagraphStyle.listNumber,
-    );
+    return document.paragraphs.any((p) => p.style.isList);
   }
 }
