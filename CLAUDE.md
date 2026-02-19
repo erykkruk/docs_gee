@@ -32,6 +32,7 @@ The library generates DOCX files by assembling XML parts into a ZIP archive. DOC
 - `DocxDocument` - Container for paragraphs with optional title/author metadata
 - `DocxParagraph` - Paragraph with runs, style, alignment, and page break support. Factory constructors: `.text()`, `.heading()`, `.bulletItem()`, `.numberedItem()`
 - `DocxRun` - Text segment with formatting (bold, italic, underline, strikethrough)
+- `DocxCellBorders` - Per-cell border configuration (overrides table-level borders)
 - `DocxAlignment` / `DocxParagraphStyle` - Enums for alignment and paragraph styles
 
 **XML Parts** (`lib/src/xml_parts/`):

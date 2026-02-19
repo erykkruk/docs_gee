@@ -260,6 +260,35 @@ void main() {
   doc.addParagraph(Paragraph.text(''));
 
   // ============================================
+  // CELL BORDERS
+  // ============================================
+  doc.addParagraph(Paragraph.heading('Cell Borders:', level: 3));
+  doc.addTable(Table(
+    borders: const TableBorders.all(),
+    rows: [
+      TableRow(cells: [
+        TableCell.text('Default borders'),
+        TableCell.text(
+          'Red borders',
+          borders: const CellBorders.all(color: 'FF0000', size: 8),
+        ),
+      ]),
+      TableRow(cells: [
+        TableCell.text(
+          'Bottom only',
+          borders: const CellBorders.bottom(),
+        ),
+        TableCell.text(
+          'No borders',
+          borders: const CellBorders.none(),
+        ),
+      ]),
+    ],
+  ));
+
+  doc.addParagraph(Paragraph.text(''));
+
+  // ============================================
   // EMOJI (DOCX ONLY)
   // ============================================
   doc.addParagraph(
@@ -295,6 +324,7 @@ void main() {
   doc.addParagraph(Paragraph.bulletItem('Nested lists up to 9 levels deep'));
   doc.addParagraph(Paragraph.bulletItem('Page breaks'));
   doc.addParagraph(Paragraph.bulletItem('Tables with borders and colors'));
+  doc.addParagraph(Paragraph.bulletItem('Per-cell border control'));
   doc.addParagraph(Paragraph.bulletItem('Emoji support (DOCX only)'));
   doc.addParagraph(
       Paragraph.bulletItem('Document metadata: title, author, dates'));

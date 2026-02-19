@@ -297,6 +297,7 @@ TableCell({
   required List<Paragraph> paragraphs,
   String? backgroundColor,
   Alignment alignment = Alignment.left,
+  CellBorders? borders,
 })
 ```
 
@@ -308,6 +309,7 @@ TableCell.text(
   String text, {
   String? backgroundColor,
   Alignment alignment = Alignment.left,
+  CellBorders? borders,
 })
 ```
 
@@ -316,6 +318,27 @@ TableCell.text(
 | `paragraphs` | `List<Paragraph>` | required | Cell content |
 | `backgroundColor` | `String?` | `null` | Fill color (hex, e.g., `'E0E0E0'`) |
 | `alignment` | `Alignment` | `left` | Text alignment |
+| `borders` | `CellBorders?` | `null` | Per-cell border override |
+
+---
+
+### CellBorders
+
+Border configuration for individual cells. When set, overrides table-level borders. Alias for `DocxCellBorders`.
+
+```dart
+// All borders (single line)
+const CellBorders.all({String color = '000000', int size = 4})
+
+// No borders (explicitly removes borders)
+const CellBorders.none()
+
+// Only bottom border
+const CellBorders.bottom({Border border = const Border()})
+
+// Custom per-side
+CellBorders({Border? top, Border? bottom, Border? left, Border? right})
+```
 
 ---
 
@@ -420,6 +443,7 @@ For cleaner, format-agnostic code:
 | `TableBorders` | `DocxTableBorders` |
 | `Border` | `DocxBorder` |
 | `BorderStyle` | `DocxBorderStyle` |
+| `CellBorders` | `DocxCellBorders` |
 
 ---
 

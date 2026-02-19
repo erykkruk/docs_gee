@@ -723,6 +723,7 @@ class _PdfBuilder {
           isLastRow: rowIndex == table.rows.length - 1,
           isFirstCol: gridColIndex == 0,
           isLastCol: gridColIndex + cell.colSpan >= columnWidths.length,
+          cellBorders: cell.borders,
         );
 
         // Render cell content with vertical alignment
@@ -772,6 +773,9 @@ class _PdfBuilder {
   }
 
   /// Draws cell borders.
+  ///
+  /// If [cellBorders] is provided, it overrides the table-level borders
+  /// for this specific cell.
   void _drawCellBorders(
     StringBuffer buffer,
     DocxTableBorders borders,
@@ -783,44 +787,84 @@ class _PdfBuilder {
     required bool isLastRow,
     required bool isFirstCol,
     required bool isLastCol,
+    DocxCellBorders? cellBorders,
   }) {
+    // Determine effective borders for each side
+    final bool drawTop;
+    final bool drawBottom;
+    final bool drawLeft;
+    final bool drawRight;
+
+    DocxBorder? topBorder;
+    DocxBorder? bottomBorder;
+    DocxBorder? leftBorder;
+    DocxBorder? rightBorder;
+
+    if (cellBorders != null) {
+      // Cell-level borders override table-level
+      drawTop = cellBorders.top != null;
+      drawBottom = cellBorders.bottom != null;
+      drawLeft = cellBorders.left != null;
+      drawRight = cellBorders.right != null;
+      topBorder = cellBorders.top;
+      bottomBorder = cellBorders.bottom;
+      leftBorder = cellBorders.left;
+      rightBorder = cellBorders.right;
+    } else {
+      // Fall back to table-level borders
+      drawTop = (isFirstRow && borders.top != null) ||
+          (!isFirstRow && borders.insideH != null);
+      drawBottom = isLastRow && borders.bottom != null;
+      drawLeft = (isFirstCol && borders.left != null) ||
+          (!isFirstCol && borders.insideV != null);
+      drawRight = isLastCol && borders.right != null;
+      topBorder = isFirstRow ? borders.top : borders.insideH;
+      bottomBorder = borders.bottom;
+      leftBorder = isFirstCol ? borders.left : borders.insideV;
+      rightBorder = borders.right;
+    }
+
+    if (!drawTop && !drawBottom && !drawLeft && !drawRight) return;
+
     buffer.writeln('q');
-    buffer.writeln('0 0 0 RG');
-    buffer.writeln('0.5 w');
 
     // Top border
-    if (isFirstRow && borders.top != null) {
-      buffer.writeln('$x $y m');
-      buffer.writeln('${x + width} $y l');
-      buffer.writeln('S');
-    } else if (!isFirstRow && borders.insideH != null) {
+    if (drawTop && topBorder != null) {
+      final rgb = _hexToRgb(topBorder.color);
+      buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} RG');
+      buffer.writeln('${topBorder.size / 8} w');
       buffer.writeln('$x $y m');
       buffer.writeln('${x + width} $y l');
       buffer.writeln('S');
     }
 
     // Bottom border
-    if (isLastRow && borders.bottom != null) {
+    if (drawBottom && bottomBorder != null) {
       final bottomY = y - height;
+      final rgb = _hexToRgb(bottomBorder.color);
+      buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} RG');
+      buffer.writeln('${bottomBorder.size / 8} w');
       buffer.writeln('$x $bottomY m');
       buffer.writeln('${x + width} $bottomY l');
       buffer.writeln('S');
     }
 
     // Left border
-    if (isFirstCol && borders.left != null) {
-      buffer.writeln('$x $y m');
-      buffer.writeln('$x ${y - height} l');
-      buffer.writeln('S');
-    } else if (!isFirstCol && borders.insideV != null) {
+    if (drawLeft && leftBorder != null) {
+      final rgb = _hexToRgb(leftBorder.color);
+      buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} RG');
+      buffer.writeln('${leftBorder.size / 8} w');
       buffer.writeln('$x $y m');
       buffer.writeln('$x ${y - height} l');
       buffer.writeln('S');
     }
 
     // Right border
-    if (isLastCol && borders.right != null) {
+    if (drawRight && rightBorder != null) {
       final rightX = x + width;
+      final rgb = _hexToRgb(rightBorder.color);
+      buffer.writeln('${rgb.$1} ${rgb.$2} ${rgb.$3} RG');
+      buffer.writeln('${rightBorder.size / 8} w');
       buffer.writeln('$rightX $y m');
       buffer.writeln('$rightX ${y - height} l');
       buffer.writeln('S');

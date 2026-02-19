@@ -399,6 +399,16 @@ class DocumentXml {
       buffer.writeln('            <w:vMerge/>');
     }
 
+    // Cell borders (override table-level borders)
+    if (cell.borders != null && cell.borders!.hasBorders) {
+      buffer.writeln('            <w:tcBorders>');
+      _writeTableBorder(buffer, 'top', cell.borders!.top);
+      _writeTableBorder(buffer, 'left', cell.borders!.left);
+      _writeTableBorder(buffer, 'bottom', cell.borders!.bottom);
+      _writeTableBorder(buffer, 'right', cell.borders!.right);
+      buffer.writeln('            </w:tcBorders>');
+    }
+
     // Background color
     if (cell.backgroundColor != null) {
       buffer.writeln(

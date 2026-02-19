@@ -93,6 +93,52 @@ class DocxTableBorders {
       insideV != null;
 }
 
+/// Border configuration for individual table cells.
+///
+/// When set on a cell, these borders override the table-level borders
+/// for that specific cell.
+class DocxCellBorders {
+  const DocxCellBorders({
+    this.top,
+    this.bottom,
+    this.left,
+    this.right,
+  });
+
+  /// All borders with default style (single line, black).
+  const DocxCellBorders.all({
+    String color = '000000',
+    int size = 4,
+  })  : top = const DocxBorder(),
+        bottom = const DocxBorder(),
+        left = const DocxBorder(),
+        right = const DocxBorder();
+
+  /// No borders (explicitly removes borders from this cell).
+  const DocxCellBorders.none()
+      : top = null,
+        bottom = null,
+        left = null,
+        right = null;
+
+  /// Only bottom border (useful for underline-style separators).
+  const DocxCellBorders.bottom({
+    DocxBorder border = const DocxBorder(),
+  })  : top = null,
+        bottom = border,
+        left = null,
+        right = null;
+
+  final DocxBorder? top;
+  final DocxBorder? bottom;
+  final DocxBorder? left;
+  final DocxBorder? right;
+
+  /// Returns true if any border is defined.
+  bool get hasBorders =>
+      top != null || bottom != null || left != null || right != null;
+}
+
 /// Represents a cell in a table row.
 class DocxTableCell {
   const DocxTableCell({
@@ -100,6 +146,7 @@ class DocxTableCell {
     this.alignment = DocxAlignment.left,
     this.verticalAlignment = DocxVerticalAlignment.top,
     this.backgroundColor,
+    this.borders,
     this.colSpan = 1,
     this.rowSpan = 1,
     this.isMergedContinuation = false,
@@ -111,6 +158,7 @@ class DocxTableCell {
     DocxAlignment alignment = DocxAlignment.left,
     DocxVerticalAlignment verticalAlignment = DocxVerticalAlignment.top,
     String? backgroundColor,
+    DocxCellBorders? borders,
     int colSpan = 1,
     int rowSpan = 1,
   }) {
@@ -119,6 +167,7 @@ class DocxTableCell {
       alignment: alignment,
       verticalAlignment: verticalAlignment,
       backgroundColor: backgroundColor,
+      borders: borders,
       colSpan: colSpan,
       rowSpan: rowSpan,
     );
@@ -139,6 +188,10 @@ class DocxTableCell {
 
   /// Background color in hex format (e.g., "FFFF00" for yellow).
   final String? backgroundColor;
+
+  /// Per-cell border configuration.
+  /// When set, overrides the table-level borders for this cell.
+  final DocxCellBorders? borders;
 
   /// Number of columns this cell spans (horizontal merge).
   /// Default is 1 (no merge).
@@ -168,6 +221,9 @@ class _MergedCell implements DocxTableCell {
 
   @override
   String? get backgroundColor => null;
+
+  @override
+  DocxCellBorders? get borders => null;
 
   @override
   int get colSpan => 1;

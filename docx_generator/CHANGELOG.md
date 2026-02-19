@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-02-19
+
+### Added
+
+#### Per-Cell Border Control
+- **Cell-level borders** - Override table-level borders on individual cells
+  - `DocxCellBorders` class with `top`, `bottom`, `left`, `right` borders
+  - `CellBorders` type alias for format-agnostic code
+  - Convenience constructors: `.all()`, `.none()`, `.bottom()`
+  - Custom border per side with `color`, `size`, and `style`
+  - Cell borders override table-level borders when set
+  - Works in both DOCX (`<w:tcBorders>`) and PDF output
+- **`borders` parameter on `DocxTableCell`** - Both constructor and `.text()` factory accept `DocxCellBorders?`
+- **Unit tests** - Added `test/cell_borders_test.dart` with 26 tests covering model, XML generation, and PDF/DOCX output
+
 ## [1.1.2] - 2025-01-23
 
 ### Fixed

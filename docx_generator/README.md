@@ -7,6 +7,8 @@
 
 A **pure Dart** library for generating **Microsoft Word (DOCX)** and **PDF** documents. Create professional documents programmatically with rich formatting, tables, lists, and more - all from a single document model. Created and supported by [Codigee](https://umami.team.codigee.com/q/FZ9PQYyYN).
 
+> If you find this package useful, please consider giving it a [star on GitHub](https://github.com/erykkruk/docs_gee) and a [like on pub.dev](https://pub.dev/packages/docs_gee). It helps the package grow and stay maintained!
+
 ## Why docs_gee?
 
 - **Pure Dart** - No native dependencies, works everywhere Dart runs
@@ -27,6 +29,7 @@ A **pure Dart** library for generating **Microsoft Word (DOCX)** and **PDF** doc
 | Bullet & numbered lists | ✅ | ✅ |
 | Nested lists (up to 9 levels) | ✅ | ✅ |
 | Tables with borders & colors | ✅ | ✅ |
+| Per-cell border control | ✅ | ✅ |
 | Page breaks | ✅ | ✅ |
 | Line breaks (soft return) | ✅ | - |
 | Hyperlinks (external URLs) | ✅ | - |
@@ -44,7 +47,7 @@ A **pure Dart** library for generating **Microsoft Word (DOCX)** and **PDF** doc
 
 ```yaml
 dependencies:
-  docs_gee: ^1.1.2
+  docs_gee: ^1.2.0
 ```
 
 ```bash
@@ -134,6 +137,38 @@ doc.addTable(Table(
     ]),
   ],
 ));
+```
+
+### Cell Borders
+
+Override table-level borders on individual cells:
+
+```dart
+doc.addTable(Table(
+  borders: const TableBorders.all(),
+  rows: [
+    TableRow(cells: [
+      // Cell with custom red borders
+      TableCell.text('Alert', borders: const CellBorders.all(color: 'FF0000', size: 8)),
+      TableCell.text('Normal cell'),
+    ]),
+    TableRow(cells: [
+      // Cell with only bottom border
+      TableCell.text('Underlined', borders: const CellBorders.bottom()),
+      // Cell with no borders (overrides table borders)
+      TableCell.text('Clean', borders: const CellBorders.none()),
+    ]),
+  ],
+));
+
+// Selective sides with different styles
+TableCell(
+  paragraphs: [Paragraph.text('Custom')],
+  borders: const CellBorders(
+    top: Border(color: 'FF0000', size: 8, style: BorderStyle.double),
+    bottom: Border(color: '0000FF'),
+  ),
+);
 ```
 
 ### Semantic Styles
