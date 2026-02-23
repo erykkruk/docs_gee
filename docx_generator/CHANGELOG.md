@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-02-23
+
+### Fixed
+
+#### Page Breaks
+- **Windows Word compatibility** - Page breaks now work correctly in Microsoft Word on Windows
+  - Replaced `<w:pageBreakBefore/>` paragraph property with explicit `<w:br w:type="page"/>` run element
+  - Applies to regular paragraphs, table cell paragraphs, and TOC page breaks
+  - No API changes - `pageBreakBefore: true` works exactly the same way
+- **Unit tests** - Added `test/page_break_test.dart` with 11 tests covering page break XML generation, DOCX and PDF output
+
 ## [1.2.0] - 2026-02-19
 
 ### Added

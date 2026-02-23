@@ -47,7 +47,7 @@ A **pure Dart** library for generating **Microsoft Word (DOCX)** and **PDF** doc
 
 ```yaml
 dependencies:
-  docs_gee: ^1.2.0
+  docs_gee: ^1.2.1
 ```
 
 ```bash

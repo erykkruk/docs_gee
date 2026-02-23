@@ -87,14 +87,23 @@ class DocumentXml {
 
     // Page break after TOC
     buffer.writeln('    <w:p>');
-    buffer.writeln('      <w:pPr>');
-    buffer.writeln('        <w:pageBreakBefore/>');
-    buffer.writeln('      </w:pPr>');
+    buffer.writeln('      <w:r>');
+    buffer.writeln('        <w:br w:type="page"/>');
+    buffer.writeln('      </w:r>');
     buffer.writeln('    </w:p>');
   }
 
   static void _writeParagraph(StringBuffer buffer, DocxParagraph paragraph,
       Map<String, String> hyperlinks) {
+    // Insert a separate page break paragraph before this one if requested
+    if (paragraph.pageBreakBefore) {
+      buffer.writeln('    <w:p>');
+      buffer.writeln('      <w:r>');
+      buffer.writeln('        <w:br w:type="page"/>');
+      buffer.writeln('      </w:r>');
+      buffer.writeln('    </w:p>');
+    }
+
     buffer.writeln('    <w:p>');
 
     // Write bookmark start if paragraph has a bookmark
@@ -111,14 +120,10 @@ class DocumentXml {
     final hasAlignment = paragraph.alignment != DocxAlignment.left;
     final hasIndent = paragraph.indentLevel > 0 && paragraph.style.isList;
     final hasParagraphProps =
-        hasStyle || hasAlignment || paragraph.pageBreakBefore || hasIndent;
+        hasStyle || hasAlignment || hasIndent;
 
     if (hasParagraphProps) {
       buffer.writeln('      <w:pPr>');
-
-      if (paragraph.pageBreakBefore) {
-        buffer.writeln('        <w:pageBreakBefore/>');
-      }
 
       if (hasStyle) {
         buffer.writeln(
@@ -439,6 +444,15 @@ class DocumentXml {
   /// Writes a paragraph inside a table cell (with adjusted indentation).
   static void _writeCellParagraph(StringBuffer buffer, DocxParagraph paragraph,
       Map<String, String> hyperlinks) {
+    // Insert a separate page break paragraph before this one if requested
+    if (paragraph.pageBreakBefore) {
+      buffer.writeln('          <w:p>');
+      buffer.writeln('            <w:r>');
+      buffer.writeln('              <w:br w:type="page"/>');
+      buffer.writeln('            </w:r>');
+      buffer.writeln('          </w:p>');
+    }
+
     buffer.writeln('          <w:p>');
 
     // Write bookmark start if paragraph has a bookmark
@@ -455,14 +469,10 @@ class DocumentXml {
     final hasAlignment = paragraph.alignment != DocxAlignment.left;
     final hasIndent = paragraph.indentLevel > 0 && paragraph.style.isList;
     final hasParagraphProps =
-        hasStyle || hasAlignment || paragraph.pageBreakBefore || hasIndent;
+        hasStyle || hasAlignment || hasIndent;
 
     if (hasParagraphProps) {
       buffer.writeln('            <w:pPr>');
-
-      if (paragraph.pageBreakBefore) {
-        buffer.writeln('              <w:pageBreakBefore/>');
-      }
 
       if (hasStyle) {
         buffer.writeln(
