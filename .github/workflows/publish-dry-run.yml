@@ -1,0 +1,30 @@
+name: Publish Dry Run
+
+on:
+  pull_request:
+    paths:
+      - 'docx_generator/**'
+
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        working-directory: docx_generator
+        run: dart pub get
+
+      - name: Analyze
+        working-directory: docx_generator
+        run: dart analyze
+
+      - name: Run tests
+        working-directory: docx_generator
+        run: dart test
+
+      - name: Publish dry run
+        working-directory: docx_generator
+        run: dart pub publish --dry-run
