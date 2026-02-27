@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2026-02-27
+
+### Fixed
+
+#### PDF Generator
+- **Accurate text width estimation** - Replaced rough character-width approximation (`0.5 * fontSize`) with Adobe Helvetica AFM glyph-width table for precise text layout
+  - Helvetica variants use per-character widths from the standard Adobe Font Metrics
+  - Courier (monospace) uses correct `0.6 * fontSize` per glyph
+  - Includes width data for Latin-1 supplement and Polish characters
+- **Underline & strikethrough in table cells** - Table cell text segments now render underline and strikethrough decorations correctly (previously only worked outside tables)
+- **Per-segment width calculation** - Line width is now computed per text segment (respecting each segment's font) instead of joining all text and measuring as one
+
 ## [1.2.1] - 2026-02-23
 
 ### Fixed
