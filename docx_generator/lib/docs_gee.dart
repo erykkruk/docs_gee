@@ -26,5 +26,7 @@ library docs_gee;
 
 export 'src/document_generator.dart';
 export 'src/docx_generator.dart';
+export 'src/docx_reader.dart';
+export 'src/docx_reader_exception.dart';
 export 'src/pdf_generator.dart';
 export 'src/models/models.dart';

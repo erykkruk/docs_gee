@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-03-27
+
+### Added
+
+#### DOCX Reader
+- **`DocxReader` class** - Parse existing DOCX files into `DocxDocument` objects
+  - `DocxReader().read(Uint8List bytes) → DocxDocument`
+  - Full round-trip support: read → modify → write
+  - `DocumentReader` type alias for format-agnostic code
+- **Supported features:**
+  - All paragraph styles (headings 1-4, subtitle, caption, quote, code block, footnote)
+  - Text formatting (bold, italic, underline, strikethrough, color, background color)
+  - Text alignment (left, center, right, justify)
+  - Lists (bullet, dash, numbered, alpha, roman) with indent levels
+  - Tables with borders, colspan, rowspan, cell properties
+  - External hyperlinks and internal bookmark references
+  - Page breaks and line breaks
+  - Mixed content order (paragraphs and tables)
+  - Document metadata (title, author) from `docProps/core.xml`
+- **Typed exceptions:**
+  - `InvalidDocxArchiveException` - invalid ZIP archive
+  - `MissingDocxPartException` - missing required DOCX part
+  - `InvalidDocxXmlException` - malformed XML content
+- **Graceful degradation:**
+  - Missing `styles.xml` / `numbering.xml` → default mappings
+  - Unknown styles → fallback to `normal`
+  - Images, charts, embedded objects → silently skipped
+- **New dependency:** `xml: ^6.0.0` (pure Dart XML parser)
+- **124 tests** covering round-trip, unit parsers, edge cases, and error handling
+
 ## [1.2.2] - 2026-02-27
 
 ### Fixed

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'docx_reader.dart';
 import 'models/models.dart';
 
 /// Abstract interface for document generators.
@@ -72,3 +73,6 @@ typedef CellBorders = DocxCellBorders;
 
 /// Alias for [DocxVerticalAlignment] - use for format-agnostic code.
 typedef VerticalAlignment = DocxVerticalAlignment;
+
+/// Alias for [DocxReader] - use for format-agnostic code.
+typedef DocumentReader = DocxReader;
