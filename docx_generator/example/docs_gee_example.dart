@@ -9,6 +9,7 @@
 /// - Page breaks
 ///
 /// Run with: dart run example/docx_generator_example.dart
+library;
 
 // ignore_for_file: avoid_print
 
@@ -21,7 +22,7 @@ void main() {
   final bytes = generateSampleDocument();
 
   // Save to file
-  final outputPath = 'docx_generator_demo.docx';
+  const outputPath = 'docx_generator_demo.docx';
   File(outputPath).writeAsBytesSync(bytes);
 
   print('Document generated successfully!');
@@ -84,34 +85,34 @@ Uint8List generateSampleDocument() {
   doc.addParagraph(DocxParagraph.heading('Basic Formatting', level: 2));
 
   // Mixed formatting example
-  doc.addParagraph(DocxParagraph(
+  doc.addParagraph(const DocxParagraph(
     runs: [
-      const DocxRun('This paragraph contains '),
-      const DocxRun('bold text', bold: true),
-      const DocxRun(', '),
-      const DocxRun('italic text', italic: true),
-      const DocxRun(', '),
-      const DocxRun('underlined text', underline: true),
-      const DocxRun(', and '),
-      const DocxRun('strikethrough text', strikethrough: true),
-      const DocxRun('.'),
+      DocxRun('This paragraph contains '),
+      DocxRun('bold text', bold: true),
+      DocxRun(', '),
+      DocxRun('italic text', italic: true),
+      DocxRun(', '),
+      DocxRun('underlined text', underline: true),
+      DocxRun(', and '),
+      DocxRun('strikethrough text', strikethrough: true),
+      DocxRun('.'),
     ],
   ));
 
   doc.addParagraph(DocxParagraph.heading('Combined Formatting', level: 2));
 
-  doc.addParagraph(DocxParagraph(
+  doc.addParagraph(const DocxParagraph(
     runs: [
-      const DocxRun('You can also '),
-      const DocxRun('combine multiple styles', bold: true, italic: true),
-      const DocxRun(' in a single run, like '),
-      const DocxRun(
+      DocxRun('You can also '),
+      DocxRun('combine multiple styles', bold: true, italic: true),
+      DocxRun(' in a single run, like '),
+      DocxRun(
         'bold + italic + underline',
         bold: true,
         italic: true,
         underline: true,
       ),
-      const DocxRun('.'),
+      DocxRun('.'),
     ],
   ));
 

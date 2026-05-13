@@ -9,6 +9,7 @@
 /// - Page breaks
 ///
 /// Run with: dart run example/pdf_example.dart
+library;
 
 // ignore_for_file: avoid_print
 
@@ -21,7 +22,7 @@ void main() {
   final bytes = generateSamplePdfDocument();
 
   // Save to file
-  final outputPath = 'pdf_generator_demo.pdf';
+  const outputPath = 'pdf_generator_demo.pdf';
   File(outputPath).writeAsBytesSync(bytes);
 
   print('PDF document generated successfully!');
@@ -86,29 +87,29 @@ Uint8List generateSamplePdfDocument() {
   doc.addParagraph(DocxParagraph.heading('Basic Formatting', level: 2));
 
   // Mixed formatting example
-  doc.addParagraph(DocxParagraph(
+  doc.addParagraph(const DocxParagraph(
     runs: [
-      const DocxRun('This paragraph contains '),
-      const DocxRun('bold text', bold: true),
-      const DocxRun(', '),
-      const DocxRun('italic text', italic: true),
-      const DocxRun(', and '),
-      const DocxRun('bold italic text', bold: true, italic: true),
-      const DocxRun('.'),
+      DocxRun('This paragraph contains '),
+      DocxRun('bold text', bold: true),
+      DocxRun(', '),
+      DocxRun('italic text', italic: true),
+      DocxRun(', and '),
+      DocxRun('bold italic text', bold: true, italic: true),
+      DocxRun('.'),
     ],
   ));
 
   doc.addParagraph(DocxParagraph.heading('Combined Formatting', level: 2));
 
-  doc.addParagraph(DocxParagraph(
+  doc.addParagraph(const DocxParagraph(
     runs: [
-      const DocxRun('PDF uses the standard '),
-      const DocxRun('Base 14 fonts', bold: true),
-      const DocxRun(' (Helvetica, Times-Roman, Courier) which support '),
-      const DocxRun('bold', bold: true),
-      const DocxRun(' and '),
-      const DocxRun('italic', italic: true),
-      const DocxRun(' variants.'),
+      DocxRun('PDF uses the standard '),
+      DocxRun('Base 14 fonts', bold: true),
+      DocxRun(' (Helvetica, Times-Roman, Courier) which support '),
+      DocxRun('bold', bold: true),
+      DocxRun(' and '),
+      DocxRun('italic', italic: true),
+      DocxRun(' variants.'),
     ],
   ));
 
@@ -223,11 +224,11 @@ Uint8List generateSamplePdfDocument() {
 
   doc.addParagraph(DocxParagraph.text(''));
 
-  doc.addParagraph(DocxParagraph(
+  doc.addParagraph(const DocxParagraph(
     runs: [
-      const DocxRun('Key advantage: '),
-      const DocxRun('same document model', bold: true),
-      const DocxRun(' can be exported to both DOCX and PDF formats!'),
+      DocxRun('Key advantage: '),
+      DocxRun('same document model', bold: true),
+      DocxRun(' can be exported to both DOCX and PDF formats!'),
     ],
     alignment: DocxAlignment.center,
   ));

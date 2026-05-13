@@ -9,6 +9,7 @@
 /// - Page breaks
 ///
 /// Run with: dart run example/all_features_example.dart
+library;
 
 // ignore_for_file: avoid_print
 
@@ -61,24 +62,24 @@ void main() {
   // ============================================
   doc.addParagraph(Paragraph.heading('3. Text Formatting', level: 1));
 
-  doc.addParagraph(Paragraph(
+  doc.addParagraph(const Paragraph(
     runs: [
-      const TextRun('Regular text, '),
-      const TextRun('bold text, ', bold: true),
-      const TextRun('italic text, ', italic: true),
-      const TextRun('underlined text, ', underline: true),
-      const TextRun('strikethrough text.', strikethrough: true),
+      TextRun('Regular text, '),
+      TextRun('bold text, ', bold: true),
+      TextRun('italic text, ', italic: true),
+      TextRun('underlined text, ', underline: true),
+      TextRun('strikethrough text.', strikethrough: true),
     ],
   ));
 
-  doc.addParagraph(Paragraph(
+  doc.addParagraph(const Paragraph(
     runs: [
-      const TextRun('Combined: ', bold: true),
-      const TextRun('bold + italic', bold: true, italic: true),
-      const TextRun(', '),
-      const TextRun('bold + underline', bold: true, underline: true),
-      const TextRun(', '),
-      const TextRun('all styles',
+      TextRun('Combined: ', bold: true),
+      TextRun('bold + italic', bold: true, italic: true),
+      TextRun(', '),
+      TextRun('bold + underline', bold: true, underline: true),
+      TextRun(', '),
+      TextRun('all styles',
           bold: true, italic: true, underline: true, strikethrough: true),
     ],
   ));
@@ -89,21 +90,21 @@ void main() {
   // ============================================
   doc.addParagraph(Paragraph.heading('4. Text Colors', level: 1));
 
-  doc.addParagraph(Paragraph(
+  doc.addParagraph(const Paragraph(
     runs: [
-      const TextRun('Red text ', color: 'FF0000'),
-      const TextRun('Green text ', color: '00FF00'),
-      const TextRun('Blue text ', color: '0000FF'),
-      const TextRun('Orange text ', color: 'FFA500'),
-      const TextRun('Purple text', color: '800080'),
+      TextRun('Red text ', color: 'FF0000'),
+      TextRun('Green text ', color: '00FF00'),
+      TextRun('Blue text ', color: '0000FF'),
+      TextRun('Orange text ', color: 'FFA500'),
+      TextRun('Purple text', color: '800080'),
     ],
   ));
 
-  doc.addParagraph(Paragraph(
+  doc.addParagraph(const Paragraph(
     runs: [
-      const TextRun('Yellow highlight ', backgroundColor: 'FFFF00'),
-      const TextRun('Cyan highlight ', backgroundColor: '00FFFF'),
-      const TextRun('Magenta highlight', backgroundColor: 'FF00FF'),
+      TextRun('Yellow highlight ', backgroundColor: 'FFFF00'),
+      TextRun('Cyan highlight ', backgroundColor: '00FFFF'),
+      TextRun('Magenta highlight', backgroundColor: 'FF00FF'),
     ],
   ));
   doc.addParagraph(Paragraph.text(''));

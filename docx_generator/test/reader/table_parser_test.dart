@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 import 'package:xml/xml.dart';
 
 void main() {
-  XmlElement _parseTable(String xml) {
+  XmlElement parseTable(String xml) {
     return XmlDocument.parse(
             '<root xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
             'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
@@ -17,7 +17,7 @@ void main() {
 
   group('TableParser - basic structure', () {
     test('parses simple 2x2 table', () {
-      final tbl = _parseTable('''
+      final tbl = parseTable('''
 <w:tbl>
   <w:tblPr><w:tblW w:w="0" w:type="auto"/></w:tblPr>
   <w:tr>
@@ -40,7 +40,7 @@ void main() {
 
   group('TableParser - borders', () {
     test('parses table borders', () {
-      final tbl = _parseTable('''
+      final tbl = parseTable('''
 <w:tbl>
   <w:tblPr>
     <w:tblW w:w="0" w:type="auto"/>
@@ -68,7 +68,7 @@ void main() {
     });
 
     test('parses nil borders as null', () {
-      final tbl = _parseTable('''
+      final tbl = parseTable('''
 <w:tbl>
   <w:tblPr>
     <w:tblW w:w="0" w:type="auto"/>
@@ -92,7 +92,7 @@ void main() {
     });
 
     test('parses dashed border style', () {
-      final tbl = _parseTable('''
+      final tbl = parseTable('''
 <w:tbl>
   <w:tblPr>
     <w:tblW w:w="0" w:type="auto"/>
@@ -119,7 +119,7 @@ void main() {
 
   group('TableParser - colspan', () {
     test('parses gridSpan as colSpan', () {
-      final tbl = _parseTable('''
+      final tbl = parseTable('''
 <w:tbl>
   <w:tblPr><w:tblW w:w="0" w:type="auto"/></w:tblPr>
   <w:tr>
@@ -137,7 +137,7 @@ void main() {
 
   group('TableParser - rowspan (vMerge)', () {
     test('parses vMerge restart and continuation', () {
-      final tbl = _parseTable('''
+      final tbl = parseTable('''
 <w:tbl>
   <w:tblPr><w:tblW w:w="0" w:type="auto"/></w:tblPr>
   <w:tr>
@@ -165,7 +165,7 @@ void main() {
 
   group('TableParser - cell properties', () {
     test('parses background color', () {
-      final tbl = _parseTable('''
+      final tbl = parseTable('''
 <w:tbl>
   <w:tblPr><w:tblW w:w="0" w:type="auto"/></w:tblPr>
   <w:tr>
@@ -184,7 +184,7 @@ void main() {
     });
 
     test('parses vertical alignment', () {
-      final tbl = _parseTable('''
+      final tbl = parseTable('''
 <w:tbl>
   <w:tblPr><w:tblW w:w="0" w:type="auto"/></w:tblPr>
   <w:tr>
@@ -204,7 +204,7 @@ void main() {
     });
 
     test('parses cell borders', () {
-      final tbl = _parseTable('''
+      final tbl = parseTable('''
 <w:tbl>
   <w:tblPr><w:tblW w:w="0" w:type="auto"/></w:tblPr>
   <w:tr>

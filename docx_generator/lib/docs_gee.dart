@@ -22,7 +22,7 @@
 /// // import 'package:docs_gee/src/file_saver_io.dart';
 /// // await bytes.saveToFile('output.pdf');
 /// ```
-library docs_gee;
+library;
 
 export 'src/document_generator.dart';
 export 'src/docx_generator.dart';

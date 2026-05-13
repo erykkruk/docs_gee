@@ -11,7 +11,7 @@ void main() {
     reader = const DocxReader();
   });
 
-  DocxDocument _roundTrip(DocxDocument doc) =>
+  DocxDocument roundTrip(DocxDocument doc) =>
       reader.read(generator.generate(doc));
 
   group('DocxReader - edge cases: special characters', () {
@@ -19,7 +19,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.text('5 < 10 & 10 > 5 "quotes" \'apos\''));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.plainText,
           '5 < 10 & 10 > 5 "quotes" \'apos\'');
     });
@@ -28,7 +28,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.text('Hello World! \u{1F600}'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.plainText, 'Hello World! \u{1F600}');
     });
 
@@ -36,17 +36,17 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.text(''));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.plainText, '');
     });
 
     test('handles text with leading and trailing spaces', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
-        runs: [const DocxRun(' spaced ')],
+      doc.addParagraph(const DocxParagraph(
+        runs: [DocxRun(' spaced ')],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.runs.first.text, ' spaced ');
     });
 
@@ -55,7 +55,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.text(longText));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.plainText, longText);
     });
 
@@ -64,7 +64,7 @@ void main() {
       doc.addParagraph(
           DocxParagraph.text('Zażółć gęślą jaźń ĄĆĘŁŃÓŚŹŻ'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.plainText,
           'Zażółć gęślą jaźń ĄĆĘŁŃÓŚŹŻ');
     });
@@ -87,7 +87,7 @@ void main() {
       doc.addParagraph(DocxParagraph.alphaItem('Alpha'));
       doc.addParagraph(DocxParagraph.romanItem('Roman'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs, hasLength(13));
       expect(result.paragraphs[0].style, DocxParagraphStyle.heading1);
       expect(result.paragraphs[1].style, DocxParagraphStyle.heading2);
@@ -117,16 +117,16 @@ void main() {
             DocxTableCell.text('Span 2', colSpan: 2),
             DocxTableCell.text('Single'),
           ]),
-          DocxTableRow(cells: [
-            const DocxTableCell(
+          const DocxTableRow(cells: [
+            DocxTableCell(
               paragraphs: [DocxParagraph(runs: [DocxRun('Center')])],
               verticalAlignment: DocxVerticalAlignment.center,
             ),
-            const DocxTableCell(
+            DocxTableCell(
               paragraphs: [DocxParagraph(runs: [DocxRun('Bottom')])],
               verticalAlignment: DocxVerticalAlignment.bottom,
             ),
-            const DocxTableCell(
+            DocxTableCell(
               paragraphs: [DocxParagraph(runs: [DocxRun('Bordered')])],
               borders: DocxCellBorders.all(),
             ),
@@ -135,7 +135,7 @@ void main() {
         borders: const DocxTableBorders.all(),
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final table = result.tables.first;
 
       // Row 0: header colors
@@ -157,17 +157,17 @@ void main() {
 
     test('reads document with multiple hyperlinks', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
+      doc.addParagraph(const DocxParagraph(
         runs: [
-          const DocxRun('Visit '),
-          const DocxRun('Google', hyperlink: 'https://google.com'),
-          const DocxRun(' or '),
-          const DocxRun('GitHub', hyperlink: 'https://github.com'),
-          const DocxRun('.'),
+          DocxRun('Visit '),
+          DocxRun('Google', hyperlink: 'https://google.com'),
+          DocxRun(' or '),
+          DocxRun('GitHub', hyperlink: 'https://github.com'),
+          DocxRun('.'),
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final runs = result.paragraphs.first.runs;
       expect(runs, hasLength(5));
       expect(runs[0].text, 'Visit ');
@@ -181,9 +181,9 @@ void main() {
 
     test('reads document with formatted hyperlink', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
+      doc.addParagraph(const DocxParagraph(
         runs: [
-          const DocxRun(
+          DocxRun(
             'Bold link',
             bold: true,
             hyperlink: 'https://example.com',
@@ -191,7 +191,7 @@ void main() {
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final run = result.paragraphs.first.runs.first;
       expect(run.bold, isTrue);
       expect(run.hyperlink, 'https://example.com');
@@ -205,7 +205,7 @@ void main() {
       doc.addParagraph(
           DocxParagraph.text('Page 3', pageBreakBefore: true));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs, hasLength(3));
       expect(result.paragraphs[0].pageBreakBefore, isFalse);
       expect(result.paragraphs[1].pageBreakBefore, isTrue);
@@ -214,17 +214,17 @@ void main() {
 
     test('reads rich paragraph with line breaks and formatting', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
+      doc.addParagraph(const DocxParagraph(
         runs: [
-          const DocxRun('Line 1', bold: true),
-          const DocxRun.lineBreak(),
-          const DocxRun('Line 2', italic: true),
-          const DocxRun.lineBreak(),
-          const DocxRun('Line 3', color: 'FF0000'),
+          DocxRun('Line 1', bold: true),
+          DocxRun.lineBreak(),
+          DocxRun('Line 2', italic: true),
+          DocxRun.lineBreak(),
+          DocxRun('Line 3', color: 'FF0000'),
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final runs = result.paragraphs.first.runs;
       expect(runs, hasLength(5));
       expect(runs[0].bold, isTrue);
@@ -257,15 +257,15 @@ void main() {
       doc.addParagraph(DocxParagraph.bulletItem('First point'));
       doc.addParagraph(
           DocxParagraph.bulletItem('Nested point', indentLevel: 1));
-      doc.addParagraph(DocxParagraph(
+      doc.addParagraph(const DocxParagraph(
         runs: [
-          const DocxRun('See '),
-          const DocxRun('intro', bookmarkRef: 'intro'),
-          const DocxRun(' for more.'),
+          DocxRun('See '),
+          DocxRun('intro', bookmarkRef: 'intro'),
+          DocxRun(' for more.'),
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
 
       // Content order
       expect(result.content, hasLength(7));
@@ -316,7 +316,7 @@ void main() {
         borders: const DocxTableBorders.none(),
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final borders = result.tables.first.borders;
       expect(borders.hasBorders, isFalse);
     });
@@ -331,7 +331,7 @@ void main() {
         borders: const DocxTableBorders.outside(),
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final borders = result.tables.first.borders;
       expect(borders.top, isNotNull);
       expect(borders.bottom, isNotNull);
@@ -343,10 +343,10 @@ void main() {
 
     test('reads cell with bottom-only border', () {
       final doc = DocxDocument();
-      doc.addTable(DocxTable(
+      doc.addTable(const DocxTable(
         rows: [
           DocxTableRow(cells: [
-            const DocxTableCell(
+            DocxTableCell(
               paragraphs: [DocxParagraph(runs: [DocxRun('Cell')])],
               borders: DocxCellBorders.bottom(),
             ),
@@ -354,7 +354,7 @@ void main() {
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final cellBorders = result.tables.first.rows[0].cells[0].borders;
       expect(cellBorders, isNotNull);
       expect(cellBorders!.top, isNull);
@@ -368,22 +368,22 @@ void main() {
     test('reads document with no content', () {
       final doc = DocxDocument();
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.content, isEmpty);
     });
 
     test('reads table with empty cells', () {
       final doc = DocxDocument();
-      doc.addTable(DocxTable(
+      doc.addTable(const DocxTable(
         rows: [
-          const DocxTableRow(cells: [
+          DocxTableRow(cells: [
             DocxTableCell(),
             DocxTableCell(),
           ]),
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.tables.first.rowCount, 1);
       expect(result.tables.first.rows[0].cells, hasLength(2));
     });
@@ -394,7 +394,7 @@ void main() {
         runs: [DocxRun(''), DocxRun('text'), DocxRun('')],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       // Empty runs may be trimmed by the XML generator,
       // but the non-empty text should survive
       final combinedText = result.paragraphs.first.plainText;
@@ -410,7 +410,7 @@ void main() {
             DocxParagraph.bulletItem('Level $i', indentLevel: i));
       }
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs, hasLength(6));
       for (int i = 0; i <= 5; i++) {
         expect(result.paragraphs[i].indentLevel, i);
@@ -420,10 +420,10 @@ void main() {
 
     test('reads table with multiple paragraphs in cell', () {
       final doc = DocxDocument();
-      doc.addTable(DocxTable(
+      doc.addTable(const DocxTable(
         rows: [
           DocxTableRow(cells: [
-            const DocxTableCell(
+            DocxTableCell(
               paragraphs: [
                 DocxParagraph(runs: [DocxRun('First')]),
                 DocxParagraph(runs: [DocxRun('Second')]),
@@ -434,7 +434,7 @@ void main() {
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final cell = result.tables.first.rows[0].cells[0];
       expect(cell.paragraphs, hasLength(3));
       expect(cell.paragraphs[0].plainText, 'First');
@@ -451,7 +451,7 @@ void main() {
       final doc = DocxDocument();
       doc.addTable(DocxTable.simple(data));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final table = result.tables.first;
       expect(table.rowCount, 20);
       expect(table.rows[0].cells, hasLength(5));
@@ -462,9 +462,9 @@ void main() {
   group('DocxReader - edge cases: all formatting combined', () {
     test('reads run with all formatting properties', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
+      doc.addParagraph(const DocxParagraph(
         runs: [
-          const DocxRun(
+          DocxRun(
             'Everything',
             bold: true,
             italic: true,
@@ -476,7 +476,7 @@ void main() {
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final run = result.paragraphs.first.runs.first;
       expect(run.text, 'Everything');
       expect(run.bold, isTrue);
@@ -489,23 +489,23 @@ void main() {
 
     test('reads alternating formatted runs', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
+      doc.addParagraph(const DocxParagraph(
         runs: [
-          const DocxRun('bold', bold: true),
-          const DocxRun(' '),
-          const DocxRun('italic', italic: true),
-          const DocxRun(' '),
-          const DocxRun('under', underline: true),
-          const DocxRun(' '),
-          const DocxRun('strike', strikethrough: true),
-          const DocxRun(' '),
-          const DocxRun('red', color: 'FF0000'),
-          const DocxRun(' '),
-          const DocxRun('highlight', backgroundColor: 'FFFF00'),
+          DocxRun('bold', bold: true),
+          DocxRun(' '),
+          DocxRun('italic', italic: true),
+          DocxRun(' '),
+          DocxRun('under', underline: true),
+          DocxRun(' '),
+          DocxRun('strike', strikethrough: true),
+          DocxRun(' '),
+          DocxRun('red', color: 'FF0000'),
+          DocxRun(' '),
+          DocxRun('highlight', backgroundColor: 'FFFF00'),
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final runs = result.paragraphs.first.runs;
       expect(runs, hasLength(11));
       expect(runs[0].bold, isTrue);
@@ -535,7 +535,7 @@ void main() {
           runs: [DocxRun('Color', backgroundColor: entry.key)],
         ));
 
-        final result = _roundTrip(doc);
+        final result = roundTrip(doc);
         // The exact hex may change due to highlight mapping,
         // but the backgroundColor should not be null
         expect(result.paragraphs.first.runs.first.backgroundColor, isNotNull);

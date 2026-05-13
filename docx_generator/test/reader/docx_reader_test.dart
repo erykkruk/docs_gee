@@ -13,8 +13,8 @@ void main() {
     reader = const DocxReader();
   });
 
-  Uint8List _generate(DocxDocument doc) => generator.generate(doc);
-  DocxDocument _roundTrip(DocxDocument doc) => reader.read(_generate(doc));
+  Uint8List generate(DocxDocument doc) => generator.generate(doc);
+  DocxDocument roundTrip(DocxDocument doc) => reader.read(generate(doc));
 
   group('DocxReader - error handling', () {
     test('throws DocxReaderException for invalid bytes', () {
@@ -37,7 +37,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.text('Hello World'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final paragraphs = result.paragraphs;
 
       expect(paragraphs, hasLength(1));
@@ -51,7 +51,7 @@ void main() {
       doc.addParagraph(DocxParagraph.text('Second'));
       doc.addParagraph(DocxParagraph.text('Third'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs, hasLength(3));
       expect(result.paragraphs[0].plainText, 'First');
       expect(result.paragraphs[1].plainText, 'Second');
@@ -62,7 +62,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(const DocxParagraph(runs: []));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs, hasLength(1));
       expect(result.paragraphs.first.runs, isEmpty);
     });
@@ -76,7 +76,7 @@ void main() {
       doc.addParagraph(DocxParagraph.heading('H3', level: 3));
       doc.addParagraph(DocxParagraph.heading('H4', level: 4));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs[0].style, DocxParagraphStyle.heading1);
       expect(result.paragraphs[1].style, DocxParagraphStyle.heading2);
       expect(result.paragraphs[2].style, DocxParagraphStyle.heading3);
@@ -89,7 +89,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.subtitle('Sub'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.style, DocxParagraphStyle.subtitle);
     });
 
@@ -97,7 +97,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.caption('Cap'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.style, DocxParagraphStyle.caption);
     });
 
@@ -105,7 +105,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.quote('Quoted'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.style, DocxParagraphStyle.quote);
     });
 
@@ -113,7 +113,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.codeBlock('print("hi")'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.style, DocxParagraphStyle.codeBlock);
     });
 
@@ -121,7 +121,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.footnote('Note'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.style, DocxParagraphStyle.footnote);
     });
   });
@@ -132,7 +132,7 @@ void main() {
       doc.addParagraph(
           DocxParagraph.text('Centered', alignment: DocxAlignment.center));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.alignment, DocxAlignment.center);
     });
 
@@ -141,7 +141,7 @@ void main() {
       doc.addParagraph(
           DocxParagraph.text('Right', alignment: DocxAlignment.right));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.alignment, DocxAlignment.right);
     });
 
@@ -150,7 +150,7 @@ void main() {
       doc.addParagraph(
           DocxParagraph.text('Justified', alignment: DocxAlignment.justify));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.alignment, DocxAlignment.justify);
     });
   });
@@ -158,76 +158,76 @@ void main() {
   group('DocxReader - round-trip: formatting', () {
     test('reads bold', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
-        runs: [const DocxRun('Bold', bold: true)],
+      doc.addParagraph(const DocxParagraph(
+        runs: [DocxRun('Bold', bold: true)],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.runs.first.bold, isTrue);
     });
 
     test('reads italic', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
-        runs: [const DocxRun('Italic', italic: true)],
+      doc.addParagraph(const DocxParagraph(
+        runs: [DocxRun('Italic', italic: true)],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.runs.first.italic, isTrue);
     });
 
     test('reads underline', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
-        runs: [const DocxRun('Underlined', underline: true)],
+      doc.addParagraph(const DocxParagraph(
+        runs: [DocxRun('Underlined', underline: true)],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.runs.first.underline, isTrue);
     });
 
     test('reads strikethrough', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
-        runs: [const DocxRun('Struck', strikethrough: true)],
+      doc.addParagraph(const DocxParagraph(
+        runs: [DocxRun('Struck', strikethrough: true)],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.runs.first.strikethrough, isTrue);
     });
 
     test('reads text color', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
-        runs: [const DocxRun('Red', color: 'FF0000')],
+      doc.addParagraph(const DocxParagraph(
+        runs: [DocxRun('Red', color: 'FF0000')],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.runs.first.color, 'FF0000');
     });
 
     test('reads background color', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
-        runs: [const DocxRun('Highlighted', backgroundColor: 'FFFF00')],
+      doc.addParagraph(const DocxParagraph(
+        runs: [DocxRun('Highlighted', backgroundColor: 'FFFF00')],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.runs.first.backgroundColor, 'FFFF00');
     });
 
     test('reads mixed formatting in one paragraph', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
+      doc.addParagraph(const DocxParagraph(
         runs: [
-          const DocxRun('Normal '),
-          const DocxRun('bold', bold: true),
-          const DocxRun(' and '),
-          const DocxRun('italic', italic: true),
+          DocxRun('Normal '),
+          DocxRun('bold', bold: true),
+          DocxRun(' and '),
+          DocxRun('italic', italic: true),
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final runs = result.paragraphs.first.runs;
       expect(runs, hasLength(4));
       expect(runs[0].text, 'Normal ');
@@ -241,13 +241,13 @@ void main() {
 
     test('reads combined formatting on single run', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
+      doc.addParagraph(const DocxParagraph(
         runs: [
-          const DocxRun('All', bold: true, italic: true, underline: true),
+          DocxRun('All', bold: true, italic: true, underline: true),
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final run = result.paragraphs.first.runs.first;
       expect(run.bold, isTrue);
       expect(run.italic, isTrue);
@@ -261,7 +261,7 @@ void main() {
       doc.addParagraph(DocxParagraph.bulletItem('Item 1'));
       doc.addParagraph(DocxParagraph.bulletItem('Item 2'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs[0].style, DocxParagraphStyle.listBullet);
       expect(result.paragraphs[1].style, DocxParagraphStyle.listBullet);
     });
@@ -271,7 +271,7 @@ void main() {
       doc.addParagraph(DocxParagraph.numberedItem('First'));
       doc.addParagraph(DocxParagraph.numberedItem('Second'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs[0].style, DocxParagraphStyle.listNumber);
       expect(result.paragraphs[1].style, DocxParagraphStyle.listNumber);
     });
@@ -280,7 +280,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.dashItem('Dash 1'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.style, DocxParagraphStyle.listDash);
     });
 
@@ -288,7 +288,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.alphaItem('Alpha'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.style, DocxParagraphStyle.listNumberAlpha);
     });
 
@@ -296,7 +296,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.romanItem('Roman'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(
           result.paragraphs.first.style, DocxParagraphStyle.listNumberRoman);
     });
@@ -307,7 +307,7 @@ void main() {
       doc.addParagraph(DocxParagraph.bulletItem('Level 1', indentLevel: 1));
       doc.addParagraph(DocxParagraph.bulletItem('Level 2', indentLevel: 2));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs[0].indentLevel, 0);
       expect(result.paragraphs[1].indentLevel, 1);
       expect(result.paragraphs[2].indentLevel, 2);
@@ -322,7 +322,7 @@ void main() {
         ['C', 'D'],
       ]));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.tables, hasLength(1));
       final table = result.tables.first;
       expect(table.rowCount, 2);
@@ -342,7 +342,7 @@ void main() {
         borders: const DocxTableBorders.all(),
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final borders = result.tables.first.borders;
       expect(borders.top, isNotNull);
       expect(borders.bottom, isNotNull);
@@ -370,7 +370,7 @@ void main() {
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.tables.first.rows[0].cells[0].colSpan, 2);
     });
 
@@ -391,7 +391,7 @@ void main() {
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.tables.first.rows[0].cells[0].rowSpan, 2);
       expect(result.tables.first.rows[1].cells[0].isMergedContinuation, isTrue);
     });
@@ -406,16 +406,16 @@ void main() {
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.tables.first.rows[0].cells[0].backgroundColor, 'E0E0E0');
     });
 
     test('reads cell vertical alignment', () {
       final doc = DocxDocument();
-      doc.addTable(DocxTable(
+      doc.addTable(const DocxTable(
         rows: [
           DocxTableRow(cells: [
-            const DocxTableCell(
+            DocxTableCell(
               paragraphs: [DocxParagraph(runs: [DocxRun('Center')])],
               verticalAlignment: DocxVerticalAlignment.center,
             ),
@@ -423,7 +423,7 @@ void main() {
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(
         result.tables.first.rows[0].cells[0].verticalAlignment,
         DocxVerticalAlignment.center,
@@ -434,13 +434,13 @@ void main() {
   group('DocxReader - round-trip: hyperlinks', () {
     test('reads external hyperlink', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
+      doc.addParagraph(const DocxParagraph(
         runs: [
-          const DocxRun('Click here', hyperlink: 'https://example.com'),
+          DocxRun('Click here', hyperlink: 'https://example.com'),
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final run = result.paragraphs.first.runs.first;
       expect(run.hyperlink, 'https://example.com');
       expect(run.text, 'Click here');
@@ -453,13 +453,13 @@ void main() {
         level: 1,
         bookmarkName: 'my_bookmark',
       ));
-      doc.addParagraph(DocxParagraph(
+      doc.addParagraph(const DocxParagraph(
         runs: [
-          const DocxRun('Go to target', bookmarkRef: 'my_bookmark'),
+          DocxRun('Go to target', bookmarkRef: 'my_bookmark'),
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs.first.bookmarkName, 'my_bookmark');
       expect(result.paragraphs[1].runs.first.bookmarkRef, 'my_bookmark');
     });
@@ -472,7 +472,7 @@ void main() {
       doc.addParagraph(
           DocxParagraph.text('After break', pageBreakBefore: true));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.paragraphs, hasLength(2));
       expect(result.paragraphs[0].pageBreakBefore, isFalse);
       expect(result.paragraphs[1].pageBreakBefore, isTrue);
@@ -483,15 +483,15 @@ void main() {
   group('DocxReader - round-trip: line breaks', () {
     test('reads line break run', () {
       final doc = DocxDocument();
-      doc.addParagraph(DocxParagraph(
+      doc.addParagraph(const DocxParagraph(
         runs: [
-          const DocxRun('Before'),
-          const DocxRun.lineBreak(),
-          const DocxRun('After'),
+          DocxRun('Before'),
+          DocxRun.lineBreak(),
+          DocxRun('After'),
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final runs = result.paragraphs.first.runs;
       expect(runs, hasLength(3));
       expect(runs[0].text, 'Before');
@@ -509,7 +509,7 @@ void main() {
       ]));
       doc.addParagraph(DocxParagraph.text('After table'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final content = result.content;
       expect(content, hasLength(3));
       expect(content[0], isA<DocxParagraph>());
@@ -531,7 +531,7 @@ void main() {
       ]));
       doc.addParagraph(DocxParagraph.text('P3'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.content, hasLength(5));
       expect(result.content[0], isA<DocxParagraph>());
       expect(result.content[1], isA<DocxTable>());
@@ -546,7 +546,7 @@ void main() {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.text('Hello'));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       expect(result.title, isNull);
       expect(result.author, isNull);
     });
@@ -555,10 +555,10 @@ void main() {
   group('DocxReader - round-trip: cell borders', () {
     test('reads per-cell borders', () {
       final doc = DocxDocument();
-      doc.addTable(DocxTable(
+      doc.addTable(const DocxTable(
         rows: [
           DocxTableRow(cells: [
-            const DocxTableCell(
+            DocxTableCell(
               paragraphs: [DocxParagraph(runs: [DocxRun('With borders')])],
               borders: DocxCellBorders.all(),
             ),
@@ -566,7 +566,7 @@ void main() {
         ],
       ));
 
-      final result = _roundTrip(doc);
+      final result = roundTrip(doc);
       final cellBorders = result.tables.first.rows[0].cells[0].borders;
       expect(cellBorders, isNotNull);
       expect(cellBorders!.top, isNotNull);

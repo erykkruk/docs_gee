@@ -4,6 +4,7 @@
 /// to export to both DOCX and PDF formats.
 ///
 /// Run with: dart run example/unified_example.dart
+library;
 
 // ignore_for_file: avoid_print
 
@@ -41,15 +42,15 @@ void main() {
 
   doc.addParagraph(Paragraph.heading('Formatted Text', level: 2));
 
-  doc.addParagraph(Paragraph(
+  doc.addParagraph(const Paragraph(
     runs: [
-      const TextRun('You can use '),
-      const TextRun('bold', bold: true),
-      const TextRun(', '),
-      const TextRun('italic', italic: true),
-      const TextRun(', and '),
-      const TextRun('combined styles', bold: true, italic: true),
-      const TextRun('.'),
+      TextRun('You can use '),
+      TextRun('bold', bold: true),
+      TextRun(', '),
+      TextRun('italic', italic: true),
+      TextRun(', and '),
+      TextRun('combined styles', bold: true, italic: true),
+      TextRun('.'),
     ],
   ));
 
