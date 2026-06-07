@@ -29,6 +29,11 @@ class DocxParagraph {
     );
   }
 
+  /// Creates an empty paragraph, useful as vertical spacing between blocks.
+  factory DocxParagraph.empty() {
+    return const DocxParagraph(runs: [DocxRun('')]);
+  }
+
   /// Creates a heading paragraph.
   factory DocxParagraph.heading(
     String text, {
