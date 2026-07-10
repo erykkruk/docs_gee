@@ -9,6 +9,14 @@ A **pure Dart** library for generating **Microsoft Word (DOCX)** and **PDF** doc
 
 > If you find this package useful, please consider giving it a [star on GitHub](https://github.com/erykkruk/docs_gee) and a [like on pub.dev](https://pub.dev/packages/docs_gee). It helps the package grow and stay maintained!
 
+## Documentation
+
+Full hosted documentation is available at [codigee.com/open-source/docs-gee](https://codigee.com/open-source/docs-gee):
+
+- **[Overview](https://codigee.com/open-source/docs-gee)** - what docs_gee is and why to use it
+- **[Document building guide](https://codigee.com/open-source/docs-gee/guide)** - step-by-step guide to building DOCX and PDF documents
+- **[DocxReader & API reference](https://codigee.com/open-source/docs-gee/api)** - full API reference and `DocxReader` docs ([markdown source](doc/api.md))
+
 ## Why docs_gee?
 
 - **Pure Dart** - No native dependencies, works everywhere Dart runs
