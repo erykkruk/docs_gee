@@ -88,6 +88,17 @@ class RunParser {
       }
     }
 
+    // Vertical script: <w:vertAlign w:val="superscript"/>
+    var script = DocxScript.baseline;
+    final vertAlignElement = _findChild(rPr, 'vertAlign');
+    if (vertAlignElement != null) {
+      script = switch (_getAttr(vertAlignElement, 'val')) {
+        'superscript' => DocxScript.superscript,
+        'subscript' => DocxScript.subscript,
+        _ => DocxScript.baseline,
+      };
+    }
+
     // Filter out auto-applied hyperlink underline
     final effectiveUnderline =
         underline && !(hyperlink != null && !_hasExplicitUnderline(rPr));
@@ -102,6 +113,7 @@ class RunParser {
       backgroundColor: backgroundColor,
       hyperlink: hyperlink,
       bookmarkRef: bookmarkRef,
+      script: script,
     );
   }
 

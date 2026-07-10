@@ -119,8 +119,7 @@ class DocumentXml {
     final hasStyle = paragraph.style != DocxParagraphStyle.normal;
     final hasAlignment = paragraph.alignment != DocxAlignment.left;
     final hasIndent = paragraph.indentLevel > 0 && paragraph.style.isList;
-    final hasParagraphProps =
-        hasStyle || hasAlignment || hasIndent;
+    final hasParagraphProps = hasStyle || hasAlignment || hasIndent;
 
     if (hasParagraphProps) {
       buffer.writeln('      <w:pPr>');
@@ -223,6 +222,9 @@ class DocumentXml {
         buffer.write('<w:u w:val="single"/>');
       }
       if (run.strikethrough) buffer.write('<w:strike/>');
+      if (run.script != DocxScript.baseline) {
+        buffer.write('<w:vertAlign w:val="${run.script.value}"/>');
+      }
       if (run.color != null) {
         buffer.write('<w:color w:val="${run.color}"/>');
       } else if (hasLinkStyle) {
@@ -468,8 +470,7 @@ class DocumentXml {
     final hasStyle = paragraph.style != DocxParagraphStyle.normal;
     final hasAlignment = paragraph.alignment != DocxAlignment.left;
     final hasIndent = paragraph.indentLevel > 0 && paragraph.style.isList;
-    final hasParagraphProps =
-        hasStyle || hasAlignment || hasIndent;
+    final hasParagraphProps = hasStyle || hasAlignment || hasIndent;
 
     if (hasParagraphProps) {
       buffer.writeln('            <w:pPr>');

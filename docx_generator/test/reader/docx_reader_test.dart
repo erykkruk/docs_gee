@@ -297,8 +297,7 @@ void main() {
       doc.addParagraph(DocxParagraph.romanItem('Roman'));
 
       final result = roundTrip(doc);
-      expect(
-          result.paragraphs.first.style, DocxParagraphStyle.listNumberRoman);
+      expect(result.paragraphs.first.style, DocxParagraphStyle.listNumberRoman);
     });
 
     test('reads nested list with indent levels', () {
@@ -361,10 +360,14 @@ void main() {
           ]),
           const DocxTableRow(cells: [
             DocxTableCell(
-              paragraphs: [DocxParagraph(runs: [DocxRun('A')])],
+              paragraphs: [
+                DocxParagraph(runs: [DocxRun('A')])
+              ],
             ),
             DocxTableCell(
-              paragraphs: [DocxParagraph(runs: [DocxRun('B')])],
+              paragraphs: [
+                DocxParagraph(runs: [DocxRun('B')])
+              ],
             ),
           ]),
         ],
@@ -385,7 +388,9 @@ void main() {
           const DocxTableRow(cells: [
             DocxTableCell.merged(),
             DocxTableCell(
-              paragraphs: [DocxParagraph(runs: [DocxRun('D')])],
+              paragraphs: [
+                DocxParagraph(runs: [DocxRun('D')])
+              ],
             ),
           ]),
         ],
@@ -416,7 +421,9 @@ void main() {
         rows: [
           DocxTableRow(cells: [
             DocxTableCell(
-              paragraphs: [DocxParagraph(runs: [DocxRun('Center')])],
+              paragraphs: [
+                DocxParagraph(runs: [DocxRun('Center')])
+              ],
               verticalAlignment: DocxVerticalAlignment.center,
             ),
           ]),
@@ -559,7 +566,9 @@ void main() {
         rows: [
           DocxTableRow(cells: [
             DocxTableCell(
-              paragraphs: [DocxParagraph(runs: [DocxRun('With borders')])],
+              paragraphs: [
+                DocxParagraph(runs: [DocxRun('With borders')])
+              ],
               borders: DocxCellBorders.all(),
             ),
           ]),

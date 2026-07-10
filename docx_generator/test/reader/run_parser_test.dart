@@ -53,8 +53,8 @@ void main() {
     });
 
     test('parses strikethrough', () {
-      final run = parseRun(
-          '<w:r><w:rPr><w:strike/></w:rPr><w:t>Strike</w:t></w:r>');
+      final run =
+          parseRun('<w:r><w:rPr><w:strike/></w:rPr><w:t>Strike</w:t></w:r>');
       final result = RunParser.parse(run);
       expect(result.strikethrough, isTrue);
     });
@@ -102,8 +102,7 @@ void main() {
   group('RunParser - hyperlinks', () {
     test('passes external hyperlink through', () {
       final run = parseRun('<w:r><w:t>Link</w:t></w:r>');
-      final result =
-          RunParser.parse(run, hyperlink: 'https://example.com');
+      final result = RunParser.parse(run, hyperlink: 'https://example.com');
       expect(result.hyperlink, 'https://example.com');
       expect(result.text, 'Link');
     });
@@ -117,8 +116,7 @@ void main() {
     test('filters auto-applied hyperlink blue color', () {
       final run = parseRun(
           '<w:r><w:rPr><w:color w:val="0000FF"/></w:rPr><w:t>Link</w:t></w:r>');
-      final result =
-          RunParser.parse(run, hyperlink: 'https://example.com');
+      final result = RunParser.parse(run, hyperlink: 'https://example.com');
       expect(result.color, isNull);
     });
   });

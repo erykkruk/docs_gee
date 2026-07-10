@@ -134,9 +134,8 @@ class TableParser {
     }
 
     // Determine alignment from first paragraph (cell-level alignment)
-    final alignment = paragraphs.isNotEmpty
-        ? paragraphs.first.alignment
-        : DocxAlignment.left;
+    final alignment =
+        paragraphs.isNotEmpty ? paragraphs.first.alignment : DocxAlignment.left;
 
     return DocxTableCell(
       paragraphs: paragraphs,

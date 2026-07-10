@@ -1,3 +1,5 @@
+import 'docx_enums.dart';
+
 /// Represents a run of text with formatting.
 ///
 /// A "run" in DOCX terminology is a contiguous piece of text
@@ -13,6 +15,7 @@ class DocxRun {
     this.backgroundColor,
     this.hyperlink,
     this.bookmarkRef,
+    this.script = DocxScript.baseline,
     this.isLineBreak = false,
   });
 
@@ -28,6 +31,7 @@ class DocxRun {
         backgroundColor = null,
         hyperlink = null,
         bookmarkRef = null,
+        script = DocxScript.baseline,
         isLineBreak = true;
 
   /// The text content.
@@ -61,6 +65,19 @@ class DocxRun {
   /// When set, this run will link to the bookmark within the document.
   final String? bookmarkRef;
 
+  /// Vertical script position (baseline, superscript or subscript).
+  ///
+  /// Superscript and subscript text is rendered smaller and shifted off the
+  /// baseline. Example:
+  /// ```dart
+  /// DocxParagraph(runs: [
+  ///   DocxRun('H'),
+  ///   DocxRun('2', script: DocxScript.subscript),
+  ///   DocxRun('O'),
+  /// ]);
+  /// ```
+  final DocxScript script;
+
   /// Whether this run represents a line break (soft return).
   /// When true, this generates a <w:br/> element instead of text.
   final bool isLineBreak;
@@ -75,7 +92,8 @@ class DocxRun {
       underline ||
       strikethrough ||
       color != null ||
-      backgroundColor != null;
+      backgroundColor != null ||
+      script != DocxScript.baseline;
 
   /// Creates a copy with modified properties.
   DocxRun copyWith({
@@ -88,6 +106,7 @@ class DocxRun {
     String? backgroundColor,
     String? hyperlink,
     String? bookmarkRef,
+    DocxScript? script,
     bool? isLineBreak,
   }) {
     return DocxRun(
@@ -100,6 +119,7 @@ class DocxRun {
       backgroundColor: backgroundColor ?? this.backgroundColor,
       hyperlink: hyperlink ?? this.hyperlink,
       bookmarkRef: bookmarkRef ?? this.bookmarkRef,
+      script: script ?? this.script,
       isLineBreak: isLineBreak ?? this.isLineBreak,
     );
   }

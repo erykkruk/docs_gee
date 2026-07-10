@@ -22,6 +22,7 @@ A **pure Dart** library for generating **Microsoft Word (DOCX)** and **PDF** doc
 | Feature | DOCX | PDF |
 |---------|:----:|:---:|
 | Text formatting (bold, italic, underline, strikethrough) | ✅ | ✅ |
+| Superscript & subscript | ✅ | ✅ |
 | Text colors & highlighting | ✅ | ✅ |
 | Headings (H1-H4) | ✅ | ✅ |
 | Paragraph styles (subtitle, caption, quote, code, footnote) | ✅ | ✅ |
@@ -103,6 +104,26 @@ doc.addParagraph(Paragraph(
     TextRun('colored', color: 'FF0000'),
   ],
 ));
+```
+
+### Superscript & Subscript
+
+Use `script` on a run to raise or lower text off the baseline — handy for
+exponents, ordinals, footnote markers and chemical formulas.
+
+```dart
+// E = mc²
+doc.addParagraph(Paragraph(runs: [
+  TextRun('E = mc'),
+  TextRun('2', script: Script.superscript),
+]));
+
+// H₂O
+doc.addParagraph(Paragraph(runs: [
+  TextRun('H'),
+  TextRun('2', script: Script.subscript),
+  TextRun('O'),
+]));
 ```
 
 ### Lists
@@ -341,6 +362,7 @@ Future<void> shareDocument(Uint8List bytes) async {
 | `strikethrough` | `bool` | Strikethrough text |
 | `color` | `String` | Hex color (e.g., `'FF0000'`) |
 | `backgroundColor` | `String` | Highlight color |
+| `script` | `DocxScript` | Superscript / subscript (`Script.superscript`, `Script.subscript`) |
 | `hyperlink` | `String?` | External URL link |
 | `bookmarkRef` | `String?` | Internal bookmark reference |
 | `isLineBreak` | `bool` | Line break (use `TextRun.lineBreak()`) |

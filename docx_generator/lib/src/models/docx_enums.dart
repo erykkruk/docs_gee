@@ -19,6 +19,28 @@ enum DocxVerticalAlignment {
   final String value;
 }
 
+/// Vertical script position of a text run.
+///
+/// Maps to the DOCX `<w:vertAlign>` run property. Superscript and subscript
+/// text is rendered smaller and shifted off the baseline — useful for
+/// footnote markers, ordinals (1ˢᵗ), exponents (x²) and chemical formulas
+/// (H₂O).
+enum DocxScript {
+  /// Normal baseline position (default).
+  baseline('baseline'),
+
+  /// Raised, smaller text (e.g. exponents, footnote markers).
+  superscript('superscript'),
+
+  /// Lowered, smaller text (e.g. chemical subscripts).
+  subscript('subscript');
+
+  const DocxScript(this.value);
+
+  /// The DOCX `w:vertAlign` attribute value.
+  final String value;
+}
+
 /// Paragraph style types.
 enum DocxParagraphStyle {
   normal('Normal'),

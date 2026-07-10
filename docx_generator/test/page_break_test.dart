@@ -27,7 +27,8 @@ void main() {
       final xml = result.xml;
 
       // The break should be in its own <w:p> with a <w:r> containing <w:br>
-      expect(xml, contains('<w:p>\n      <w:r>\n        <w:br w:type="page"/>'));
+      expect(
+          xml, contains('<w:p>\n      <w:r>\n        <w:br w:type="page"/>'));
     });
 
     test('pageBreakBefore does not use <w:pageBreakBefore/> property', () {
@@ -80,9 +81,7 @@ void main() {
       final result = DocumentXml.generate(doc);
       final xml = result.xml;
 
-      final matches = '<w:br w:type="page"/>'
-          .allMatches(xml)
-          .length;
+      final matches = '<w:br w:type="page"/>'.allMatches(xml).length;
       expect(matches, 2);
     });
   });

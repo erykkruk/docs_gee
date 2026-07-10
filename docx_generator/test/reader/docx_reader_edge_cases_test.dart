@@ -61,12 +61,10 @@ void main() {
 
     test('handles Polish characters', () {
       final doc = DocxDocument();
-      doc.addParagraph(
-          DocxParagraph.text('Zażółć gęślą jaźń ĄĆĘŁŃÓŚŹŻ'));
+      doc.addParagraph(DocxParagraph.text('Zażółć gęślą jaźń ĄĆĘŁŃÓŚŹŻ'));
 
       final result = roundTrip(doc);
-      expect(result.paragraphs.first.plainText,
-          'Zażółć gęślą jaźń ĄĆĘŁŃÓŚŹŻ');
+      expect(result.paragraphs.first.plainText, 'Zażółć gęślą jaźń ĄĆĘŁŃÓŚŹŻ');
     });
   });
 
@@ -119,15 +117,21 @@ void main() {
           ]),
           const DocxTableRow(cells: [
             DocxTableCell(
-              paragraphs: [DocxParagraph(runs: [DocxRun('Center')])],
+              paragraphs: [
+                DocxParagraph(runs: [DocxRun('Center')])
+              ],
               verticalAlignment: DocxVerticalAlignment.center,
             ),
             DocxTableCell(
-              paragraphs: [DocxParagraph(runs: [DocxRun('Bottom')])],
+              paragraphs: [
+                DocxParagraph(runs: [DocxRun('Bottom')])
+              ],
               verticalAlignment: DocxVerticalAlignment.bottom,
             ),
             DocxTableCell(
-              paragraphs: [DocxParagraph(runs: [DocxRun('Bordered')])],
+              paragraphs: [
+                DocxParagraph(runs: [DocxRun('Bordered')])
+              ],
               borders: DocxCellBorders.all(),
             ),
           ]),
@@ -200,10 +204,8 @@ void main() {
     test('reads document with multiple page breaks', () {
       final doc = DocxDocument();
       doc.addParagraph(DocxParagraph.text('Page 1'));
-      doc.addParagraph(
-          DocxParagraph.text('Page 2', pageBreakBefore: true));
-      doc.addParagraph(
-          DocxParagraph.text('Page 3', pageBreakBefore: true));
+      doc.addParagraph(DocxParagraph.text('Page 2', pageBreakBefore: true));
+      doc.addParagraph(DocxParagraph.text('Page 3', pageBreakBefore: true));
 
       final result = roundTrip(doc);
       expect(result.paragraphs, hasLength(3));
@@ -237,8 +239,8 @@ void main() {
     test('reads full-featured document', () {
       final doc = DocxDocument(title: 'Test Doc', author: 'Eryk');
 
-      doc.addParagraph(DocxParagraph.heading('Introduction', level: 1,
-          bookmarkName: 'intro'));
+      doc.addParagraph(DocxParagraph.heading('Introduction',
+          level: 1, bookmarkName: 'intro'));
       doc.addParagraph(DocxParagraph.text(
         'Welcome to the document.',
         alignment: DocxAlignment.justify,
@@ -252,8 +254,8 @@ void main() {
         ],
       ));
 
-      doc.addParagraph(DocxParagraph.heading('Details',
-          level: 2, pageBreakBefore: true));
+      doc.addParagraph(
+          DocxParagraph.heading('Details', level: 2, pageBreakBefore: true));
       doc.addParagraph(DocxParagraph.bulletItem('First point'));
       doc.addParagraph(
           DocxParagraph.bulletItem('Nested point', indentLevel: 1));
@@ -347,7 +349,9 @@ void main() {
         rows: [
           DocxTableRow(cells: [
             DocxTableCell(
-              paragraphs: [DocxParagraph(runs: [DocxRun('Cell')])],
+              paragraphs: [
+                DocxParagraph(runs: [DocxRun('Cell')])
+              ],
               borders: DocxCellBorders.bottom(),
             ),
           ]),
@@ -406,8 +410,7 @@ void main() {
     test('reads deeply nested list', () {
       final doc = DocxDocument();
       for (int i = 0; i <= 5; i++) {
-        doc.addParagraph(
-            DocxParagraph.bulletItem('Level $i', indentLevel: i));
+        doc.addParagraph(DocxParagraph.bulletItem('Level $i', indentLevel: i));
       }
 
       final result = roundTrip(doc);

@@ -83,6 +83,16 @@ void main() {
           bold: true, italic: true, underline: true, strikethrough: true),
     ],
   ));
+
+  doc.addParagraph(const Paragraph(
+    runs: [
+      TextRun('Superscript & subscript: E = mc'),
+      TextRun('2', script: Script.superscript),
+      TextRun(', H'),
+      TextRun('2', script: Script.subscript),
+      TextRun('O'),
+    ],
+  ));
   doc.addParagraph(Paragraph.text(''));
 
   // ============================================

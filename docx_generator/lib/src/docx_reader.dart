@@ -122,15 +122,16 @@ class DocxReader {
       String? author;
 
       // <dc:title>...</dc:title>
-      final titleMatch =
-          RegExp(r'<dc:title>(.*?)</dc:title>', dotAll: true).firstMatch(coreXml);
+      final titleMatch = RegExp(r'<dc:title>(.*?)</dc:title>', dotAll: true)
+          .firstMatch(coreXml);
       if (titleMatch != null && titleMatch.group(1)!.isNotEmpty) {
         title = titleMatch.group(1);
       }
 
       // <dc:creator>...</dc:creator>
       final authorMatch =
-          RegExp(r'<dc:creator>(.*?)</dc:creator>', dotAll: true).firstMatch(coreXml);
+          RegExp(r'<dc:creator>(.*?)</dc:creator>', dotAll: true)
+              .firstMatch(coreXml);
       if (authorMatch != null && authorMatch.group(1)!.isNotEmpty) {
         author = authorMatch.group(1);
       }

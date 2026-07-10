@@ -47,6 +47,9 @@ typedef TextRun = DocxRun;
 /// Alias for [DocxAlignment] - use for format-agnostic code.
 typedef Alignment = DocxAlignment;
 
+/// Alias for [DocxScript] - use for format-agnostic code.
+typedef Script = DocxScript;
+
 /// Alias for [DocxParagraphStyle] - use for format-agnostic code.
 typedef ParagraphStyle = DocxParagraphStyle;
 

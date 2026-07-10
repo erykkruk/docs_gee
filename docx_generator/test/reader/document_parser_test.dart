@@ -40,8 +40,7 @@ void main() {
     });
 
     test('parses bookmark name', () {
-      final xml = wrapBody(
-          '<w:p><w:bookmarkStart w:id="0" w:name="section1"/>'
+      final xml = wrapBody('<w:p><w:bookmarkStart w:id="0" w:name="section1"/>'
           '<w:r><w:t>Section</w:t></w:r>'
           '<w:bookmarkEnd w:id="0"/></w:p>');
       final content = DocumentParser.parse(xml, {});
@@ -76,8 +75,7 @@ void main() {
 
   group('DocumentParser - page breaks', () {
     test('detects page-break-only paragraph and applies to next', () {
-      final xml = wrapBody(
-          '<w:p><w:r><w:t>Before</w:t></w:r></w:p>'
+      final xml = wrapBody('<w:p><w:r><w:t>Before</w:t></w:r></w:p>'
           '<w:p><w:r><w:br w:type="page"/></w:r></w:p>'
           '<w:p><w:r><w:t>After</w:t></w:r></w:p>');
       final content = DocumentParser.parse(xml, {});
@@ -114,8 +112,7 @@ void main() {
 
   group('DocumentParser - mixed content', () {
     test('preserves paragraph-table order', () {
-      final xml = wrapBody(
-          '<w:p><w:r><w:t>Before</w:t></w:r></w:p>'
+      final xml = wrapBody('<w:p><w:r><w:t>Before</w:t></w:r></w:p>'
           '<w:tbl><w:tblPr><w:tblW w:w="0" w:type="auto"/></w:tblPr>'
           '<w:tr><w:tc><w:tcPr><w:tcW w:w="9360" w:type="dxa"/></w:tcPr><w:p><w:r><w:t>Cell</w:t></w:r></w:p></w:tc></w:tr>'
           '</w:tbl>'
@@ -149,8 +146,7 @@ void main() {
 
   group('DocumentParser - skips sectPr', () {
     test('ignores section properties', () {
-      final xml = wrapBody(
-          '<w:p><w:r><w:t>Text</w:t></w:r></w:p>'
+      final xml = wrapBody('<w:p><w:r><w:t>Text</w:t></w:r></w:p>'
           '<w:sectPr><w:pgSz w:w="12240" w:h="15840"/></w:sectPr>');
       final content = DocumentParser.parse(xml, {});
 

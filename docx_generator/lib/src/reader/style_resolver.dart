@@ -79,17 +79,21 @@ class StyleResolver {
     // Find <w:num w:numId="numId"> → get abstractNumId
     int? abstractNumId;
     for (final numElement in document.findAllElements('num',
-        namespace: 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')) {
+        namespace:
+            'http://schemas.openxmlformats.org/wordprocessingml/2006/main')) {
       final id = int.tryParse(numElement.getAttribute('numId',
-              namespace: 'http://schemas.openxmlformats.org/wordprocessingml/2006/main') ??
+              namespace:
+                  'http://schemas.openxmlformats.org/wordprocessingml/2006/main') ??
           '');
       if (id == numId) {
         final abstractRef = numElement
             .findAllElements('abstractNumId',
-                namespace: 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
+                namespace:
+                    'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
             .firstOrNull;
         abstractNumId = int.tryParse(abstractRef?.getAttribute('val',
-                namespace: 'http://schemas.openxmlformats.org/wordprocessingml/2006/main') ??
+                namespace:
+                    'http://schemas.openxmlformats.org/wordprocessingml/2006/main') ??
             '');
         break;
       }
@@ -98,13 +102,10 @@ class StyleResolver {
     // Also try without namespace (common in generated XML)
     if (abstractNumId == null) {
       for (final numElement in document.findAllElements('num')) {
-        final id =
-            int.tryParse(_getWAttr(numElement, 'numId') ?? '');
+        final id = int.tryParse(_getWAttr(numElement, 'numId') ?? '');
         if (id == numId) {
-          final abstractRef =
-              _findWElement(numElement, 'abstractNumId');
-          abstractNumId =
-              int.tryParse(_getWAttr(abstractRef, 'val') ?? '');
+          final abstractRef = _findWElement(numElement, 'abstractNumId');
+          abstractNumId = int.tryParse(_getWAttr(abstractRef, 'val') ?? '');
           break;
         }
       }
@@ -121,14 +122,12 @@ class StyleResolver {
     int abstractNumId,
   ) {
     for (final abstractNum in document.findAllElements('abstractNum')) {
-      final id = int.tryParse(
-          _getWAttr(abstractNum, 'abstractNumId') ?? '');
+      final id = int.tryParse(_getWAttr(abstractNum, 'abstractNumId') ?? '');
       if (id != abstractNumId) continue;
 
       // Get level 0 numFmt
       for (final lvl in abstractNum.findAllElements('lvl')) {
-        final ilvl =
-            int.tryParse(_getWAttr(lvl, 'ilvl') ?? '');
+        final ilvl = int.tryParse(_getWAttr(lvl, 'ilvl') ?? '');
         if (ilvl != 0) continue;
 
         final numFmtElement = _findWElement(lvl, 'numFmt');

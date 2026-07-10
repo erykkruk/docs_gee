@@ -564,6 +564,7 @@ class _PdfBuilder {
         color: textColor,
         underline: run.underline,
         strikethrough: run.strikethrough,
+        script: run.script,
       ));
     }
 
@@ -600,11 +601,24 @@ class _PdfBuilder {
           buffer.writeln('0 0 0 rg');
         }
 
-        buffer.writeln('${segment.fontRef} $size Tf');
-        buffer.writeln('(${_escapePdfString(segment.text)}) Tj');
+        final isScript = segment.script != DocxScript.baseline;
+        final renderSize = isScript ? size * 0.66 : size.toDouble();
+        final scriptRise = !isScript
+            ? 0.0
+            : (segment.script == DocxScript.superscript
+                ? size * 0.33
+                : -size * 0.15);
 
-        final segmentWidth =
-            _estimateTextWidth(segment.text, size, fontRef: segment.fontRef);
+        buffer.writeln('${segment.fontRef} $renderSize Tf');
+        if (scriptRise != 0) buffer.writeln('$scriptRise Ts');
+        buffer.writeln('(${_escapePdfString(segment.text)}) Tj');
+        if (scriptRise != 0) buffer.writeln('0 Ts');
+
+        final segmentWidth = _estimateTextWidth(
+          segment.text,
+          isScript ? (size * 0.66).round() : size,
+          fontRef: segment.fontRef,
+        );
 
         if (segment.underline || segment.strikethrough) {
           buffer.writeln('ET');
@@ -930,6 +944,7 @@ class _PdfBuilder {
         color: textColor,
         underline: run.underline,
         strikethrough: run.strikethrough,
+        script: run.script,
       ));
     }
 
@@ -964,11 +979,24 @@ class _PdfBuilder {
           buffer.writeln('0 0 0 rg');
         }
 
-        buffer.writeln('${segment.fontRef} $size Tf');
-        buffer.writeln('(${_escapePdfString(segment.text)}) Tj');
+        final isScript = segment.script != DocxScript.baseline;
+        final renderSize = isScript ? size * 0.66 : size.toDouble();
+        final scriptRise = !isScript
+            ? 0.0
+            : (segment.script == DocxScript.superscript
+                ? size * 0.33
+                : -size * 0.15);
 
-        final segmentWidth =
-            _estimateTextWidth(segment.text, size, fontRef: segment.fontRef);
+        buffer.writeln('${segment.fontRef} $renderSize Tf');
+        if (scriptRise != 0) buffer.writeln('$scriptRise Ts');
+        buffer.writeln('(${_escapePdfString(segment.text)}) Tj');
+        if (scriptRise != 0) buffer.writeln('0 Ts');
+
+        final segmentWidth = _estimateTextWidth(
+          segment.text,
+          isScript ? (size * 0.66).round() : size,
+          fontRef: segment.fontRef,
+        );
 
         if (segment.underline || segment.strikethrough) {
           buffer.writeln('ET');
@@ -1046,6 +1074,7 @@ class _PdfBuilder {
             color: segment.color,
             underline: segment.underline,
             strikethrough: segment.strikethrough,
+            script: segment.script,
           ));
           currentLineWidth = wordWidth;
         } else {
@@ -1056,6 +1085,7 @@ class _PdfBuilder {
               color: segment.color,
               underline: segment.underline,
               strikethrough: segment.strikethrough,
+              script: segment.script,
             ));
             currentLineWidth += spaceWidth + wordWidth;
           } else {
@@ -1065,6 +1095,7 @@ class _PdfBuilder {
               color: segment.color,
               underline: segment.underline,
               strikethrough: segment.strikethrough,
+              script: segment.script,
             ));
             currentLineWidth += wordWidth;
           }
@@ -1176,6 +1207,7 @@ class _PdfBuilder {
             color: segment.color,
             underline: segment.underline,
             strikethrough: segment.strikethrough,
+            script: segment.script,
           ));
           currentLineWidth = wordWidth;
         } else {
@@ -1187,6 +1219,7 @@ class _PdfBuilder {
               color: segment.color,
               underline: segment.underline,
               strikethrough: segment.strikethrough,
+              script: segment.script,
             ));
             currentLineWidth += spaceWidth + wordWidth;
           } else {
@@ -1196,6 +1229,7 @@ class _PdfBuilder {
               color: segment.color,
               underline: segment.underline,
               strikethrough: segment.strikethrough,
+              script: segment.script,
             ));
             currentLineWidth += wordWidth;
           }
@@ -1441,7 +1475,7 @@ class _PdfBuilder {
     0x0142: 222, // ł (like l)
     0x0143: 722, // Ń (like N)
     0x0144: 556, // ń (like n)
-0x015A: 667, // Ś (like S)
+    0x015A: 667, // Ś (like S)
     0x015B: 500, // ś (like s)
     0x0179: 611, // Ź (like Z)
     0x017A: 500, // ź (like z)
@@ -1630,6 +1664,7 @@ class _TextSegment {
     this.color,
     this.underline = false,
     this.strikethrough = false,
+    this.script = DocxScript.baseline,
   });
 
   final String text;
@@ -1637,4 +1672,5 @@ class _TextSegment {
   final String? color; // Hex color like "FF0000"
   final bool underline;
   final bool strikethrough;
+  final DocxScript script;
 }

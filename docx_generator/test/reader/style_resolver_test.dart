@@ -5,16 +5,15 @@ import 'package:test/test.dart';
 void main() {
   group('StyleResolver.resolveStyleId', () {
     test('resolves known style IDs', () {
-      expect(
-          StyleResolver.resolveStyleId('Normal'), DocxParagraphStyle.normal);
-      expect(
-          StyleResolver.resolveStyleId('Heading1'), DocxParagraphStyle.heading1);
-      expect(
-          StyleResolver.resolveStyleId('Heading2'), DocxParagraphStyle.heading2);
-      expect(
-          StyleResolver.resolveStyleId('Heading3'), DocxParagraphStyle.heading3);
-      expect(
-          StyleResolver.resolveStyleId('Heading4'), DocxParagraphStyle.heading4);
+      expect(StyleResolver.resolveStyleId('Normal'), DocxParagraphStyle.normal);
+      expect(StyleResolver.resolveStyleId('Heading1'),
+          DocxParagraphStyle.heading1);
+      expect(StyleResolver.resolveStyleId('Heading2'),
+          DocxParagraphStyle.heading2);
+      expect(StyleResolver.resolveStyleId('Heading3'),
+          DocxParagraphStyle.heading3);
+      expect(StyleResolver.resolveStyleId('Heading4'),
+          DocxParagraphStyle.heading4);
       expect(StyleResolver.resolveStyleId('Subtitle'),
           DocxParagraphStyle.subtitle);
       expect(
@@ -39,8 +38,8 @@ void main() {
     test('returns normal for unknown style IDs', () {
       expect(StyleResolver.resolveStyleId('UnknownStyle'),
           DocxParagraphStyle.normal);
-      expect(StyleResolver.resolveStyleId('MyCustom'),
-          DocxParagraphStyle.normal);
+      expect(
+          StyleResolver.resolveStyleId('MyCustom'), DocxParagraphStyle.normal);
     });
 
     test('returns normal for null', () {
@@ -54,8 +53,7 @@ void main() {
       expect(StyleResolver.resolveNumId(2), DocxParagraphStyle.listNumber);
       expect(StyleResolver.resolveNumId(3), DocxParagraphStyle.listDash);
       expect(StyleResolver.resolveNumId(4), DocxParagraphStyle.listNumberAlpha);
-      expect(
-          StyleResolver.resolveNumId(5), DocxParagraphStyle.listNumberRoman);
+      expect(StyleResolver.resolveNumId(5), DocxParagraphStyle.listNumberRoman);
     });
 
     test('falls back to bullet for unknown numId without numbering XML', () {
