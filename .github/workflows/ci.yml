@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        working-directory: docx_generator
+        run: dart pub get
+
+      - name: Verify formatting
+        working-directory: docx_generator
+        run: dart format --set-exit-if-changed .
+
+      - name: Analyze
+        working-directory: docx_generator
+        run: dart analyze
+
+      - name: Run tests
+        working-directory: docx_generator
+        run: dart test
