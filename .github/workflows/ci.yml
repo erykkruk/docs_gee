@@ -12,11 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: dart-lang/setup-dart@v1
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
 
       - name: Install dependencies
         working-directory: docx_generator
-        run: dart pub get
+        run: flutter pub get
 
       - name: Verify formatting
         working-directory: docx_generator
@@ -24,8 +27,8 @@ jobs:
 
       - name: Analyze
         working-directory: docx_generator
-        run: dart analyze
+        run: flutter analyze
 
       - name: Run tests
         working-directory: docx_generator
-        run: dart test
+        run: flutter test
