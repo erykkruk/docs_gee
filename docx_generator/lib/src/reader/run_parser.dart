@@ -99,6 +99,19 @@ class RunParser {
       };
     }
 
+    // Font size: <w:sz w:val="28"/>, stored in half-points.
+    int? fontSize;
+    final szElement = _findChild(rPr, 'sz');
+    if (szElement != null) {
+      final halfPoints = int.tryParse(_getAttr(szElement, 'val') ?? '');
+      if (halfPoints != null && halfPoints > 0) {
+        fontSize = halfPoints ~/ 2;
+      }
+    }
+
+    // Right-to-left run: <w:rtl/>
+    final rtl = _hasChild(rPr, 'rtl');
+
     // Filter out auto-applied hyperlink underline
     final effectiveUnderline =
         underline && !(hyperlink != null && !_hasExplicitUnderline(rPr));
@@ -114,6 +127,8 @@ class RunParser {
       hyperlink: hyperlink,
       bookmarkRef: bookmarkRef,
       script: script,
+      fontSize: fontSize,
+      rtl: rtl,
     );
   }
 

@@ -139,6 +139,84 @@ class DocxCellBorders {
       top != null || bottom != null || left != null || right != null;
 }
 
+/// Padding inside a table cell, in twips (twentieths of a point).
+///
+/// A twip is 1/1440 of an inch, the unit Word stores cell margins in. Use
+/// [DocxCellPadding.points] to declare the same thing in points:
+///
+/// ```dart
+/// // 6pt top and bottom, 10pt left and right
+/// const DocxCellPadding.points(top: 6, bottom: 6, left: 10, right: 10);
+/// ```
+///
+/// Set it table-wide through [DocxTable.cellPadding] or per cell through
+/// [DocxTableCell.padding]; a cell value overrides the table default.
+class DocxCellPadding {
+  /// Creates padding from raw twip values.
+  const DocxCellPadding({
+    this.top = 0,
+    this.right = 0,
+    this.bottom = 0,
+    this.left = 0,
+  });
+
+  /// Creates uniform padding from a single twip value.
+  const DocxCellPadding.all(int twips)
+      : top = twips,
+        right = twips,
+        bottom = twips,
+        left = twips;
+
+  /// Creates padding from point values (1pt = 20 twips).
+  const DocxCellPadding.points({
+    int top = 0,
+    int right = 0,
+    int bottom = 0,
+    int left = 0,
+  })  : top = top * twipsPerPoint,
+        right = right * twipsPerPoint,
+        bottom = bottom * twipsPerPoint,
+        left = left * twipsPerPoint;
+
+  /// Word's own default cell margins: no vertical padding, 108 twips
+  /// (0.075 inch) on each side.
+  static const DocxCellPadding wordDefault =
+      DocxCellPadding(left: 108, right: 108);
+
+  /// Twips in a single point.
+  static const int twipsPerPoint = 20;
+
+  /// Padding above the cell content, in twips.
+  final int top;
+
+  /// Padding to the right of the cell content, in twips.
+  final int right;
+
+  /// Padding below the cell content, in twips.
+  final int bottom;
+
+  /// Padding to the left of the cell content, in twips.
+  final int left;
+
+  /// Whether any edge carries padding.
+  bool get hasPadding => top > 0 || right > 0 || bottom > 0 || left > 0;
+
+  @override
+  bool operator ==(Object other) =>
+      other is DocxCellPadding &&
+      other.top == top &&
+      other.right == right &&
+      other.bottom == bottom &&
+      other.left == left;
+
+  @override
+  int get hashCode => Object.hash(top, right, bottom, left);
+
+  @override
+  String toString() =>
+      'DocxCellPadding(top: $top, right: $right, bottom: $bottom, left: $left)';
+}
+
 /// Represents a cell in a table row.
 class DocxTableCell {
   const DocxTableCell({
@@ -150,6 +228,7 @@ class DocxTableCell {
     this.colSpan = 1,
     this.rowSpan = 1,
     this.isMergedContinuation = false,
+    this.padding,
   });
 
   /// Creates a simple cell with plain text.
@@ -161,6 +240,7 @@ class DocxTableCell {
     DocxCellBorders? borders,
     int colSpan = 1,
     int rowSpan = 1,
+    DocxCellPadding? padding,
   }) {
     return DocxTableCell(
       paragraphs: [DocxParagraph.text(text, alignment: alignment)],
@@ -170,6 +250,7 @@ class DocxTableCell {
       borders: borders,
       colSpan: colSpan,
       rowSpan: rowSpan,
+      padding: padding,
     );
   }
 
@@ -204,6 +285,11 @@ class DocxTableCell {
   /// Whether this cell is a continuation of a vertical merge.
   /// Internal use only - use DocxTableCell.merged() factory instead.
   final bool isMergedContinuation;
+
+  /// Padding inside this cell, overriding [DocxTable.cellPadding].
+  ///
+  /// Null falls back to the table-wide value.
+  final DocxCellPadding? padding;
 }
 
 /// Internal class for merged continuation cells.
@@ -233,6 +319,9 @@ class _MergedCell implements DocxTableCell {
 
   @override
   bool get isMergedContinuation => true;
+
+  @override
+  DocxCellPadding? get padding => null;
 }
 
 /// Represents a row in a table.
@@ -251,6 +340,7 @@ class DocxTable {
     required this.rows,
     this.borders = const DocxTableBorders.all(),
     this.columnWidths,
+    this.cellPadding,
   });
 
   /// Creates a simple table from a list of rows (list of cell texts).
@@ -259,6 +349,7 @@ class DocxTable {
     List<List<String>> data, {
     DocxTableBorders borders = const DocxTableBorders.all(),
     List<double>? columnWidths,
+    DocxCellPadding? cellPadding,
   }) {
     return DocxTable(
       rows: data
@@ -268,6 +359,7 @@ class DocxTable {
           .toList(),
       borders: borders,
       columnWidths: columnWidths,
+      cellPadding: cellPadding,
     );
   }
 
@@ -279,6 +371,7 @@ class DocxTable {
     String headerBackgroundColor = 'E0E0E0',
     DocxTableBorders borders = const DocxTableBorders.all(),
     List<double>? columnWidths,
+    DocxCellPadding? cellPadding,
   }) {
     final headerRow = DocxTableRow(
       cells: headers
@@ -299,6 +392,7 @@ class DocxTable {
       rows: [headerRow, ...dataRows],
       borders: borders,
       columnWidths: columnWidths,
+      cellPadding: cellPadding,
     );
   }
 
@@ -312,6 +406,12 @@ class DocxTable {
   /// If null, columns are evenly distributed.
   /// The values should sum to 100 for best results.
   final List<double>? columnWidths;
+
+  /// Padding applied to every cell that does not set its own
+  /// [DocxTableCell.padding].
+  ///
+  /// Null leaves the word processor's own defaults in place.
+  final DocxCellPadding? cellPadding;
 
   /// Returns the number of columns (based on first row, accounting for colSpan).
   int get columnCount {

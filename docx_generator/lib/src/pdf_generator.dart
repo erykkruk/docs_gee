@@ -384,26 +384,62 @@ class _PdfBuilder {
   double _estimateTableHeight(DocxTable table) {
     double totalHeight = 0;
     for (final row in table.rows) {
-      totalHeight += _estimateRowHeight(row);
+      totalHeight += _estimateRowHeight(row, table);
     }
     return totalHeight + 10; // Add some padding
   }
 
-  /// Estimates the height of a table row.
-  double _estimateRowHeight(DocxTableRow row) {
+  /// Estimates the height of a table row, including cell padding.
+  double _estimateRowHeight(DocxTableRow row, DocxTable table) {
     double maxHeight = fontSize * 1.5; // Minimum row height
+    double maxVerticalPadding = 0;
     for (final cell in row.cells) {
       double cellHeight = 0;
       for (final paragraph in cell.paragraphs) {
         cellHeight += _estimateParagraphHeight(paragraph);
       }
       if (cellHeight > maxHeight) maxHeight = cellHeight;
+
+      final padding = _resolveCellPadding(cell, table);
+      final vertical = padding.top + padding.bottom;
+      if (vertical > maxVerticalPadding) maxVerticalPadding = vertical;
     }
-    return maxHeight + 8; // Add cell padding
+    return maxHeight + maxVerticalPadding;
+  }
+
+  /// Default padding in points applied to a cell that declares none, matching
+  /// the value this generator used before padding was configurable.
+  static const double _defaultCellPaddingPt = 4.0;
+
+  /// Resolves the effective cell padding in PDF points.
+  ///
+  /// A cell's own padding wins over the table default; with neither set, the
+  /// generator falls back to [_defaultCellPaddingPt] on every edge.
+  ({double top, double right, double bottom, double left}) _resolveCellPadding(
+    DocxTableCell cell,
+    DocxTable table,
+  ) {
+    final padding = cell.padding ?? table.cellPadding;
+    if (padding == null) {
+      return (
+        top: _defaultCellPaddingPt,
+        right: _defaultCellPaddingPt,
+        bottom: _defaultCellPaddingPt,
+        left: _defaultCellPaddingPt,
+      );
+    }
+    // Twips to points.
+    const divisor = DocxCellPadding.twipsPerPoint;
+    return (
+      top: padding.top / divisor,
+      right: padding.right / divisor,
+      bottom: padding.bottom / divisor,
+      left: padding.left / divisor,
+    );
   }
 
   double _estimateParagraphHeight(DocxParagraph paragraph) {
-    final size = _getFontSizeForStyle(paragraph.style);
+    final size = _maxRunSize(paragraph, _getFontSizeForStyle(paragraph.style));
     final lineHeight = size * 1.5;
     final text = paragraph.plainText;
 
@@ -413,6 +449,17 @@ class _PdfBuilder {
     final lineCount = (text.length / charsPerLine).ceil().clamp(1, 100);
 
     return lineCount * lineHeight + (size * 0.5); // Add spacing after paragraph
+  }
+
+  /// Largest point size any run in [paragraph] asks for, never below the
+  /// paragraph's own style size.
+  int _maxRunSize(DocxParagraph paragraph, int styleSize) {
+    var largest = styleSize;
+    for (final run in paragraph.runs) {
+      final runSize = run.fontSize;
+      if (runSize != null && runSize > largest) largest = runSize;
+    }
+    return largest;
   }
 
   int _getFontSizeForStyle(DocxParagraphStyle style) {
@@ -478,7 +525,7 @@ class _PdfBuilder {
 
     var currentY = startY;
     final size = _getFontSizeForStyle(paragraph.style);
-    final lineHeight = size * 1.4;
+    final lineHeight = _maxRunSize(paragraph, size) * 1.4;
 
     // Handle list prefixes and indentation
     String prefix = '';
@@ -565,6 +612,7 @@ class _PdfBuilder {
         underline: run.underline,
         strikethrough: run.strikethrough,
         script: run.script,
+        fontSize: run.fontSize,
       ));
     }
 
@@ -574,7 +622,9 @@ class _PdfBuilder {
       final line = lines[i];
       final lineWidth = line.fold<double>(
         0,
-        (sum, s) => sum + _estimateTextWidth(s.text, size, fontRef: s.fontRef),
+        (sum, s) =>
+            sum +
+            _estimateTextWidth(s.text, s.sizeOr(size), fontRef: s.fontRef),
       );
 
       double xPos;
@@ -601,13 +651,15 @@ class _PdfBuilder {
           buffer.writeln('0 0 0 rg');
         }
 
+        final segmentSize = segment.sizeOr(size);
         final isScript = segment.script != DocxScript.baseline;
-        final renderSize = isScript ? size * 0.66 : size.toDouble();
+        final renderSize =
+            isScript ? segmentSize * 0.66 : segmentSize.toDouble();
         final scriptRise = !isScript
             ? 0.0
             : (segment.script == DocxScript.superscript
-                ? size * 0.33
-                : -size * 0.15);
+                ? segmentSize * 0.33
+                : -segmentSize * 0.15);
 
         buffer.writeln('${segment.fontRef} $renderSize Tf');
         if (scriptRise != 0) buffer.writeln('$scriptRise Ts');
@@ -616,7 +668,7 @@ class _PdfBuilder {
 
         final segmentWidth = _estimateTextWidth(
           segment.text,
-          isScript ? (size * 0.66).round() : size,
+          isScript ? (segmentSize * 0.66).round() : segmentSize,
           fontRef: segment.fontRef,
         );
 
@@ -641,7 +693,7 @@ class _PdfBuilder {
           }
 
           if (segment.strikethrough) {
-            final strikeY = currentY + size * 0.3;
+            final strikeY = currentY + segmentSize * 0.3;
             buffer.writeln('$segmentX $strikeY m');
             buffer.writeln('${segmentX + segmentWidth} $strikeY l');
             buffer.writeln('S');
@@ -690,7 +742,7 @@ class _PdfBuilder {
 
     for (int rowIndex = 0; rowIndex < table.rows.length; rowIndex++) {
       final row = table.rows[rowIndex];
-      final rowHeight = _estimateRowHeight(row);
+      final rowHeight = _estimateRowHeight(row, table);
       var currentX = marginLeft;
       int gridColIndex = 0;
 
@@ -744,26 +796,27 @@ class _PdfBuilder {
         );
 
         // Render cell content with vertical alignment
-        const cellPadding = 4.0;
+        final padding = _resolveCellPadding(cell, table);
         final contentHeight = _estimateCellContentHeight(cell);
         double cellY;
 
         switch (cell.verticalAlignment) {
           case DocxVerticalAlignment.center:
-            cellY = currentY - cellPadding - (rowHeight - contentHeight) / 2;
+            cellY = currentY - padding.top - (rowHeight - contentHeight) / 2;
           case DocxVerticalAlignment.bottom:
-            cellY = currentY - rowHeight + contentHeight;
+            cellY = currentY - rowHeight + contentHeight + padding.bottom;
           case DocxVerticalAlignment.top:
-            cellY = currentY - cellPadding;
+            cellY = currentY - padding.top;
         }
 
+        final textWidth = cellWidth - padding.left - padding.right;
         for (final paragraph in cell.paragraphs) {
           cellY = _renderCellParagraph(
             buffer,
             paragraph,
             cellY,
-            currentX + cellPadding,
-            cellWidth - (cellPadding * 2),
+            currentX + padding.left,
+            textWidth > 0 ? textWidth : cellWidth,
           );
         }
 
@@ -782,7 +835,7 @@ class _PdfBuilder {
     double height = 0;
     for (final paragraph in cell.paragraphs) {
       final size = _getFontSizeForStyle(paragraph.style);
-      final lineHeight = size * 1.4;
+      final lineHeight = _maxRunSize(paragraph, size) * 1.4;
       // Rough estimate: one line per paragraph
       height += lineHeight;
     }
@@ -902,7 +955,7 @@ class _PdfBuilder {
 
     var currentY = startY;
     final size = _getFontSizeForStyle(paragraph.style);
-    final lineHeight = size * 1.4;
+    final lineHeight = _maxRunSize(paragraph, size) * 1.4;
 
     final segments = <_TextSegment>[];
     final isHeading = paragraph.style == DocxParagraphStyle.heading1 ||
@@ -945,6 +998,7 @@ class _PdfBuilder {
         underline: run.underline,
         strikethrough: run.strikethrough,
         script: run.script,
+        fontSize: run.fontSize,
       ));
     }
 
@@ -953,7 +1007,9 @@ class _PdfBuilder {
     for (final line in lines) {
       final lineWidth = line.fold<double>(
         0,
-        (sum, s) => sum + _estimateTextWidth(s.text, size, fontRef: s.fontRef),
+        (sum, s) =>
+            sum +
+            _estimateTextWidth(s.text, s.sizeOr(size), fontRef: s.fontRef),
       );
 
       double xPos;
@@ -979,13 +1035,15 @@ class _PdfBuilder {
           buffer.writeln('0 0 0 rg');
         }
 
+        final segmentSize = segment.sizeOr(size);
         final isScript = segment.script != DocxScript.baseline;
-        final renderSize = isScript ? size * 0.66 : size.toDouble();
+        final renderSize =
+            isScript ? segmentSize * 0.66 : segmentSize.toDouble();
         final scriptRise = !isScript
             ? 0.0
             : (segment.script == DocxScript.superscript
-                ? size * 0.33
-                : -size * 0.15);
+                ? segmentSize * 0.33
+                : -segmentSize * 0.15);
 
         buffer.writeln('${segment.fontRef} $renderSize Tf');
         if (scriptRise != 0) buffer.writeln('$scriptRise Ts');
@@ -994,7 +1052,7 @@ class _PdfBuilder {
 
         final segmentWidth = _estimateTextWidth(
           segment.text,
-          isScript ? (size * 0.66).round() : size,
+          isScript ? (segmentSize * 0.66).round() : segmentSize,
           fontRef: segment.fontRef,
         );
 
@@ -1019,7 +1077,7 @@ class _PdfBuilder {
           }
 
           if (segment.strikethrough) {
-            final strikeY = currentY + size * 0.3;
+            final strikeY = currentY + segmentSize * 0.3;
             buffer.writeln('$segmentX $strikeY m');
             buffer.writeln('${segmentX + segmentWidth} $strikeY l');
             buffer.writeln('S');
@@ -1047,8 +1105,9 @@ class _PdfBuilder {
     var currentLine = <_TextSegment>[];
     var currentLineWidth = 0.0;
     for (final segment in segments) {
+      final segmentSize = segment.sizeOr(size);
       final spaceWidth =
-          _estimateTextWidth(' ', size, fontRef: segment.fontRef);
+          _estimateTextWidth(' ', segmentSize, fontRef: segment.fontRef);
       final words = segment.text.split(' ');
 
       for (int i = 0; i < words.length; i++) {
@@ -1056,7 +1115,7 @@ class _PdfBuilder {
         if (word.isEmpty) continue;
 
         final wordWidth =
-            _estimateTextWidth(word, size, fontRef: segment.fontRef);
+            _estimateTextWidth(word, segmentSize, fontRef: segment.fontRef);
         final needsSpace = currentLine.isNotEmpty &&
             (currentLine.last.text.isNotEmpty &&
                 !currentLine.last.text.endsWith(' '));
@@ -1068,35 +1127,14 @@ class _PdfBuilder {
           currentLine = <_TextSegment>[];
           currentLineWidth = 0.0;
 
-          currentLine.add(_TextSegment(
-            word,
-            segment.fontRef,
-            color: segment.color,
-            underline: segment.underline,
-            strikethrough: segment.strikethrough,
-            script: segment.script,
-          ));
+          currentLine.add(segment.withText(word));
           currentLineWidth = wordWidth;
         } else {
           if (needsSpace) {
-            currentLine.add(_TextSegment(
-              ' $word',
-              segment.fontRef,
-              color: segment.color,
-              underline: segment.underline,
-              strikethrough: segment.strikethrough,
-              script: segment.script,
-            ));
+            currentLine.add(segment.withText(' $word'));
             currentLineWidth += spaceWidth + wordWidth;
           } else {
-            currentLine.add(_TextSegment(
-              word,
-              segment.fontRef,
-              color: segment.color,
-              underline: segment.underline,
-              strikethrough: segment.strikethrough,
-              script: segment.script,
-            ));
+            currentLine.add(segment.withText(word));
             currentLineWidth += wordWidth;
           }
         }
@@ -1178,8 +1216,9 @@ class _PdfBuilder {
     final maxWidth = _contentWidth;
 
     for (final segment in segments) {
+      final segmentSize = segment.sizeOr(size);
       final spaceWidth =
-          _estimateTextWidth(' ', size, fontRef: segment.fontRef);
+          _estimateTextWidth(' ', segmentSize, fontRef: segment.fontRef);
       final words = segment.text.split(' ');
 
       for (int i = 0; i < words.length; i++) {
@@ -1187,7 +1226,7 @@ class _PdfBuilder {
         if (word.isEmpty) continue;
 
         final wordWidth =
-            _estimateTextWidth(word, size, fontRef: segment.fontRef);
+            _estimateTextWidth(word, segmentSize, fontRef: segment.fontRef);
         final needsSpace = currentLine.isNotEmpty &&
             (currentLine.last.text.isNotEmpty &&
                 !currentLine.last.text.endsWith(' '));
@@ -1201,36 +1240,15 @@ class _PdfBuilder {
           currentLineWidth = 0.0;
 
           // Add word to new line with preserved formatting
-          currentLine.add(_TextSegment(
-            word,
-            segment.fontRef,
-            color: segment.color,
-            underline: segment.underline,
-            strikethrough: segment.strikethrough,
-            script: segment.script,
-          ));
+          currentLine.add(segment.withText(word));
           currentLineWidth = wordWidth;
         } else {
           // Add to current line with preserved formatting
           if (needsSpace) {
-            currentLine.add(_TextSegment(
-              ' $word',
-              segment.fontRef,
-              color: segment.color,
-              underline: segment.underline,
-              strikethrough: segment.strikethrough,
-              script: segment.script,
-            ));
+            currentLine.add(segment.withText(' $word'));
             currentLineWidth += spaceWidth + wordWidth;
           } else {
-            currentLine.add(_TextSegment(
-              word,
-              segment.fontRef,
-              color: segment.color,
-              underline: segment.underline,
-              strikethrough: segment.strikethrough,
-              script: segment.script,
-            ));
+            currentLine.add(segment.withText(word));
             currentLineWidth += wordWidth;
           }
         }
@@ -1665,6 +1683,7 @@ class _TextSegment {
     this.underline = false,
     this.strikethrough = false,
     this.script = DocxScript.baseline,
+    this.fontSize,
   });
 
   final String text;
@@ -1673,4 +1692,22 @@ class _TextSegment {
   final bool underline;
   final bool strikethrough;
   final DocxScript script;
+
+  /// Per-run font size override in points, or null to use the paragraph size.
+  final int? fontSize;
+
+  /// Effective point size for this segment.
+  int sizeOr(int paragraphSize) => fontSize ?? paragraphSize;
+
+  /// Same formatting, different text. Used by the wrapper, which rebuilds
+  /// segments word by word and must not drop the run's formatting.
+  _TextSegment withText(String newText) => _TextSegment(
+        newText,
+        fontRef,
+        color: color,
+        underline: underline,
+        strikethrough: strikethrough,
+        script: script,
+        fontSize: fontSize,
+      );
 }

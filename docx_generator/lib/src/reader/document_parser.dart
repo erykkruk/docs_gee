@@ -125,6 +125,9 @@ class DocumentParser {
     final jc = _findChild(pPr, 'jc');
     final alignment = StyleResolver.resolveAlignment(_getAttr(jc, 'val'));
 
+    // Right-to-left paragraph direction: <w:bidi/>
+    final rtl = _findChild(pPr, 'bidi') != null;
+
     // Bookmark
     String? bookmarkName;
     final bookmarkStart = _findChild(pElement, 'bookmarkStart');
@@ -142,6 +145,7 @@ class DocumentParser {
       pageBreakBefore: pageBreakBefore,
       indentLevel: indentLevel,
       bookmarkName: bookmarkName,
+      rtl: rtl,
     );
   }
 
@@ -212,7 +216,7 @@ class DocumentParser {
     // External: <w:hyperlink r:id="rId100">
     final rId = hyperlinkElement.getAttribute('r:id') ??
         hyperlinkElement.getAttribute('id',
-            namespace:
+            namespaceUri:
                 'http://schemas.openxmlformats.org/officeDocument/2006/relationships');
     // Internal: <w:hyperlink w:anchor="bookmarkName">
     final anchor = _getAttr(hyperlinkElement, 'anchor');

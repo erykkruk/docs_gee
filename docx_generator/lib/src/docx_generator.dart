@@ -40,15 +40,30 @@ class DocxGenerator implements DocumentGenerator {
   /// Default file extension for DOCX files.
   static const String defaultExtension = '.docx';
 
+  /// Relationship ID of word/header1.xml.
+  static const String _headerRelId = 'rId3';
+
+  /// Relationship ID of word/footer1.xml.
+  static const String _footerRelId = 'rId4';
+
   /// Generates a DOCX file from the given document.
   ///
   /// Returns the DOCX file as bytes that can be written to a file.
   @override
   Uint8List generate(DocxDocument document) {
     final hasLists = _documentHasLists(document);
+    final header = _partWithContent(document.header);
+    final footer = _partWithContent(document.footer);
+    final headerRelId = header == null ? null : _headerRelId;
+    final footerRelId = footer == null ? null : _footerRelId;
 
-    // Generate document.xml and collect hyperlinks
-    final documentResult = DocumentXml.generate(document);
+    // Generate document.xml and collect hyperlink and image relationships
+    final documentResult = DocumentXml.generate(
+      document,
+      headerRelId: headerRelId,
+      footerRelId: footerRelId,
+    );
+    final imageFormats = document.images.map((image) => image.format).toSet();
 
     final archive = Archive();
 
@@ -56,7 +71,12 @@ class DocxGenerator implements DocumentGenerator {
     _addFile(
       archive,
       '[Content_Types].xml',
-      ContentTypesXml.generate(hasNumbering: hasLists),
+      ContentTypesXml.generate(
+        hasNumbering: hasLists,
+        imageFormats: imageFormats,
+        hasHeader: header != null,
+        hasFooter: footer != null,
+      ),
     );
 
     // Add _rels/.rels
@@ -73,6 +93,9 @@ class DocxGenerator implements DocumentGenerator {
       RelsXml.generateDocumentRels(
         hasNumbering: hasLists,
         hyperlinks: documentResult.hyperlinks,
+        images: documentResult.images,
+        headerRelId: headerRelId,
+        footerRelId: footerRelId,
       ),
     );
 
@@ -99,6 +122,33 @@ class DocxGenerator implements DocumentGenerator {
       );
     }
 
+    // Add word/header1.xml and word/footer1.xml if defined
+    if (header != null) {
+      _addFile(
+        archive,
+        'word/header1.xml',
+        HeaderFooterXml.generateHeader(header),
+      );
+    }
+    if (footer != null) {
+      _addFile(
+        archive,
+        'word/footer1.xml',
+        HeaderFooterXml.generateFooter(footer),
+      );
+    }
+
+    // Add the media parts backing the image relationships. Iterating the
+    // relationship map rather than document.images keeps part names and
+    // r:embed ids in lockstep with what document.xml actually referenced.
+    final images = document.images;
+    var imageIndex = 0;
+    for (final partName in documentResult.images.values) {
+      final image = images[imageIndex];
+      imageIndex++;
+      _addBinaryFile(archive, 'word/$partName', image.bytes);
+    }
+
     // Encode as ZIP
     final zipEncoder = ZipEncoder();
     final zipBytes = zipEncoder.encode(archive);
@@ -109,6 +159,17 @@ class DocxGenerator implements DocumentGenerator {
   void _addFile(Archive archive, String path, String content) {
     final bytes = utf8.encode(content);
     archive.addFile(ArchiveFile(path, bytes.length, bytes));
+  }
+
+  void _addBinaryFile(Archive archive, String path, Uint8List bytes) {
+    archive.addFile(ArchiveFile(path, bytes.length, bytes));
+  }
+
+  /// Returns the header or footer only when it would render something, so an
+  /// empty one never adds a part or a relationship to the archive.
+  DocxHeaderFooter? _partWithContent(DocxHeaderFooter? part) {
+    if (part == null || part.isEmpty) return null;
+    return part;
   }
 
   bool _documentHasLists(DocxDocument document) {

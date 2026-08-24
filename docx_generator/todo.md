@@ -2,16 +2,16 @@
 
 ## High Priority
 
-- [ ] **Arabic/RTL Support (DOCX)** - Add right-to-left text direction for Arabic, Hebrew, Persian. Add `rtl` property to paragraphs and runs, generate `<w:bidi/>` and `<w:rtl/>` XML elements.
+- [x] **Arabic/RTL Support (DOCX)** - shipped in 1.5.0: `DocxParagraph.rtl` and `DocxRun.rtl` generate `<w:bidi/>` and `<w:rtl/>`, and round-trip through `DocxReader`.
 - [ ] **Custom Styles (DOCX)** - Allow users to define custom paragraph and character styles
 
 ---
 
 ## Normal Priority
 
-- [ ] **Font Size per Run** - Allow specifying font size at the run level (not just document level) for both DOCX and PDF
-- [ ] **Cell Padding for Tables** - Add configurable padding/margins for table cells in DOCX and PDF
-- [ ] **Images Support (DOCX)** - Add ability to insert PNG/JPEG images into documents
+- [x] **Font Size per Run** - shipped in 1.5.0 as `DocxRun.fontSize`, honoured by both generators.
+- [x] **Cell Padding for Tables** - shipped in 1.5.0 as `DocxCellPadding` on `DocxTable.cellPadding` and `DocxTableCell.padding`.
+- [x] **Images Support (DOCX)** - shipped in 1.5.0 as `DocxImage` plus `DocxDocument.addImage`.
 
 ---
 
@@ -19,8 +19,8 @@
 
 - [ ] **PDF Font Embedding** - Embed TTF/OTF fonts for extended character support (CJK, Hindi, full Polish). Very complex - requires font parsing and subsetting.
 - [ ] **PDF RTL Support** - Right-to-left text in PDF. Very complex - requires text shaping library.
-- [ ] **Headers and Footers (DOCX)** - Add page headers and footers with custom content
-- [ ] **Page Numbers (DOCX)** - Add automatic page numbering (depends on headers/footers)
+- [x] **Headers and Footers (DOCX)** - shipped in 1.5.0 as `DocxHeaderFooter` on `DocxDocument.header` / `.footer`.
+- [x] **Page Numbers (DOCX)** - shipped in 1.5.0 as `DocxRun.pageNumber()` / `DocxRun.pageCount()` and `DocxHeaderFooter.pageNumber()`.
 - [ ] **Footnotes/Endnotes (DOCX)** - Proper footnote support with automatic numbering and references
 - [ ] **PDF Hyperlinks** - Add clickable external links in PDF output
 

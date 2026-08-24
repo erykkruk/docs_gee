@@ -10,6 +10,7 @@ class DocxParagraph {
     this.pageBreakBefore = false,
     this.indentLevel = 0,
     this.bookmarkName,
+    this.rtl = false,
   });
 
   /// Creates a simple paragraph with plain text.
@@ -203,6 +204,16 @@ class DocxParagraph {
   /// Indent level for nested lists (0 = top level, 1 = first nested, etc.).
   /// Maximum supported level is 8.
   final int indentLevel;
+
+  /// Whether the paragraph reads right-to-left (Arabic, Hebrew, Persian).
+  ///
+  /// Emits `<w:bidi/>`, which flips the paragraph direction and moves the
+  /// default alignment to the right edge. Runs carrying right-to-left script
+  /// should set [DocxRun.rtl] as well.
+  ///
+  /// DOCX only: the PDF generator has no bidirectional text shaping and
+  /// renders such paragraphs left-to-right.
+  final bool rtl;
 
   /// Optional bookmark name for this paragraph.
   /// When set, this paragraph can be referenced by internal links.

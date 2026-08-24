@@ -11,18 +11,41 @@ class DocumentXml {
   /// Counter for generating unique hyperlink relationship IDs.
   static int _hyperlinkIdCounter = 0;
 
+  /// Counter for generating unique image relationship IDs.
+  static int _imageIdCounter = 0;
+
+  /// First relationship ID reserved for embedded images.
+  ///
+  /// Kept clear of the fixed IDs (styles, numbering, header, footer) and of
+  /// the hyperlink block that starts at 100.
+  static const int _imageRelIdBase = 200;
+
   /// Generates the document.xml content.
-  /// Returns a record with the XML content and a map of hyperlink IDs to URLs.
-  static ({String xml, Map<String, String> hyperlinks}) generate(
-      DocxDocument document) {
+  ///
+  /// Returns the XML alongside the relationship maps the package parts need:
+  /// hyperlink IDs to URLs, and image IDs to media part names.
+  static ({
+    String xml,
+    Map<String, String> hyperlinks,
+    Map<String, String> images,
+  }) generate(
+    DocxDocument document, {
+    String? headerRelId,
+    String? footerRelId,
+  }) {
     final buffer = StringBuffer();
     final hyperlinks = <String, String>{};
+    final images = <String, String>{};
     _bookmarkIdCounter = 0;
     _hyperlinkIdCounter = 0;
+    _imageIdCounter = 0;
 
     buffer.writeln(XmlUtils.xmlDeclaration);
-    buffer.writeln(
-        '<w:document xmlns:w="${XmlUtils.wNamespace}" xmlns:r="${XmlUtils.rNamespace}">');
+    buffer.writeln('<w:document xmlns:w="${XmlUtils.wNamespace}" '
+        'xmlns:r="${XmlUtils.rNamespace}" '
+        'xmlns:wp="${XmlUtils.wpNamespace}" '
+        'xmlns:a="${XmlUtils.aNamespace}" '
+        'xmlns:pic="${XmlUtils.picNamespace}">');
     buffer.writeln('  <w:body>');
 
     // Generate Table of Contents if enabled
@@ -32,14 +55,26 @@ class DocumentXml {
 
     for (final item in document.content) {
       if (item is DocxParagraph) {
-        _writeParagraph(buffer, item, hyperlinks);
+        writeParagraph(buffer, item, hyperlinks);
       } else if (item is DocxTable) {
         _writeTable(buffer, item, hyperlinks);
+      } else if (item is DocxImage) {
+        _writeImageParagraph(buffer, item, images);
       }
     }
 
-    // Section properties (page size, margins)
+    // Section properties (page size, margins). The header and footer
+    // references have to come first inside sectPr: the schema fixes this
+    // order and Word refuses the file otherwise.
     buffer.writeln('    <w:sectPr>');
+    if (headerRelId != null) {
+      buffer.writeln(
+          '      <w:headerReference w:type="default" r:id="$headerRelId"/>');
+    }
+    if (footerRelId != null) {
+      buffer.writeln(
+          '      <w:footerReference w:type="default" r:id="$footerRelId"/>');
+    }
     buffer.writeln('      <w:pgSz w:w="12240" w:h="15840"/>'); // Letter size
     buffer.writeln(
         '      <w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720"/>');
@@ -47,7 +82,7 @@ class DocumentXml {
 
     buffer.writeln('  </w:body>');
     buffer.writeln('</w:document>');
-    return (xml: buffer.toString(), hyperlinks: hyperlinks);
+    return (xml: buffer.toString(), hyperlinks: hyperlinks, images: images);
   }
 
   /// Writes a Table of Contents field.
@@ -93,8 +128,17 @@ class DocumentXml {
     buffer.writeln('    </w:p>');
   }
 
-  static void _writeParagraph(StringBuffer buffer, DocxParagraph paragraph,
-      Map<String, String> hyperlinks) {
+  /// Writes a body-level paragraph.
+  ///
+  /// Library-internal (`xml_parts` is not exported): also used by
+  /// [HeaderFooterXml], which passes `allowHyperlinks: false` because header
+  /// and footer parts carry their own relationship file.
+  static void writeParagraph(
+    StringBuffer buffer,
+    DocxParagraph paragraph,
+    Map<String, String> hyperlinks, {
+    bool allowHyperlinks = true,
+  }) {
     // Insert a separate page break paragraph before this one if requested
     if (paragraph.pageBreakBefore) {
       buffer.writeln('    <w:p>');
@@ -119,7 +163,8 @@ class DocumentXml {
     final hasStyle = paragraph.style != DocxParagraphStyle.normal;
     final hasAlignment = paragraph.alignment != DocxAlignment.left;
     final hasIndent = paragraph.indentLevel > 0 && paragraph.style.isList;
-    final hasParagraphProps = hasStyle || hasAlignment || hasIndent;
+    final hasParagraphProps =
+        hasStyle || hasAlignment || hasIndent || paragraph.rtl;
 
     if (hasParagraphProps) {
       buffer.writeln('      <w:pPr>');
@@ -139,6 +184,12 @@ class DocumentXml {
         buffer.writeln('        </w:numPr>');
       }
 
+      // Right-to-left paragraph direction. Written before <w:jc> so the
+      // alignment value is interpreted in the flipped direction.
+      if (paragraph.rtl) {
+        buffer.writeln('        <w:bidi/>');
+      }
+
       if (hasAlignment) {
         buffer.writeln(
           '        <w:jc w:val="${paragraph.alignment.value}"/>',
@@ -150,7 +201,7 @@ class DocumentXml {
 
     // Write runs
     for (final run in paragraph.runs) {
-      _writeRun(buffer, run, hyperlinks);
+      _writeRun(buffer, run, hyperlinks, allowHyperlinks: allowHyperlinks);
     }
 
     // Write bookmark end if paragraph has a bookmark
@@ -174,15 +225,27 @@ class DocumentXml {
   }
 
   static void _writeRun(
-      StringBuffer buffer, DocxRun run, Map<String, String> hyperlinks) {
+    StringBuffer buffer,
+    DocxRun run,
+    Map<String, String> hyperlinks, {
+    bool allowHyperlinks = true,
+  }) {
     // Handle line break runs
     if (run.isLineBreak) {
       buffer.writeln('      <w:r><w:br/></w:r>');
       return;
     }
 
+    // Handle field runs (page number, page count)
+    if (run.isField) {
+      buffer.write('      ');
+      _writeFieldRun(buffer, run);
+      buffer.writeln();
+      return;
+    }
+
     // Handle external hyperlinks
-    if (run.hyperlink != null) {
+    if (run.hyperlink != null && allowHyperlinks) {
       final rId = 'rId${100 + _hyperlinkIdCounter}';
       _hyperlinkIdCounter++;
       hyperlinks[rId] = run.hyperlink!;
@@ -224,6 +287,15 @@ class DocumentXml {
       if (run.strikethrough) buffer.write('<w:strike/>');
       if (run.script != DocxScript.baseline) {
         buffer.write('<w:vertAlign w:val="${run.script.value}"/>');
+      }
+      if (run.fontSize != null) {
+        // DOCX stores font size in half-points, so 14pt is w:val="28".
+        final halfPoints = run.fontSize! * 2;
+        buffer.write('<w:sz w:val="$halfPoints"/>');
+        buffer.write('<w:szCs w:val="$halfPoints"/>');
+      }
+      if (run.rtl) {
+        buffer.write('<w:rtl/>');
       }
       if (run.color != null) {
         buffer.write('<w:color w:val="${run.color}"/>');
@@ -327,6 +399,14 @@ class DocumentXml {
       buffer.writeln('        </w:tblBorders>');
     }
 
+    // Table-wide cell margins, applied to every cell without its own padding.
+    final cellPadding = table.cellPadding;
+    if (cellPadding != null) {
+      buffer.writeln('        <w:tblCellMar>');
+      _writeCellMarginEdges(buffer, cellPadding, '          ');
+      buffer.writeln('        </w:tblCellMar>');
+    }
+
     buffer.writeln('      </w:tblPr>');
 
     // Calculate column widths
@@ -428,6 +508,14 @@ class DocumentXml {
           '            <w:vAlign w:val="${cell.verticalAlignment.value}"/>');
     }
 
+    // Per-cell padding, overriding the table-wide margins.
+    final padding = cell.padding;
+    if (padding != null) {
+      buffer.writeln('            <w:tcMar>');
+      _writeCellMarginEdges(buffer, padding, '              ');
+      buffer.writeln('            </w:tcMar>');
+    }
+
     buffer.writeln('          </w:tcPr>');
 
     // Cell content (paragraphs)
@@ -470,7 +558,8 @@ class DocumentXml {
     final hasStyle = paragraph.style != DocxParagraphStyle.normal;
     final hasAlignment = paragraph.alignment != DocxAlignment.left;
     final hasIndent = paragraph.indentLevel > 0 && paragraph.style.isList;
-    final hasParagraphProps = hasStyle || hasAlignment || hasIndent;
+    final hasParagraphProps =
+        hasStyle || hasAlignment || hasIndent || paragraph.rtl;
 
     if (hasParagraphProps) {
       buffer.writeln('            <w:pPr>');
@@ -488,6 +577,10 @@ class DocumentXml {
             '                <w:ilvl w:val="${paragraph.indentLevel}"/>');
         buffer.writeln('                <w:numId w:val="$numId"/>');
         buffer.writeln('              </w:numPr>');
+      }
+
+      if (paragraph.rtl) {
+        buffer.writeln('              <w:bidi/>');
       }
 
       if (hasAlignment) {
@@ -521,6 +614,14 @@ class DocumentXml {
       return;
     }
 
+    // Handle field runs (page number, page count)
+    if (run.isField) {
+      buffer.write('            ');
+      _writeFieldRun(buffer, run);
+      buffer.writeln();
+      return;
+    }
+
     // Handle external hyperlinks
     if (run.hyperlink != null) {
       final rId = 'rId${100 + _hyperlinkIdCounter}';
@@ -545,5 +646,132 @@ class DocumentXml {
     buffer.write('            ');
     _writeRunContent(buffer, run, isHyperlink: false);
     buffer.writeln();
+  }
+
+  /// Writes the four `<w:top>`/`<w:left>`/`<w:bottom>`/`<w:right>` margin
+  /// edges shared by `<w:tblCellMar>` and `<w:tcMar>`.
+  static void _writeCellMarginEdges(
+    StringBuffer buffer,
+    DocxCellPadding padding,
+    String indent,
+  ) {
+    buffer.writeln('$indent<w:top w:w="${padding.top}" w:type="dxa"/>');
+    buffer.writeln('$indent<w:left w:w="${padding.left}" w:type="dxa"/>');
+    buffer.writeln('$indent<w:bottom w:w="${padding.bottom}" w:type="dxa"/>');
+    buffer.writeln('$indent<w:right w:w="${padding.right}" w:type="dxa"/>');
+  }
+
+  /// Writes a field run as `<w:fldSimple>`.
+  ///
+  /// The nested run holds a placeholder value so the field still shows
+  /// something in readers that do not recalculate fields; Word replaces it
+  /// on open.
+  static void _writeFieldRun(StringBuffer buffer, DocxRun run) {
+    final field = run.field!;
+    buffer.write('<w:fldSimple w:instr=" ${field.instruction} ">');
+    buffer.write('<w:r>');
+    final hasProps =
+        run.bold || run.italic || run.color != null || run.fontSize != null;
+    if (hasProps) {
+      buffer.write('<w:rPr>');
+      if (run.bold) buffer.write('<w:b/>');
+      if (run.italic) buffer.write('<w:i/>');
+      if (run.color != null) {
+        buffer.write('<w:color w:val="${run.color}"/>');
+      }
+      if (run.fontSize != null) {
+        final halfPoints = run.fontSize! * 2;
+        buffer.write('<w:sz w:val="$halfPoints"/>');
+        buffer.write('<w:szCs w:val="$halfPoints"/>');
+      }
+      buffer.write('</w:rPr>');
+    }
+    buffer.write('<w:t>1</w:t>');
+    buffer.write('</w:r>');
+    buffer.write('</w:fldSimple>');
+  }
+
+  // ============================================
+  // IMAGE GENERATION
+  // ============================================
+
+  /// Writes an image as its own paragraph, registering the media part in
+  /// [images] so the relationship file and the archive can pick it up.
+  static void _writeImageParagraph(
+    StringBuffer buffer,
+    DocxImage image,
+    Map<String, String> images,
+  ) {
+    final index = _imageIdCounter;
+    _imageIdCounter++;
+    final rId = 'rId${_imageRelIdBase + index}';
+    final fileName = 'image${index + 1}.${image.format.extension}';
+    images[rId] = 'media/$fileName';
+
+    buffer.writeln('    <w:p>');
+    if (image.alignment != DocxAlignment.left) {
+      buffer.writeln('      <w:pPr>');
+      buffer.writeln('        <w:jc w:val="${image.alignment.value}"/>');
+      buffer.writeln('      </w:pPr>');
+    }
+    buffer.writeln('      <w:r>');
+    _writeDrawing(buffer, image, rId: rId, id: index + 1, fileName: fileName);
+    buffer.writeln('      </w:r>');
+    buffer.writeln('    </w:p>');
+  }
+
+  /// Writes the inline DrawingML markup for one picture.
+  static void _writeDrawing(
+    StringBuffer buffer,
+    DocxImage image, {
+    required String rId,
+    required int id,
+    required String fileName,
+  }) {
+    final cx = image.widthEmu;
+    final cy = image.heightEmu;
+    final name = XmlUtils.escapeXml(fileName);
+    final descr = image.altText == null
+        ? ''
+        : ' descr="${XmlUtils.escapeXml(image.altText!)}"';
+
+    buffer.writeln('        <w:drawing>');
+    buffer.writeln(
+        '          <wp:inline distT="0" distB="0" distL="0" distR="0">');
+    buffer.writeln('            <wp:extent cx="$cx" cy="$cy"/>');
+    buffer.writeln('            <wp:effectExtent l="0" t="0" r="0" b="0"/>');
+    buffer.writeln('            <wp:docPr id="$id" name="Picture $id"$descr/>');
+    buffer.writeln('            <wp:cNvGraphicFramePr>');
+    buffer.writeln('              <a:graphicFrameLocks noChangeAspect="1"/>');
+    buffer.writeln('            </wp:cNvGraphicFramePr>');
+    buffer.writeln('            <a:graphic>');
+    buffer.writeln(
+        '              <a:graphicData uri="${XmlUtils.picNamespace}">');
+    buffer.writeln('                <pic:pic>');
+    buffer.writeln('                  <pic:nvPicPr>');
+    buffer.writeln(
+        '                    <pic:cNvPr id="$id" name="$name"$descr/>');
+    buffer.writeln('                    <pic:cNvPicPr/>');
+    buffer.writeln('                  </pic:nvPicPr>');
+    buffer.writeln('                  <pic:blipFill>');
+    buffer.writeln('                    <a:blip r:embed="$rId"/>');
+    buffer.writeln('                    <a:stretch>');
+    buffer.writeln('                      <a:fillRect/>');
+    buffer.writeln('                    </a:stretch>');
+    buffer.writeln('                  </pic:blipFill>');
+    buffer.writeln('                  <pic:spPr>');
+    buffer.writeln('                    <a:xfrm>');
+    buffer.writeln('                      <a:off x="0" y="0"/>');
+    buffer.writeln('                      <a:ext cx="$cx" cy="$cy"/>');
+    buffer.writeln('                    </a:xfrm>');
+    buffer.writeln('                    <a:prstGeom prst="rect">');
+    buffer.writeln('                      <a:avLst/>');
+    buffer.writeln('                    </a:prstGeom>');
+    buffer.writeln('                  </pic:spPr>');
+    buffer.writeln('                </pic:pic>');
+    buffer.writeln('              </a:graphicData>');
+    buffer.writeln('            </a:graphic>');
+    buffer.writeln('          </wp:inline>');
+    buffer.writeln('        </w:drawing>');
   }
 }
