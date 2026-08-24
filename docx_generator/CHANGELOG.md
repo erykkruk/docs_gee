@@ -30,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   generators and read back by `DocxReader`.
 
 ### Changed
+- Dropped the `flutter:` constraint from `environment`. Nothing under `lib/`
+  imports Flutter, and the bound made `dart pub get` refuse with "docs_gee
+  requires the Flutter SDK", which had been failing the publish dry-run
+  workflow since April and locked the package out of pure Dart projects.
 - `xml` raised to `^7.0.0`; the reader now uses its `namespaceUri` argument
   instead of the deprecated `namespace`.
 - `flutter_lints` raised to `^6.0.0`; the package analyzes clean under the
