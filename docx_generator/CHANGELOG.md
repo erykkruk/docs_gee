@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-08-24
+
+### Added
+- **Images in DOCX.** `DocxImage` embeds PNG and JPEG bytes, reading the
+  intrinsic pixel size straight from the file header, so a picture needs no
+  explicit dimensions. `width`/`height` scale it, and giving only one keeps
+  the aspect ratio. Add one with `document.addImage(...)`; `altText` becomes
+  the accessibility description and `alignment` places it on the page.
+- **Headers, footers and page numbers (DOCX).** `DocxHeaderFooter` on
+  `DocxDocument.header` / `.footer` repeats content on every page.
+  `DocxHeaderFooter.pageNumber()` builds the usual `Page 3 of 12` footer from
+  the new `DocxRun.pageNumber()` and `DocxRun.pageCount()` field runs, which
+  the word processor recalculates on open.
+- **Right-to-left text (DOCX).** `DocxParagraph.rtl` emits `<w:bidi/>` and
+  `DocxRun.rtl` emits `<w:rtl/>`, for Arabic, Hebrew and Persian. Both survive
+  a read-back through `DocxReader`.
+- **Font size per run.** `DocxRun.fontSize` (in points) overrides the
+  document default in both DOCX and PDF output; the PDF line height grows with
+  the tallest run on the line.
+- **Configurable table cell padding.** `DocxCellPadding` on
+  `DocxTable.cellPadding` (table-wide) or `DocxTableCell.padding` (per cell),
+  declared in twips or through `DocxCellPadding.points(...)`. Honoured by both
+  generators and read back by `DocxReader`.
+
+### Changed
+- Dropped the `flutter:` constraint from `environment`. Nothing under `lib/`
+  imports Flutter, and the bound made `dart pub get` refuse with "docs_gee
+  requires the Flutter SDK", which had been failing the publish dry-run
+  workflow since April and locked the package out of pure Dart projects.
+- `xml` raised to `^7.0.0`; the reader now uses its `namespaceUri` argument
+  instead of the deprecated `namespace`.
+- `flutter_lints` raised to `^6.0.0`; the package analyzes clean under the
+  stricter rule set.
+
+### Notes
+- Headers, footers and images are DOCX-only; the PDF generator skips them.
+- External hyperlinks inside a header or footer render as plain text: those
+  parts resolve relationship ids against their own relationship file, which
+  this library does not emit, and a dangling id would make Word reject the
+  document.
+
 ## [1.4.2] - 2026-07-10
 
 ### Changed

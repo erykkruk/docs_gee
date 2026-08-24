@@ -31,4 +31,17 @@ class XmlUtils {
   /// Content Types namespace.
   static const String contentTypesNamespace =
       'http://schemas.openxmlformats.org/package/2006/content-types';
+
+  /// WordprocessingML drawing namespace (the `wp:` prefix), which wraps an
+  /// embedded picture in a way Word can lay out inline with text.
+  static const String wpNamespace =
+      'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing';
+
+  /// DrawingML main namespace (the `a:` prefix).
+  static const String aNamespace =
+      'http://schemas.openxmlformats.org/drawingml/2006/main';
+
+  /// DrawingML picture namespace (the `pic:` prefix).
+  static const String picNamespace =
+      'http://schemas.openxmlformats.org/drawingml/2006/picture';
 }

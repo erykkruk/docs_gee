@@ -79,20 +79,20 @@ class StyleResolver {
     // Find <w:num w:numId="numId"> → get abstractNumId
     int? abstractNumId;
     for (final numElement in document.findAllElements('num',
-        namespace:
+        namespaceUri:
             'http://schemas.openxmlformats.org/wordprocessingml/2006/main')) {
       final id = int.tryParse(numElement.getAttribute('numId',
-              namespace:
+              namespaceUri:
                   'http://schemas.openxmlformats.org/wordprocessingml/2006/main') ??
           '');
       if (id == numId) {
         final abstractRef = numElement
             .findAllElements('abstractNumId',
-                namespace:
+                namespaceUri:
                     'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
             .firstOrNull;
         abstractNumId = int.tryParse(abstractRef?.getAttribute('val',
-                namespace:
+                namespaceUri:
                     'http://schemas.openxmlformats.org/wordprocessingml/2006/main') ??
             '');
         break;
@@ -176,7 +176,7 @@ class StyleResolver {
   static String? _getWAttr(XmlElement? element, String name) {
     if (element == null) return null;
     return element.getAttribute(name,
-            namespace:
+            namespaceUri:
                 'http://schemas.openxmlformats.org/wordprocessingml/2006/main') ??
         element.getAttribute('w:$name') ??
         element.getAttribute(name);
@@ -187,7 +187,7 @@ class StyleResolver {
     if (parent == null) return null;
     return parent
             .findAllElements(localName,
-                namespace:
+                namespaceUri:
                     'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
             .firstOrNull ??
         parent.findAllElements('w:$localName').firstOrNull;

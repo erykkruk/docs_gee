@@ -17,6 +17,9 @@ class DocxRun {
     this.bookmarkRef,
     this.script = DocxScript.baseline,
     this.isLineBreak = false,
+    this.fontSize,
+    this.rtl = false,
+    this.field,
   });
 
   /// Creates a line break run (soft return within a paragraph).
@@ -32,7 +35,51 @@ class DocxRun {
         hyperlink = null,
         bookmarkRef = null,
         script = DocxScript.baseline,
-        isLineBreak = true;
+        isLineBreak = true,
+        fontSize = null,
+        rtl = false,
+        field = null;
+
+  /// Creates a run holding the current page number.
+  ///
+  /// Rendered as a `PAGE` field, which Word recalculates on open, so the
+  /// number is right without the generator paginating anything. Intended for
+  /// [DocxHeaderFooter] content; body text may use it too.
+  const DocxRun.pageNumber({
+    this.bold = false,
+    this.italic = false,
+    this.color,
+    this.fontSize,
+  })  : text = '',
+        underline = false,
+        strikethrough = false,
+        backgroundColor = null,
+        hyperlink = null,
+        bookmarkRef = null,
+        script = DocxScript.baseline,
+        isLineBreak = false,
+        rtl = false,
+        field = DocxField.page;
+
+  /// Creates a run holding the total page count.
+  ///
+  /// Rendered as a `NUMPAGES` field. Pair it with [DocxRun.pageNumber] for
+  /// the usual `Page 3 of 12` footer.
+  const DocxRun.pageCount({
+    this.bold = false,
+    this.italic = false,
+    this.color,
+    this.fontSize,
+  })  : text = '',
+        underline = false,
+        strikethrough = false,
+        backgroundColor = null,
+        hyperlink = null,
+        bookmarkRef = null,
+        script = DocxScript.baseline,
+        isLineBreak = false,
+        rtl = false,
+        field = DocxField.pageCount;
 
   /// The text content.
   final String text;
@@ -79,8 +126,32 @@ class DocxRun {
   final DocxScript script;
 
   /// Whether this run represents a line break (soft return).
-  /// When true, this generates a <w:br/> element instead of text.
+  /// When true, this generates a `<w:br/>` element instead of text.
   final bool isLineBreak;
+
+  /// Font size for this run in points, overriding the document default.
+  ///
+  /// `14` renders as 14pt. Null keeps the size configured on the generator
+  /// ([DocxGenerator.fontSize] / [PdfGenerator.fontSize]), which is how every
+  /// run behaved before per-run sizing existed.
+  final int? fontSize;
+
+  /// Whether this run reads right-to-left (Arabic, Hebrew, Persian).
+  ///
+  /// Emits `<w:rtl/>` so Word applies bidirectional layout to the run. Set
+  /// [DocxParagraph.rtl] as well to flip the paragraph direction itself.
+  ///
+  /// DOCX only: the PDF generator has no bidirectional text shaping and
+  /// renders such runs left-to-right.
+  final bool rtl;
+
+  /// Field this run renders instead of literal [text], if any.
+  ///
+  /// Set by the [DocxRun.pageNumber] and [DocxRun.pageCount] constructors.
+  final DocxField? field;
+
+  /// Whether this run renders a field rather than literal text.
+  bool get isField => field != null;
 
   /// Returns true if this run is a link (external or internal).
   bool get isLink => hyperlink != null || bookmarkRef != null;
@@ -93,7 +164,9 @@ class DocxRun {
       strikethrough ||
       color != null ||
       backgroundColor != null ||
-      script != DocxScript.baseline;
+      script != DocxScript.baseline ||
+      fontSize != null ||
+      rtl;
 
   /// Creates a copy with modified properties.
   DocxRun copyWith({
@@ -108,6 +181,9 @@ class DocxRun {
     String? bookmarkRef,
     DocxScript? script,
     bool? isLineBreak,
+    int? fontSize,
+    bool? rtl,
+    DocxField? field,
   }) {
     return DocxRun(
       text ?? this.text,
@@ -121,6 +197,9 @@ class DocxRun {
       bookmarkRef: bookmarkRef ?? this.bookmarkRef,
       script: script ?? this.script,
       isLineBreak: isLineBreak ?? this.isLineBreak,
+      fontSize: fontSize ?? this.fontSize,
+      rtl: rtl ?? this.rtl,
+      field: field ?? this.field,
     );
   }
 }

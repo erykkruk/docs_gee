@@ -39,6 +39,12 @@ Full hosted documentation is available at [codigee.com/open-source/docs-gee](htt
 | Nested lists (up to 9 levels) | ✅ | ✅ |
 | Tables with borders & colors | ✅ | ✅ |
 | Per-cell border control | ✅ | ✅ |
+| Configurable cell padding | ✅ | ✅ |
+| Font size per run | ✅ | ✅ |
+| Images (PNG / JPEG) | ✅ | - |
+| Headers & footers | ✅ | - |
+| Page numbers (`PAGE` / `NUMPAGES` fields) | ✅ | - |
+| Right-to-left text (Arabic, Hebrew, Persian) | ✅ | - |
 | Page breaks | ✅ | ✅ |
 | Line breaks (soft return) | ✅ | - |
 | Hyperlinks (external URLs) | ✅ | - |
@@ -199,6 +205,105 @@ TableCell(
   ),
 );
 ```
+
+### Images (DOCX only)
+
+The intrinsic size is read from the PNG or JPEG header, so a picture needs no
+explicit dimensions:
+
+```dart
+final doc = DocxDocument();
+doc.addImage(DocxImage(
+  bytes: pngBytes,
+  altText: 'Quarterly revenue chart',
+));
+
+// Scaled to 400px wide, height derived from the aspect ratio
+doc.addImage(DocxImage(
+  bytes: jpegBytes,
+  width: 400,
+  alignment: DocxAlignment.center,
+));
+```
+
+Anything that is not PNG or JPEG, or whose header is truncated, throws
+`DocxImageException` rather than producing a document Word cannot open.
+
+### Headers, Footers and Page Numbers (DOCX only)
+
+```dart
+final doc = DocxDocument(
+  header: DocxHeaderFooter.text(
+    'Quarterly report',
+    alignment: DocxAlignment.center,
+  ),
+  // Renders "Page 3 of 12", recalculated by the word processor on open
+  footer: DocxHeaderFooter.pageNumber(prefix: 'Page ', showTotal: true),
+);
+```
+
+Build a richer one from paragraphs, and place the page number yourself with
+the field runs:
+
+```dart
+DocxHeaderFooter(paragraphs: [
+  DocxParagraph(
+    runs: [
+      const DocxRun('Confidential', italic: true),
+      const DocxRun('  -  '),
+      const DocxRun.pageNumber(bold: true),
+    ],
+    alignment: DocxAlignment.right,
+  ),
+]);
+```
+
+External hyperlinks inside a header or footer render as plain text: those
+parts resolve relationship ids against their own relationship file, which this
+library does not emit.
+
+### Right-to-Left Text (DOCX only)
+
+```dart
+doc.addParagraph(const DocxParagraph(
+  runs: [DocxRun('مرحبا بالعالم', rtl: true)],
+  rtl: true,
+));
+```
+
+`rtl` on the paragraph flips the paragraph direction (`<w:bidi/>`); `rtl` on
+the run marks the text itself as right-to-left (`<w:rtl/>`). Set both for
+Arabic, Hebrew or Persian content. The PDF generator has no bidirectional text
+shaping and renders such content left-to-right.
+
+### Font Size per Run
+
+```dart
+doc.addParagraph(const DocxParagraph(runs: [
+  DocxRun('Lead-in ', fontSize: 18),
+  DocxRun('and the rest at the document default.'),
+]));
+```
+
+Sizes are in points and apply to DOCX and PDF alike; in PDF the line grows to
+fit the tallest run on it.
+
+### Table Cell Padding
+
+```dart
+// Table-wide
+DocxTable.simple(
+  [['Product', 'Price']],
+  cellPadding: const DocxCellPadding.points(top: 6, bottom: 6, left: 10, right: 10),
+);
+
+// Per cell, overriding the table default
+DocxTableCell.text('Roomy', padding: const DocxCellPadding.all(200));
+```
+
+Padding is stored in twips (1/1440 inch); `DocxCellPadding.points(...)`
+converts from points and `DocxCellPadding.wordDefault` matches Word's own
+margins.
 
 ### Semantic Styles
 
@@ -374,6 +479,9 @@ Future<void> shareDocument(Uint8List bytes) async {
 | `hyperlink` | `String?` | External URL link |
 | `bookmarkRef` | `String?` | Internal bookmark reference |
 | `isLineBreak` | `bool` | Line break (use `TextRun.lineBreak()`) |
+| `fontSize` | `int?` | Font size in points, overriding the document default |
+| `rtl` | `bool` | Right-to-left run direction (DOCX only) |
+| `field` | `DocxField?` | Page field (use `DocxRun.pageNumber()` / `.pageCount()`) |
 
 ## Compatibility
 

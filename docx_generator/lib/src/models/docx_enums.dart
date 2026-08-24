@@ -85,3 +85,21 @@ enum DocxParagraphStyle {
         _ => false,
       };
 }
+
+/// A Word field: a placeholder the word processor recomputes when the
+/// document is opened or refreshed.
+///
+/// Used by [DocxRun.pageNumber] and [DocxRun.pageCount]; the generator never
+/// paginates the content itself, it just emits the instruction.
+enum DocxField {
+  /// Current page number, emitted as the `PAGE` instruction.
+  page('PAGE'),
+
+  /// Total number of pages, emitted as the `NUMPAGES` instruction.
+  pageCount('NUMPAGES');
+
+  const DocxField(this.instruction);
+
+  /// The field instruction text written into `<w:instrText>`.
+  final String instruction;
+}

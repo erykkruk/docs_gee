@@ -1,6 +1,6 @@
 name: docs_gee
 description: Pure Dart library for generating and reading DOCX and PDF documents with rich formatting, tables, lists. Cross-platform with no native dependencies.
-version: 1.4.2
+version: 1.5.0
 
 homepage: https://github.com/erykkruk/docs_gee
 repository: https://github.com/erykkruk/docs_gee
@@ -14,13 +14,15 @@ topics:
   - generator
 
 environment:
+  # No Flutter constraint on purpose: nothing under lib/ imports Flutter, so
+  # a `flutter:` bound would make `dart pub get` refuse ("docs_gee requires
+  # the Flutter SDK") and lock the package out of pure Dart projects.
   sdk: ">=3.2.0 <4.0.0"
-  flutter: ">=3.16.0"
 
 dependencies:
   archive: ^4.0.0
-  xml: ^6.0.0
+  xml: ^7.0.0
 
 dev_dependencies:
-  flutter_lints: ^4.0.0
+  lints: ^6.0.0
   test: ^1.24.0

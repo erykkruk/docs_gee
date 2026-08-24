@@ -14,6 +14,9 @@ class TableParser {
     Map<String, String> relationships,
   ) {
     final borders = _parseTableBorders(tblElement);
+    final cellPadding = _parseCellPadding(
+      _findChild(_findChild(tblElement, 'tblPr'), 'tblCellMar'),
+    );
     final rows = <DocxTableRow>[];
 
     for (final child in tblElement.children) {
@@ -24,7 +27,11 @@ class TableParser {
     // Calculate rowSpan by analyzing vMerge patterns
     _resolveRowSpans(rows);
 
-    return DocxTable(rows: rows, borders: borders);
+    return DocxTable(
+      rows: rows,
+      borders: borders,
+      cellPadding: cellPadding,
+    );
   }
 
   /// Parses `<w:tblBorders>` from table properties.
@@ -126,6 +133,9 @@ class TableParser {
     // Cell borders: <w:tcBorders>
     final cellBorders = _parseCellBorders(tcPr);
 
+    // Cell padding: <w:tcMar>
+    final padding = _parseCellPadding(_findChild(tcPr, 'tcMar'));
+
     // Parse paragraphs inside the cell
     final paragraphs = <DocxParagraph>[];
     for (final child in tcElement.children) {
@@ -146,7 +156,31 @@ class TableParser {
       colSpan: colSpan,
       // rowSpan is resolved later in _resolveRowSpans
       rowSpan: vMerge != null ? 1 : 1,
+      padding: padding,
     );
+  }
+
+  /// Parses a `<w:tblCellMar>` or `<w:tcMar>` element into padding.
+  ///
+  /// Returns null when the element is absent or every edge is zero, so a
+  /// document that never set padding round-trips back to null rather than to
+  /// an all-zero object.
+  static DocxCellPadding? _parseCellPadding(XmlElement? marElement) {
+    if (marElement == null) return null;
+    final padding = DocxCellPadding(
+      top: _edgeWidth(marElement, 'top'),
+      right: _edgeWidth(marElement, 'right'),
+      bottom: _edgeWidth(marElement, 'bottom'),
+      left: _edgeWidth(marElement, 'left'),
+    );
+    return padding.hasPadding ? padding : null;
+  }
+
+  /// Reads one `w:w` margin value in twips, defaulting to zero.
+  static int _edgeWidth(XmlElement marElement, String edge) {
+    final element = _findChild(marElement, edge);
+    if (element == null) return 0;
+    return int.tryParse(_getAttr(element, 'w') ?? '') ?? 0;
   }
 
   /// Parses `<w:tcBorders>` for cell-level border overrides.
@@ -187,6 +221,9 @@ class TableParser {
     final jc = _findChild(pPr, 'jc');
     final alignment = StyleResolver.resolveAlignment(_getAttr(jc, 'val'));
 
+    // Right-to-left paragraph direction: <w:bidi/>
+    final rtl = _findChild(pPr, 'bidi') != null;
+
     // Bookmark
     String? bookmarkName;
     final bookmarkStart = _findChild(pElement, 'bookmarkStart');
@@ -202,6 +239,7 @@ class TableParser {
       style: style,
       alignment: alignment,
       bookmarkName: bookmarkName,
+      rtl: rtl,
     );
   }
 
@@ -221,7 +259,7 @@ class TableParser {
         // External hyperlink: <w:hyperlink r:id="rId100">
         final rId = child.getAttribute('r:id') ??
             child.getAttribute('id',
-                namespace:
+                namespaceUri:
                     'http://schemas.openxmlformats.org/officeDocument/2006/relationships');
         final anchor = _getAttr(child, 'anchor');
 
@@ -284,6 +322,7 @@ class TableParser {
             borders: cell.borders,
             colSpan: cell.colSpan,
             rowSpan: span,
+            padding: cell.padding,
           );
         }
       }
