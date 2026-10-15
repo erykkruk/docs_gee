@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:xml/xml.dart';
 
 import 'docx_reader_exception.dart';
 import 'models/models.dart';
@@ -38,6 +39,9 @@ import 'reader/relationship_resolver.dart';
 class DocxReader {
   /// Creates a new [DocxReader].
   const DocxReader();
+
+  /// Dublin Core namespace used by `dc:title` and `dc:creator` in core.xml.
+  static const String _dublinCoreNamespace = 'http://purl.org/dc/elements/1.1/';
 
   /// Parses DOCX bytes into a [DocxDocument].
   ///
@@ -117,28 +121,24 @@ class DocxReader {
     if (coreXml == null) return (title: null, author: null);
 
     try {
-      // Simple extraction without full XML parsing for metadata
-      String? title;
-      String? author;
-
-      // <dc:title>...</dc:title>
-      final titleMatch = RegExp(r'<dc:title>(.*?)</dc:title>', dotAll: true)
-          .firstMatch(coreXml);
-      if (titleMatch != null && titleMatch.group(1)!.isNotEmpty) {
-        title = titleMatch.group(1);
-      }
-
-      // <dc:creator>...</dc:creator>
-      final authorMatch =
-          RegExp(r'<dc:creator>(.*?)</dc:creator>', dotAll: true)
-              .firstMatch(coreXml);
-      if (authorMatch != null && authorMatch.group(1)!.isNotEmpty) {
-        author = authorMatch.group(1);
-      }
-
-      return (title: title, author: author);
+      final document = XmlDocument.parse(coreXml);
+      return (
+        title: _dublinCoreText(document, 'title'),
+        author: _dublinCoreText(document, 'creator'),
+      );
     } on Object {
       return (title: null, author: null);
     }
+  }
+
+  /// Text of the first Dublin Core element named [localName], with entity
+  /// references such as `&amp;` decoded, or null when it is missing or empty.
+  String? _dublinCoreText(XmlDocument document, String localName) {
+    final element = document
+        .findAllElements(localName, namespaceUri: _dublinCoreNamespace)
+        .firstOrNull;
+    final text = element?.innerText;
+    if (text == null || text.isEmpty) return null;
+    return text;
   }
 }

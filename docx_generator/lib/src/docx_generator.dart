@@ -64,6 +64,10 @@ class DocxGenerator implements DocumentGenerator {
       footerRelId: footerRelId,
     );
     final imageFormats = document.images.map((image) => image.format).toSet();
+    final hasCoreProperties = CorePropertiesXml.hasContent(
+      title: document.title,
+      author: document.author,
+    );
 
     final archive = Archive();
 
@@ -76,6 +80,7 @@ class DocxGenerator implements DocumentGenerator {
         imageFormats: imageFormats,
         hasHeader: header != null,
         hasFooter: footer != null,
+        hasCoreProperties: hasCoreProperties,
       ),
     );
 
@@ -83,8 +88,20 @@ class DocxGenerator implements DocumentGenerator {
     _addFile(
       archive,
       '_rels/.rels',
-      RelsXml.generateMainRels(),
+      RelsXml.generateMainRels(hasCoreProperties: hasCoreProperties),
     );
+
+    // Add docProps/core.xml if the document carries metadata
+    if (hasCoreProperties) {
+      _addFile(
+        archive,
+        CorePropertiesXml.partName,
+        CorePropertiesXml.generate(
+          title: document.title,
+          author: document.author,
+        ),
+      );
+    }
 
     // Add word/_rels/document.xml.rels (with hyperlinks)
     _addFile(

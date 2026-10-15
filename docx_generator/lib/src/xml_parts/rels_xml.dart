@@ -5,13 +5,20 @@ class RelsXml {
   RelsXml._();
 
   /// Generates the main _rels/.rels content.
-  static String generateMainRels() {
+  ///
+  /// [hasCoreProperties] - whether to link docProps/core.xml (metadata).
+  static String generateMainRels({bool hasCoreProperties = false}) {
     final buffer = StringBuffer();
     buffer.writeln(XmlUtils.xmlDeclaration);
     buffer.writeln('<Relationships xmlns="${XmlUtils.relsNamespace}">');
     buffer.writeln('  <Relationship Id="rId1" '
         'Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" '
         'Target="word/document.xml"/>');
+    if (hasCoreProperties) {
+      buffer.writeln('  <Relationship Id="rId2" '
+          'Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" '
+          'Target="docProps/core.xml"/>');
+    }
     buffer.writeln('</Relationships>');
     return buffer.toString();
   }
