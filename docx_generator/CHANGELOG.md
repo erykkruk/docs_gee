@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2026-10-15
+
+### Fixed
+- **DOCX title and author are now written.** `DocxDocument.title` and
+  `.author` were only used by the PDF generator; the DOCX output had no
+  `docProps/core.xml`, so Word showed no metadata under File > Info. The part
+  is now emitted (with its content type and package relationship) whenever
+  either field is set, and documents without metadata are unchanged.
+- **Text that XML 1.0 forbids no longer corrupts the DOCX.** Control
+  characters such as the vertical tab, form feed or NUL, which text pasted
+  from other applications often carries, made `word/document.xml` malformed
+  and Word refused to open the file. They are now dropped wherever text is
+  written (body, tables, headers, footers, metadata).
+- **Windows and classic Mac line endings.** `\r\n` and a bare `\r` inside a
+  run now become a line break, the same as `\n`, instead of leaving a raw
+  carriage return in `<w:t>`.
+- **`DocxReader` kept only the break of a multi-line run.** A run holding
+  both text and `<w:br/>` (what the generator writes for `'a\nb'`, and what
+  Word writes for Shift+Enter) was read back as a bare line break and its
+  text was lost. The text is now kept, with each break as `\n`.
+- **`DocxReader` metadata decoding.** `title` and `author` are read with a
+  real XML parser, so entities such as `&amp;` come back decoded instead of
+  verbatim.
+
 ## [1.5.0] - 2026-08-24
 
 ### Added
