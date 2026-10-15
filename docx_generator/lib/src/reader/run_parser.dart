@@ -36,9 +36,12 @@ class RunParser {
     String? hyperlink,
     String? bookmarkRef,
   }) {
-    // Check for line break: <w:br/> (without type="page")
+    // Check for line break: <w:br/> (without type="page") in a run with no
+    // text. A run that mixes <w:t> and <w:br/> (what the generator writes
+    // for "a\nb", and what Word writes for Shift+Enter) keeps its text, and
+    // the breaks become "\n" below.
     final brElement = _findChild(runElement, 'br');
-    if (brElement != null) {
+    if (brElement != null && !_hasChild(runElement, 't')) {
       final brType = _getAttr(brElement, 'type');
       if (brType == null) {
         // Simple line break
@@ -133,10 +136,10 @@ class RunParser {
   }
 
   /// Extracts concatenated text from `<w:t>` elements within a run,
-  /// joining with `\n` where `<w:br/>` elements appear between texts.
+  /// writing `\n` wherever a simple `<w:br/>` appears, so the break keeps
+  /// its position whether it sits before, between or after the texts.
   static String _extractText(XmlElement runElement) {
     final buffer = StringBuffer();
-    var hasPreviousText = false;
 
     for (final child in runElement.children) {
       if (child is! XmlElement) continue;
@@ -144,10 +147,9 @@ class RunParser {
 
       if (localName == 't') {
         buffer.write(child.innerText);
-        hasPreviousText = true;
       } else if (localName == 'br') {
         final brType = _getAttr(child, 'type');
-        if (brType == null && hasPreviousText) {
+        if (brType == null) {
           buffer.write('\n');
         }
       }
