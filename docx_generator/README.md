@@ -62,7 +62,7 @@ Full hosted documentation is available at [codigee.com/open-source/docs-gee](htt
 
 ```yaml
 dependencies:
-  docs_gee: ^1.3.3
+  docs_gee: ^1.5.1
 ```
 
 ```bash

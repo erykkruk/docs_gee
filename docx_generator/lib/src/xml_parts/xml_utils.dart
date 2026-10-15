@@ -2,9 +2,21 @@
 class XmlUtils {
   XmlUtils._();
 
+  /// Characters XML 1.0 forbids anywhere in a document: C0 controls other
+  /// than tab, line feed and carriage return, plus U+FFFE and U+FFFF. Even
+  /// escaped as character references they make the part malformed, and Word
+  /// refuses to open the file.
+  static final RegExp _invalidXmlChars =
+      RegExp('[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]');
+
   /// Escapes special XML characters in text.
+  ///
+  /// Characters that XML 1.0 does not allow (such as the vertical tab or
+  /// NUL that text pasted from other applications often carries) are
+  /// dropped, so the generated part always stays well-formed.
   static String escapeXml(String text) {
     return text
+        .replaceAll(_invalidXmlChars, '')
         .replaceAll('&', '&amp;')
         .replaceAll('<', '&lt;')
         .replaceAll('>', '&gt;')

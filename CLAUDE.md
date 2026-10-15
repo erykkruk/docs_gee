@@ -63,3 +63,4 @@ Generated files contain:
 - `word/styles.xml` - Style definitions
 - `word/_rels/document.xml.rels` - Document relationships
 - `word/numbering.xml` - Only included when document contains lists
+- `docProps/core.xml` - Title/author metadata, only included when either is set

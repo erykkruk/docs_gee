@@ -12,11 +12,14 @@ class ContentTypesXml {
   /// a Default extension entry or Word rejects the archive.
   /// [hasHeader] / [hasFooter] - whether header1.xml / footer1.xml are part
   /// of the archive.
+  /// [hasCoreProperties] - whether docProps/core.xml (metadata) is part of
+  /// the archive.
   static String generate({
     bool hasNumbering = false,
     Set<DocxImageFormat> imageFormats = const {},
     bool hasHeader = false,
     bool hasFooter = false,
+    bool hasCoreProperties = false,
   }) {
     final buffer = StringBuffer();
     buffer.writeln(XmlUtils.xmlDeclaration);
@@ -56,6 +59,11 @@ class ContentTypesXml {
     if (hasFooter) {
       buffer.writeln('  <Override PartName="/word/footer1.xml" '
           'ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>');
+    }
+
+    if (hasCoreProperties) {
+      buffer.writeln('  <Override PartName="/docProps/core.xml" '
+          'ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>');
     }
 
     buffer.writeln('</Types>');

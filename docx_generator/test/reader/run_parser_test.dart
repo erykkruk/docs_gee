@@ -97,6 +97,43 @@ void main() {
       final result = RunParser.parse(run);
       expect(result.isLineBreak, isTrue);
     });
+
+    test('keeps the text of a run that mixes text and line breaks', () {
+      // Arrange
+      final run = parseRun(
+          '<w:r><w:rPr><w:b/></w:rPr><w:t>one</w:t><w:br/><w:t>two</w:t></w:r>');
+
+      // Act
+      final result = RunParser.parse(run);
+
+      // Assert
+      expect(result.isLineBreak, isFalse);
+      expect(result.text, 'one\ntwo');
+      expect(result.bold, isTrue);
+    });
+
+    test('keeps a break that comes before the text', () {
+      // Arrange
+      final run = parseRun('<w:r><w:br/><w:t>after</w:t></w:r>');
+
+      // Act
+      final result = RunParser.parse(run);
+
+      // Assert
+      expect(result.text, '\nafter');
+    });
+
+    test('ignores a page break inside a text run', () {
+      // Arrange
+      final run = parseRun(
+          '<w:r><w:t>before</w:t><w:br w:type="page"/><w:t>after</w:t></w:r>');
+
+      // Act
+      final result = RunParser.parse(run);
+
+      // Assert
+      expect(result.text, 'beforeafter');
+    });
   });
 
   group('RunParser - hyperlinks', () {

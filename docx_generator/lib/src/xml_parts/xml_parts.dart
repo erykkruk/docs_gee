@@ -1,4 +1,5 @@
 export 'content_types_xml.dart';
+export 'core_properties_xml.dart';
 export 'document_xml.dart';
 export 'header_footer_xml.dart';
 export 'numbering_xml.dart';
