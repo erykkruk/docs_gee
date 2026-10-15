@@ -20,6 +20,12 @@ class DocumentXml {
   /// the hyperlink block that starts at 100.
   static const int _imageRelIdBase = 200;
 
+  /// Line endings that become a `<w:br/>` inside a run. A `\r` left in
+  /// `<w:t>` is normalised to a plain line feed by the XML parser, which Word
+  /// does not render as a break, so Windows (`\r\n`) and classic Mac (`\r`)
+  /// endings break the line the same way `\n` does.
+  static final RegExp _lineBreakPattern = RegExp('\r\n|\r|\n');
+
   /// Generates the document.xml content.
   ///
   /// Returns the XML alongside the relationship maps the package parts need:
@@ -309,8 +315,8 @@ class DocumentXml {
       buffer.write('</w:rPr>');
     }
 
-    // Text content - handle line breaks (\n) by splitting into multiple <w:t> with <w:br/>
-    final lines = run.text.split('\n');
+    // Text content - handle line breaks (\n, \r\n, \r) by splitting into multiple <w:t> with <w:br/>
+    final lines = run.text.split(_lineBreakPattern);
     for (int i = 0; i < lines.length; i++) {
       final line = lines[i];
       final escapedText = XmlUtils.escapeXml(line);
